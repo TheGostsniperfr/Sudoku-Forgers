@@ -55,18 +55,30 @@ void softmax(double *x, int len) {
 
 
 double random_weight() {
-    // Random entre -1 et 1
+    // Random between -1 & 1
     return (double)rand() / RAND_MAX * 2.0 - 1.0;
 }
 
 double random_bias() {
-    // Random entre -0.5 et 0.5
+    // Random between -0.5 & 0.5
     return (double)rand() / RAND_MAX - 0.5;
 }
 
+
+
+
+/***************************************************************
+ *  Function initialize_network : 
+ *
+ *  Init the bias and wiehgt (random) of each neurons
+ *
+ *  @input :
+ *      - *network (NeuralNetwork) : data outputs by neural networks
+***************************************************************/
+
 void initialize_network(NeuralNetwork *network) {
 
-    // Seed du générateur de nombres aléatoires avec le temps actuel
+    // Seed of random set to the current time
     srand(time(NULL));
 
     for (int layer_i = 1; layer_i < network->nb_layers; layer_i++) {
@@ -75,17 +87,17 @@ void initialize_network(NeuralNetwork *network) {
 
             network->layers[layer_i].neurons[neuron_i].bias = random_bias();
 
-            // Allouer de la mémoire pour les poids
+            // Alloc the memory for the weight
             network->layers[layer_i].neurons[neuron_i].weights =
                 (double *)malloc(network->layers[layer_i - 1].nb_neurons * sizeof(double));
 
-            // Vérifier l'allocation de mémoire
+            // Check of weight allocation
             if (network->layers[layer_i].neurons[neuron_i].weights == NULL) {
-                perror("Erreur d'allocation de mémoire pour les poids");
+                perror("Error of weights memory allocation.");
                 exit(EXIT_FAILURE);
             }
 
-            // Initialiser les poids pour chaque connexion
+            // Init weight of each connexion between neurons
             for (int weight_i = 0; weight_i < network->layers[layer_i - 1].nb_neurons; weight_i++) {
                 network->layers[layer_i].neurons[neuron_i].weights[weight_i] = random_weight();
             }
@@ -95,10 +107,15 @@ void initialize_network(NeuralNetwork *network) {
 }
 
 
+/***************************************************************
+ *  Function destroy_network : 
+ *
+ *  Dump the memory of neural network
+ * 
+ *  @input :
+ *      - *network (NeuralNetwork) : data outputs by neural networks
+***************************************************************/
 
-
-
-// Fonction pour libérer la mémoire du réseau
 void destroy_network(NeuralNetwork *network) {
     for (int layer_i = 0; layer_i < network->nb_layers; layer_i++) {
         for (int neuron_i = 0; neuron_i < network->layers[layer_i].nb_neurons; neuron_i++) {
@@ -110,7 +127,17 @@ void destroy_network(NeuralNetwork *network) {
     free(network);
 }
 
-//Fonction qui init l'input layer avec l'image 
+
+/***************************************************************
+ *  Function inputPropagation : 
+ *
+ *  Assigns each pixel in the image to a input neuron
+ * 
+ *  @input :
+ *      - *network (NeuralNetwork) : data outputs by neural networks
+ *      - *image (uint8_t) : input image
+***************************************************************/
+
 void inputPropagation(NeuralNetwork *network, uint8_t *image){
 
     if(network->layers[0].nb_neurons != 784){
@@ -124,13 +151,21 @@ void inputPropagation(NeuralNetwork *network, uint8_t *image){
     }    
 }
 
+/***************************************************************
+ *  Function hiddenPropagation : 
+ *
+ *  Propagation of hidden layer(s) neurons
+ * 
+ *  @input :
+ *      - *network (NeuralNetwork) : data outputs by neural networks
+***************************************************************/
 
 void hiddenPropagation(NeuralNetwork *network){
     for (int layer_i = 1; layer_i < network->nb_layers; layer_i++) {
         for (int neuron_i = 0; neuron_i < network->layers[layer_i].nb_neurons; neuron_i++) {
             double weighted_sum = network->layers[layer_i].neurons[neuron_i].bias;
 
-            // Somme pondérée
+            // Weighted sum
             for (int prev_neuron_i = 0; prev_neuron_i < network->layers[layer_i - 1].nb_neurons; prev_neuron_i++) {
                 weighted_sum += network->layers[layer_i].neurons[neuron_i].weights[prev_neuron_i] * network->layers[layer_i - 1].neurons[prev_neuron_i].output;
             }
@@ -141,6 +176,17 @@ void hiddenPropagation(NeuralNetwork *network){
     }
 }
 
+
+/***************************************************************
+ *  Function outputPropagation : 
+ *
+ *  Propagation of output layer neurons
+ * 
+ *  @input :
+ *      - *network (NeuralNetwork) : data outputs by neural networks
+ *      - *output (double) : output data (the recognised number)
+***************************************************************/
+
 void outputPropagation(NeuralNetwork *network,  double *output){
     int output_layer_index = network->nb_layers - 1;
     int nb_output_neurons = network->layers[output_layer_index].nb_neurons;
@@ -149,7 +195,7 @@ void outputPropagation(NeuralNetwork *network,  double *output){
     for (int neuron_i = 0; neuron_i < nb_output_neurons; neuron_i++) {
         double weighted_sum = network->layers[output_layer_index].neurons[neuron_i].bias;
 
-        // Somme pondérée 
+        // Weighted sum
         for (int prev_neuron_i = 0; prev_neuron_i < network->layers[output_layer_index - 1].nb_neurons; prev_neuron_i++) {
             weighted_sum += network->layers[output_layer_index].neurons[neuron_i].weights[prev_neuron_i] * network->layers[output_layer_index - 1].neurons[prev_neuron_i].output;
         }
@@ -166,11 +212,24 @@ void outputPropagation(NeuralNetwork *network,  double *output){
 }
 
 
+/***************************************************************
+ *  Function forward_propagation : 
+ *
+ *  Takes the data from the input image, propagates it through all the network layers 
+ *  and recovers the processed data (the recognised number)
+ * 
+ *  @input :
+ *      - *network (NeuralNetwork) : data outputs by neural networks
+ *      - *image (uint8_t) : input image
+ *      - *output (double) : output data (the recognised number)
+***************************************************************/
+
 void forward_propagation(NeuralNetwork *network, uint8_t *image, double *output){
     inputPropagation(network, image);
     hiddenPropagation(network);
     outputPropagation(network, output);
 }
+
 
 double categorical_cross_entropy_loss(NeuralNetwork *network, double *predicted_probs, double *true_probs) {
     double loss = 0.0;
@@ -209,12 +268,26 @@ double mean_categorical_cross_entropy_loss(NeuralNetwork *network, double **pred
 }
 
 
+/***************************************************************
+ *  Function backward_propagation : 
+ *
+ *  Takes the data from the input image, propagates it through all the network layers 
+ *  and recovers the processed data (the recognised number)
+ * 
+ *  @input :
+ *      - *network (NeuralNetwork) : data outputs by neural networks
+ *      - **predicted_probs (double) : input image
+ *      - **true_probs (double) : output data (the recognised number)
+ *      - nb_images (int) : number of pixel for a image 
+ *      - learning_rate (double) : rate of the neural network learn 
+***************************************************************/
+
 void backward_propagation(NeuralNetwork *network, double **predicted_probs, double **true_probs, int nb_images, double learning_rate) {
     int output_layer_index = network->nb_layers - 1;
     int nb_output_neurons = network->layers[output_layer_index].nb_neurons;
 
     for (int image_i = 0; image_i < nb_images; image_i++) {
-        // Gradients pour les poids et les biais de la couche de sortie
+        // Gradients for output layer weights and biases
         double output_gradients[nb_output_neurons];
 
         // Calcul des gradients pour la couche de sortie
@@ -222,15 +295,14 @@ void backward_propagation(NeuralNetwork *network, double **predicted_probs, doub
             output_gradients[neuron_i] = predicted_probs[image_i][neuron_i] - true_probs[image_i][neuron_i];
         }
 
-        // Gradients pour les couches cachées (en remontant depuis la couche de sortie)
+        // Calcul of gradients for the output layer
         for (int layer_i = output_layer_index; layer_i > 0; layer_i--) {
             int nb_neurons = network->layers[layer_i].nb_neurons;
 
             for (int neuron_i = 0; neuron_i < nb_neurons; neuron_i++) {
-                // Calcul de la dérivée de la fonction d'activation (par exemple, dérivée de ReLU)
                 double activation_derivative = relu_derivative(network->layers[layer_i].neurons[neuron_i].output);
 
-                // Calcul de la somme pondérée des gradients des neurones de la couche suivante
+                // Calculation of the weighted sum of the gradients of the neurons in the next layer
                 double output_gradient = 0.0;
 
                 if (layer_i == output_layer_index) {
@@ -241,13 +313,13 @@ void backward_propagation(NeuralNetwork *network, double **predicted_probs, doub
                     }
                 }
 
-                // Calcul du gradient pour le neurone
+                // Gradient calcul
                 double neuron_gradient = output_gradient * activation_derivative;
 
-                // Mise à jour du biais
+                // Update of hte bias
                 network->layers[layer_i].neurons[neuron_i].bias -= learning_rate * neuron_gradient;
 
-                // Mise à jour des poids avec la règle de la chaîne
+                // Update of the weight
                 for (int prev_neuron_i = 0; prev_neuron_i < network->layers[layer_i - 1].nb_neurons; prev_neuron_i++) {
                     network->layers[layer_i].neurons[neuron_i].weights[prev_neuron_i] -= learning_rate * neuron_gradient * network->layers[layer_i - 1].neurons[prev_neuron_i].output;
                 }
@@ -260,7 +332,7 @@ void backward_propagation(NeuralNetwork *network, double **predicted_probs, doub
 
 
 int main() {
-    // Initialisation du réseau neuronal
+    // Init of neural network
     NeuralNetwork *network = (NeuralNetwork *)malloc(sizeof(NeuralNetwork));
     if (network == NULL) {
         perror("Erreur d'allocation de mémoire pour le réseau neuronal");
@@ -274,15 +346,16 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // Définissez le nombre de neurones dans chaque couche et initialisez le réseau
-    // Vous devrez remplacer les valeurs par celles correspondant à votre architecture
-    network->layers[0].nb_neurons = 784; // Nombre d'entrées
-    network->layers[1].nb_neurons = 128; // Nombre de neurones dans la couche cachée
-    network->layers[2].nb_neurons = 10;  // Nombre de neurones dans la couche de sortie
+    //Numebr of neurone by layers
+    //layers.first -> input layer | layers.last -> output layer
+    network->layers[0].nb_neurons = 784; 
+    network->layers[1].nb_neurons = 128; 
+    network->layers[2].nb_neurons = 10;  
 
     initialize_network(network);
 
-    // Chargez les images, les labels et l'imageRes
+
+    //Get images from data set
     uint8_t *images = NULL;
     uint8_t *labels = NULL;
     int imageRes = 0;
@@ -290,18 +363,18 @@ int main() {
 
     GetImages(&images, &labels, &imageRes, &nbImages);
 
-    // Effectuez l'apprentissage en boucle sur toutes les images
+    // Perform training on all images
     int correct_predictions = 0;
     for (int image_i = 0; image_i < nbImages; image_i++) {
-        // Préparez l'image actuelle et le label correspondant
+
         uint8_t *current_image = images + image_i * imageRes * imageRes;
         uint8_t current_label = labels[image_i];
 
-        // Propagation avant
-        double output[10]; // Vous devrez définir correctement la taille en fonction de votre architecture
+        // Forward propagation
+        double output[10]; 
         forward_propagation(network, current_image, output);
 
-        // Calcul de la prédiction (classe prédite)
+        // Prediction calcul
         int predicted_class = 0;
         for (int i = 1; i < 10; i++) {
             if (output[i] > output[predicted_class]) {
@@ -309,23 +382,22 @@ int main() {
             }
         }
 
-        // Vérifiez si la prédiction est correcte
+        // Check that the prediction is correct
         if (predicted_class == current_label) {
             correct_predictions++;
         }
 
-        // Propagation arrière
-        // Vous devrez ajouter cette étape pour mettre à jour les poids et les biais du réseau
+        // Backward Propagation
 
-        // Affichez la progression
+        // Show progression
         printf("Image %d/%d - Prédiction : %d, Label : %d\n", image_i + 1, nbImages, predicted_class, current_label);
     }
 
-    // Calcul du pourcentage de bonnes réponses
+    // Show ration of performence
     double accuracy = (double)correct_predictions / nbImages * 100.0;
     printf("Pourcentage de bonnes réponses : %.2f%%\n", accuracy);
 
-    // Libérez la mémoire du réseau neuronal, des images et des labels
+    // Dump memory
     destroy_network(network);
     free(images);
     free(labels);
