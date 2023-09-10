@@ -132,7 +132,7 @@ void afficherValeursPixels(uint8_t *images, int n, int largeurImage, int hauteur
     }
 }
 
-void GetImage(uint8_t **image, uint8_t *label, int n) {
+void GetImage(uint8_t **image, uint8_t *label, int *imageRes, int n) {
     const char *nomFichierImages = "../data/train-images.idx3-ubyte";
     const char *nomFichierLabels = "../data/train-labels.idx1-ubyte";
     uint8_t *images, *labels;
@@ -143,10 +143,37 @@ void GetImage(uint8_t **image, uint8_t *label, int n) {
 
     *label = labels[n];
     *image = images + n * largeurImage * hauteurImage;
+    *imageRes = largeurImage;
 
     free(images);
     free(labels);
 }
+
+void GetImages(uint8_t ***images, uint8_t **labels, int *imageRes, int *nbImages) {
+    const char *nomFichierImages = "../data/train-images.idx3-ubyte";
+    const char *nomFichierLabels = "../data/train-labels.idx1-ubyte";
+    uint8_t *_images, *_labels;
+    int nombreImages, largeurImage, hauteurImage, nombreLabels;
+
+    lireMNISTImages(nomFichierImages, &_images, &nombreImages, &largeurImage, &hauteurImage);
+    lireMNISTLabels(nomFichierLabels, &_labels, &nombreLabels);
+
+    *images = (uint8_t **)malloc(nombreImages * sizeof(uint8_t *));
+    if (*images == NULL) {
+        perror("Erreur d'allocation de mémoire pour les images");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < nombreImages; i++) {
+        (*images)[i] = _images + i * largeurImage * hauteurImage;
+    }
+
+    *labels = _labels;
+    *imageRes = largeurImage;
+    *nbImages = nombreImages;
+}
+
+
 
 
 /*
@@ -182,4 +209,6 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
 */
+
