@@ -252,14 +252,14 @@ void saveMatrix(const char *filename, int grid[9][9]) {
 /***************************************************************
  *  Function main: 
  *
- *  load, solved and save solved grid into txt file
+ *  load, solved and save solved grid into result file
  * 
- *  Usage : ./<exe_name> <input_matrix.txt> <output_matrix.txt> 
+ *  Usage : ./<exe_name> <input_matrix.result> <output_matrix.result> 
 ***************************************************************/
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        printf("Usage: %s <input_matrix.txt> <output_matrix.txt>\n", argv[0]);
+        printf("Usage: %s <input_matrix.result> <output_matrix.result>\n", argv[0]);
         return 1; 
     }
 
