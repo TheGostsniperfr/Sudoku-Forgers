@@ -3,7 +3,7 @@
 #include <err.h>
 
 
-SDL_Surface* loadImg(char *path){
+SDL_Surface* loadImg(char *path){    
     SDL_Surface* image = IMG_Load(path);
 
     if(!image)
@@ -15,9 +15,11 @@ SDL_Surface* loadImg(char *path){
 }
 
 void saveImg(SDL_Surface* image, char *filename){
-    IMG_SaveJPG(image, strcat("../data/img_export/",filename), 100);
+    IMG_SaveJPG(image, filename, 100);    
 }
 
+
+/*
 
 int main(int argc, char *argv[]) {
 
@@ -29,4 +31,4 @@ int main(int argc, char *argv[]) {
     saveImg(loadImg(argv[1]), "test.jpeg");
 
     return 0;
-}
+}*/

@@ -23,15 +23,19 @@ typedef struct NeuralNetwork {
 } NeuralNetwork;
 
 
+//We put 0.01 instead of 0 to avoid dead neurons.
 double relu(double x) {
-    return fmax(0, x); 
+    if(x > 0.0){
+        return x;
+    }
+    return 0.01 * x;
 }
 
 double relu_derivative(double x) {
     if (x > 0.0) {
         return 1.0;
     }
-    return 0.0;    
+    return 0.01;    
 }
 
 void softmax(double *x, int len) {
@@ -51,6 +55,14 @@ void softmax(double *x, int len) {
     for (int i = 0; i < len; i++) {
         x[i] /= sum_exp;
     }
+}
+
+double sigmoid(double x){
+    return 1.0/(1.0+exp(-x));
+}
+
+double sigmoid_prime(double x){
+    return sigmoid(x)*(1-sigmoid(x));
 }
 
 
@@ -83,7 +95,6 @@ void initialize_network(NeuralNetwork *network) {
 
     for (int layer_i = 1; layer_i < network->nb_layers; layer_i++) {
         for (int neuron_i = 0; neuron_i < network->layers[layer_i].nb_neurons; neuron_i++) {
-            printf("%d - nb neurons in layer 0 : %d\n", neuron_i, network->layers[0].nb_neurons);
 
             network->layers[layer_i].neurons[neuron_i].bias = random_bias();
 
@@ -171,7 +182,7 @@ void hiddenPropagation(NeuralNetwork *network){
             }
 
             // Activation function (ReLu function)
-            network->layers[layer_i].neurons[neuron_i].output = relu(weighted_sum);
+            network->layers[layer_i].neurons[neuron_i].output = sigmoid(weighted_sum);
         }
     }
 }
@@ -231,6 +242,18 @@ void forward_propagation(NeuralNetwork *network, uint8_t *image, double *output)
 }
 
 
+/***************************************************************
+ *  Function categorical_cross_entropy_loss: 
+ *
+ *  Calculation of neural network reconisation performance
+ *
+ *  @input :
+ *      - *predicted_probs (double) : data outputs by neural networks
+ *      - *true_probs (double) : real data that the neural network needs to find
+ *  @output :
+ *      - (double) : ration
+***************************************************************/
+
 double categorical_cross_entropy_loss(NeuralNetwork *network, double *predicted_probs, double *true_probs) {
     double loss = 0.0;
 
@@ -244,28 +267,7 @@ double categorical_cross_entropy_loss(NeuralNetwork *network, double *predicted_
     return loss;
 }
 
-/***************************************************************
- *  Function mean_categorical_cross_entropy_loss: 
- *
- *  Total calculation of neural network reconisation performance
- *
- *  @input :
- *      - **predicted_probs (double) : data outputs by neural networks
- *      - **true_probs (double) : real data that the neural network needs to find
- *      - nb_images (int) : number of images input
- *
- *  @output :
- *      - (double) : ration
-***************************************************************/
-double mean_categorical_cross_entropy_loss(NeuralNetwork *network, double **predicted_probs, double **true_probs, int nb_images) {
-    double total_loss = 0.0;
 
-    for (int i = 0; i < nb_images; i++) {
-        total_loss += categorical_cross_entropy_loss(network, predicted_probs[i], true_probs[i]);
-    }
-
-    return total_loss / nb_images;
-}
 
 
 /***************************************************************
@@ -276,58 +278,57 @@ double mean_categorical_cross_entropy_loss(NeuralNetwork *network, double **pred
  * 
  *  @input :
  *      - *network (NeuralNetwork) : data outputs by neural networks
- *      - **predicted_probs (double) : input image
+ *      - **predicted_probs (double) : input images digit
  *      - **true_probs (double) : output data (the recognised number)
- *      - nb_images (int) : number of pixel for a image 
+ *      - num_examples (int) : number of pixel for a image 
  *      - learning_rate (double) : rate of the neural network learn 
 ***************************************************************/
 
-void backward_propagation(NeuralNetwork *network, double **predicted_probs, double **true_probs, int nb_images, double learning_rate) {
+void backward_propagation(NeuralNetwork *network, double *predicted_probs, double *true_probs, double learning_rate) {
     int output_layer_index = network->nb_layers - 1;
     int nb_output_neurons = network->layers[output_layer_index].nb_neurons;
 
-    for (int image_i = 0; image_i < nb_images; image_i++) {
-        // Gradients for output layer weights and biases
-        double output_gradients[nb_output_neurons];
+    for (int neuron_i = 0; neuron_i < nb_output_neurons; neuron_i++) {
+        double output_gradient = predicted_probs[neuron_i] - true_probs[neuron_i];
+        double activation_derivative = sigmoid_prime(network->layers[output_layer_index].neurons[neuron_i].output);
 
-        // Calcul des gradients pour la couche de sortie
-        for (int neuron_i = 0; neuron_i < nb_output_neurons; neuron_i++) {
-            output_gradients[neuron_i] = predicted_probs[image_i][neuron_i] - true_probs[image_i][neuron_i];
+        // Mise à jour du biais de la couche de sortie
+        network->layers[output_layer_index].neurons[neuron_i].bias -= learning_rate * output_gradient;
+
+        // Mise à jour des poids de la couche de sortie
+        for (int prev_neuron_i = 0; prev_neuron_i < network->layers[output_layer_index - 1].nb_neurons; prev_neuron_i++) {
+            double weight_gradient = output_gradient * activation_derivative * network->layers[output_layer_index - 1].neurons[prev_neuron_i].output;
+            network->layers[output_layer_index].neurons[neuron_i].weights[prev_neuron_i] -= learning_rate * weight_gradient;
         }
+    }
 
-        // Calcul of gradients for the output layer
-        for (int layer_i = output_layer_index; layer_i > 0; layer_i--) {
-            int nb_neurons = network->layers[layer_i].nb_neurons;
+    // Réalisez la rétropropagation à travers les couches cachées ici (en partant de la couche de sortie et en remontant)
+    for (int layer_i = output_layer_index - 1; layer_i > 0; layer_i--) {
+        int num_neurons = network->layers[layer_i].nb_neurons;
 
-            for (int neuron_i = 0; neuron_i < nb_neurons; neuron_i++) {
-                double activation_derivative = relu_derivative(network->layers[layer_i].neurons[neuron_i].output);
+        for (int neuron_i = 0; neuron_i < num_neurons; neuron_i++) {
+            double activation_derivative = sigmoid_prime(network->layers[layer_i].neurons[neuron_i].output);
+            double output_gradient = 0.0;
 
-                // Calculation of the weighted sum of the gradients of the neurons in the next layer
-                double output_gradient = 0.0;
+            // Calcul de la somme pondérée des gradients des neurones de la couche suivante
+            for (int next_neuron_i = 0; next_neuron_i < network->layers[layer_i + 1].nb_neurons; next_neuron_i++) {
+                output_gradient += predicted_probs[next_neuron_i] - true_probs[next_neuron_i];
+            }
 
-                if (layer_i == output_layer_index) {
-                    output_gradient = output_gradients[neuron_i];
-                } else {
-                    for (int next_neuron_i = 0; next_neuron_i < network->layers[layer_i + 1].nb_neurons; next_neuron_i++) {
-                        output_gradient += output_gradients[next_neuron_i] * network->layers[layer_i + 1].neurons[next_neuron_i].weights[neuron_i];
-                    }
-                }
+            // Calcul du gradient pour le neurone
+            output_gradient *= activation_derivative;
 
-                // Gradient calcul
-                double neuron_gradient = output_gradient * activation_derivative;
+            // Mise à jour du biais de la couche cachée
+            network->layers[layer_i].neurons[neuron_i].bias -= learning_rate * output_gradient;
 
-                // Update of hte bias
-                network->layers[layer_i].neurons[neuron_i].bias -= learning_rate * neuron_gradient;
-
-                // Update of the weight
-                for (int prev_neuron_i = 0; prev_neuron_i < network->layers[layer_i - 1].nb_neurons; prev_neuron_i++) {
-                    network->layers[layer_i].neurons[neuron_i].weights[prev_neuron_i] -= learning_rate * neuron_gradient * network->layers[layer_i - 1].neurons[prev_neuron_i].output;
-                }
+            // Mise à jour des poids de la couche cachée
+            for (int prev_neuron_i = 0; prev_neuron_i < network->layers[layer_i - 1].nb_neurons; prev_neuron_i++) {
+                double weight_gradient = output_gradient * network->layers[layer_i - 1].neurons[prev_neuron_i].output;
+                network->layers[layer_i].neurons[neuron_i].weights[prev_neuron_i] -= learning_rate * weight_gradient;
             }
         }
     }
 }
-
 
 
 
@@ -339,65 +340,86 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    network->nb_layers = 3; 
+    network->nb_layers = 3;
     network->layers = (Layer *)malloc(network->nb_layers * sizeof(Layer));
     if (network->layers == NULL) {
         perror("Erreur d'allocation de mémoire pour les couches du réseau neuronal");
         exit(EXIT_FAILURE);
     }
 
-    //Numebr of neurone by layers
-    //layers.first -> input layer | layers.last -> output layer
-    network->layers[0].nb_neurons = 784; 
-    network->layers[1].nb_neurons = 128; 
-    network->layers[2].nb_neurons = 10;  
+    // Numebr of neurone by layers
+    // layers.first -> input layer | layers.last -> output layer
+    network->layers[0].nb_neurons = 784;
+    network->layers[1].nb_neurons = 512;
+
+    network->layers[2].nb_neurons = 10;
+
+    // Allocate memory for neurons in each layer
+    for (int layer_i = 0; layer_i < network->nb_layers; layer_i++) {
+        network->layers[layer_i].neurons = (Neuron *)malloc(network->layers[layer_i].nb_neurons * sizeof(Neuron));
+        if (network->layers[layer_i].neurons == NULL) {
+            perror("Erreur d'allocation de mémoire pour les neurones");
+            exit(EXIT_FAILURE);
+        }
+    }
 
     initialize_network(network);
 
-
-    //Get images from data set
+    // Get images from data set
     uint8_t *images = NULL;
     uint8_t *labels = NULL;
     int imageRes = 0;
     int nbImages = 0;
 
+
     GetImages(&images, &labels, &imageRes, &nbImages);
 
-    // Perform training on all images
-    int correct_predictions = 0;
-    for (int image_i = 0; image_i < nbImages; image_i++) {
+    nbImages = 1000;
 
-        uint8_t *current_image = images + image_i * imageRes * imageRes;
-        uint8_t current_label = labels[image_i];
+    // Définition du taux d'apprentissage
+    double learning_rate = 0.1;
 
-        // Forward propagation
-        double output[10]; 
-        forward_propagation(network, current_image, output);
+    // Boucle d'apprentissage
+    int maxIterations = 1000; // Nombre maximum d'itérations
+    for (int iteration = 0; iteration < maxIterations; iteration++) {
+        int correct_predictions = 0;
 
-        // Prediction calcul
-        int predicted_class = 0;
-        for (int i = 1; i < 10; i++) {
-            if (output[i] > output[predicted_class]) {
-                predicted_class = i;
+        // Boucle sur chaque image
+        for (int image_i = 0; image_i < nbImages; image_i++) {
+            uint8_t *current_image = images + image_i * imageRes * imageRes;
+            uint8_t current_label = labels[image_i];
+
+            // Propagation avant
+            double output[10];
+            forward_propagation(network, current_image, output);
+
+            // Calcul de la prédiction
+            int predicted_class = 0;
+            for (int i = 1; i < 10; i++) {
+                if (output[i] > output[predicted_class]) {
+                    predicted_class = i;
+                }
             }
+
+            // Vérification de la prédiction
+            if (predicted_class == current_label) {
+                correct_predictions++;
+            }
+
+            // Préparation des vraies probabilités
+            double true_probs[10] = {0.0};
+            true_probs[current_label] = 1.0;
+
+            // Rétropropagation et mise à jour des poids et biais
+            backward_propagation(network, output, true_probs, learning_rate);
         }
 
-        // Check that the prediction is correct
-        if (predicted_class == current_label) {
-            correct_predictions++;
-        }
-
-        // Backward Propagation
-
-        // Show progression
-        printf("Image %d/%d - Prédiction : %d, Label : %d\n", image_i + 1, nbImages, predicted_class, current_label);
+        // Calcul du pourcentage de bonnes réponses
+        double accuracy = (double)correct_predictions / nbImages * 100.0;
+        printf("Iteration %d, Pourcentage de bonnes réponses : %.2f%%\n", iteration + 1, accuracy);
     }
 
-    // Show ration of performence
-    double accuracy = (double)correct_predictions / nbImages * 100.0;
-    printf("Pourcentage de bonnes réponses : %.2f%%\n", accuracy);
-
-    // Dump memory
+    // Libération de la mémoire du réseau neuronal, des images et des labels
     destroy_network(network);
     free(images);
     free(labels);
