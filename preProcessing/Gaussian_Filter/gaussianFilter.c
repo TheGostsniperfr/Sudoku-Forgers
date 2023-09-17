@@ -11,7 +11,7 @@
 #define KERNEL_SIZE 3
 
 //Standard deviation of the gaussian matrix
-#define KERNEL_SIGMA 1
+#define KERNEL_SIGMA 3
 
 
 double** createGaussianKernel(){
