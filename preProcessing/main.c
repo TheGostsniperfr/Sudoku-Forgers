@@ -1,5 +1,5 @@
-#include "preProcessing.h"
-#include "gaussianFilter.h"
+#include "SDL_Function/sdlFunction.h"
+#include "Gaussian_Filter/gaussianFilter.h"
 
 int main(){
     
@@ -10,11 +10,8 @@ int main(){
     }else{
         img = applyGaussianFilter(img);
         printf("Apply Gaussian filter\n");
-        saveImg(img, "test.jpg");
-    }
-
-
-    
+        saveImg(img, "GaussianOutput.jpg");
+    }    
 
     
     SDL_FreeSurface(img);

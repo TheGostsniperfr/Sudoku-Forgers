@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "preProcessing.h"
+#include "../SDL_Function/sdlFunction.h"
 
 
 //Size of the gaussian matrix. (Must be a odd number !!)
@@ -55,40 +55,36 @@ void printKernel(double** kernel){
     }    
 }
 
-SDL_Surface* applyGaussianFilter(SDL_Surface* img){
+
+
+SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
 
     double** kernel = createGaussianKernel();    
-    SDL_Surface *outputImage = SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0, 0);
                  
+    SDL_Surface *outputSurface = SDL_CreateRGBSurface(0, inputSurface->w, inputSurface->h, 32, 0, 0, 0, 0);
 
-
-    for (int x = 0; x < img->w; x++) {
-        for (int y = 0; y < img->h; y++) {
-
-            //get current pixel
-            Uint32 pixel = *((Uint32*)img->pixels + y * img->pitch / sizeof(Uint32) + x);
+    // Copie de l'image d'entrée dans l'image de sortie en utilisant des boucles
+    for (int y = 0; y < inputSurface->h; ++y) {
+        for (int x = 0; x < inputSurface->w; ++x) {
+            //get pixel 
+            Uint32 pixel = getpixel(inputSurface, x, y);
 
             Uint8 r, g, b, a;
-
-            SDL_GetRGBA(pixel, img->format, &r, &g, &b, &a);
+            SDL_GetRGBA(pixel, inputSurface->format, &r, &g, &b, &a);
 
             double newR = 0.0, newG = 0.0, newB = 0.0;
             for (int i = 0; i < KERNEL_SIZE; i++) {
                 for (int j = 0; j < KERNEL_SIZE; j++) {
+                    int newX = x + i ;
+                    int newY = y + j ;
+                    if (newX >= 0 && newX < inputSurface->w && newY >= 0 && newY < inputSurface->h) {
 
-                    //get neighbor pixel
-                    int newX = x + i - KERNEL_SIZE / 2;
-                    int newY = y + j - KERNEL_SIZE / 2;
-
-                     //check if the neighbor pixel is valid
-                    if (newX >= 0 && newX < img->w && newY >= 0 && newY < img->h) {
-
-                        Uint32 newPixel = *((Uint32*)img->pixels + newY * img->pitch / sizeof(Uint32) + newX);
+                        
+                        Uint32 newPixel = getpixel(inputSurface, newX, newY);
+                        
 
                         Uint8 nr, ng, nb, na;
-                        SDL_GetRGBA(newPixel, img->format, &nr, &ng, &nb, &na);
-
-                        //Apply gaussian filter to a new pixel
+                        SDL_GetRGBA(newPixel, inputSurface->format, &nr, &ng, &nb, &na);
                         newR += kernel[i][j] * nr;
                         newG += kernel[i][j] * ng;
                         newB += kernel[i][j] * nb;
@@ -96,25 +92,17 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* img){
                 }
             }
 
-            //Insert the new pixel in the output image
-            Uint32 newPixel = SDL_MapRGBA(img->format, (Uint8)newR, (Uint8)newG, (Uint8)newB, a);
-            ((Uint32 *)outputImage->pixels)[y * img->w + x] = newPixel;
+            Uint32 newPixel = SDL_MapRGBA(inputSurface->format, (Uint8)newR, (Uint8)newG, (Uint8)newB, a);
+            
+
+            //set new pixel
+            *((Uint32*)((Uint8*)outputSurface->pixels + y * outputSurface->pitch + x * sizeof(Uint32))) = newPixel;
         }
     }
 
-    return outputImage;
+    return outputSurface;
 
 
 }
 
-/*
-int main(){
-    
 
-    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_01.jpeg");
-
-    applyGaussianFilter(img);
-
-    saveImg(img, "gaussianOutput.jpeg");
-
-}*/

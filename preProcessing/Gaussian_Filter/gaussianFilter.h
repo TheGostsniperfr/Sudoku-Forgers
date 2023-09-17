@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "preProcessing.h"
+#include "../SDL_Function/sdlFunction.h"
 
 SDL_Surface* applyGaussianFilter(SDL_Surface* img);
 
