@@ -11,6 +11,8 @@ SDL_Surface* loadImg(char *path){
         errx(1, "loadImg: Error to load img");        
     }
 
+    //Convert to rgba 8888
+
     return image;
 }
 
@@ -53,16 +55,16 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 }
 
 
-/*
+SDL_Surface* fillRect(SDL_Surface* img, int _x1, int _x2, int _y1, int _y2, Uint32 pixel){
 
-int main(int argc, char *argv[]) {
+    for (int x = _x1; x < _x2; x++)
+    {
+        for (int y = _y1; y < _y2; y++)
+        {
+            //set new pixel
+            ((Uint32 *)img->pixels)[y * img->w + x] = pixel;
+        }
+    }
 
-    if(argc != 2){
-        errx(1, "Usage : %s : <image_path>", argv[0]);
-        return 1;
-    }    
-
-    saveImg(loadImg(argv[1]), "test.jpeg");
-
-    return 0;
-}*/
+    return img;
+}
