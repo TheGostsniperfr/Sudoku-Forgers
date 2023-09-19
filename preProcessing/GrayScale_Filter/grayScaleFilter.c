@@ -4,14 +4,17 @@
 
 SDL_Surface* applyGrayScaleFilter(SDL_Surface* inputSurface){
 
-    SDL_Surface *outputSurface = SDL_CreateRGBSurface(0, inputSurface->w, inputSurface->h, 32, 0, 0, 0, 0);
+    SDL_Surface *outputSurface = SDL_ConvertSurfaceFormat(inputSurface, SDL_PIXELFORMAT_ABGR8888, 0);
 
-    for (int x = 0; x < inputSurface->w; x++)
+    Uint32* pixels = (Uint32*) outputSurface->pixels;
+
+
+    for (int x = 0; x < outputSurface->w; x++)
     {
-        for (int y = 0; y < inputSurface->h; y++)
+        for (int y = 0; y < outputSurface->h; y++)
         {
             //get pixel
-            Uint32 pixel = getpixel(inputSurface, x, y);
+            Uint32 pixel = pixels[y * outputSurface->w + x];
 
             //get color of the pixel
             Uint8 r, g, b, a;
@@ -24,7 +27,7 @@ SDL_Surface* applyGrayScaleFilter(SDL_Surface* inputSurface){
             
 
             //set new pixel
-            ((Uint32 *)outputSurface->pixels)[y * inputSurface->w + x] = newPixel;
+            pixels[y * outputSurface->w + x] = newPixel;
         }
         
     }

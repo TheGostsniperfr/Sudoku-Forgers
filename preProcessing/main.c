@@ -21,10 +21,13 @@ int main(){
 
         int* histo;
         histo = findHistogram(img);
+
+        printf()
+
         //SDL_Surface* histoImg = createHistogramImg(histo);
         //saveImg(histoImg, "HistoGram.jpg");
 
-        
+        //free(histo);        
     }    
 
     

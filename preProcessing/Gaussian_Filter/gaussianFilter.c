@@ -61,13 +61,15 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
 
     double** kernel = createGaussianKernel();    
                  
-    SDL_Surface *outputSurface = SDL_CreateRGBSurface(0, inputSurface->w, inputSurface->h, 32, 0, 0, 0, 0);
+    SDL_Surface *outputSurface = SDL_ConvertSurfaceFormat(inputSurface, SDL_PIXELFORMAT_ABGR8888, 0);
+
+    Uint32* pixels = (Uint32*) outputSurface->pixels;
 
     // Copie de l'image d'entrée dans l'image de sortie en utilisant des boucles
-    for (int y = 0; y < inputSurface->h; ++y) {
-        for (int x = 0; x < inputSurface->w; ++x) {
+    for (int y = 0; y < outputSurface->h; ++y) {
+        for (int x = 0; x < outputSurface->w; ++x) {
             //get pixel 
-            Uint32 pixel = getpixel(inputSurface, x, y);
+            Uint32 pixel = pixels[y * outputSurface->w + x];
 
             Uint8 r, g, b, a;
             SDL_GetRGBA(pixel, inputSurface->format, &r, &g, &b, &a);
@@ -77,14 +79,14 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
                 for (int j = 0; j < KERNEL_SIZE; j++) {
                     int newX = x + i ;
                     int newY = y + j ;
-                    if (newX >= 0 && newX < inputSurface->w && newY >= 0 && newY < inputSurface->h) {
+                    if (newX >= 0 && newX < outputSurface->w && newY >= 0 && newY < outputSurface->h) {
 
                         
-                        Uint32 newPixel = getpixel(inputSurface, newX, newY);
+                        Uint32 newPixel = pixels[newY * outputSurface->w + newX];
                         
 
                         Uint8 nr, ng, nb, na;
-                        SDL_GetRGBA(newPixel, inputSurface->format, &nr, &ng, &nb, &na);
+                        SDL_GetRGBA(newPixel, outputSurface->format, &nr, &ng, &nb, &na);
                         newR += kernel[i][j] * nr;
                         newG += kernel[i][j] * ng;
                         newB += kernel[i][j] * nb;
@@ -92,13 +94,14 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
                 }
             }
 
-            Uint32 newPixel = SDL_MapRGBA(inputSurface->format, (Uint8)newR, (Uint8)newG, (Uint8)newB, a);
+            Uint32 newPixel = SDL_MapRGBA(outputSurface->format, (Uint8)newR, (Uint8)newG, (Uint8)newB, a);
             
 
             //set new pixel
-            *((Uint32*)((Uint8*)outputSurface->pixels + y * outputSurface->pitch + x * sizeof(Uint32))) = newPixel;
+            pixels[y * outputSurface->w + x] = newPixel;
         }
     }
+
 
     return outputSurface;
 
