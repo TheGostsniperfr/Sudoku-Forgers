@@ -12,22 +12,24 @@ int main(){
     if(img == NULL){
         printf("Error to load img !\n");
     }else{
-        img = applyGaussianFilter(img);
-        printf("Apply Gaussian filter\n");
-        saveImg(img, "GaussianOutput.jpg");
-        
+
         img = applyGrayScaleFilter(img);
         saveImg(img, "GrayScaleOutput.jpg");
+
+        img = applyGaussianFilter(img);
+        saveImg(img, "GaussianOutput.jpg");
+        
+        
 
         int* histo;
         histo = findHistogram(img);
 
-        printf()
 
-        //SDL_Surface* histoImg = createHistogramImg(histo);
-        //saveImg(histoImg, "HistoGram.jpg");
 
-        //free(histo);        
+        SDL_Surface* histoImg = createHistogramImg(histo);
+        saveImg(histoImg, "HistoGram.jpg");
+
+        free(histo);        
     }    
 
     

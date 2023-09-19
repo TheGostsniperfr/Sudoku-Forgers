@@ -2,10 +2,16 @@
 #include "SDL2/SDL_image.h"
 #include "../SDL_Function/sdlFunction.h"
 
-#define HISTO_W_BAR 5
+#define HISTO_W_BAR 50
 
 int* findHistogram(SDL_Surface* img){
-    int* histogram = (int*)malloc(256 * sizeof(int));
+    int* histogram = (int*)malloc(256 * sizeof(int)) ;
+
+    for (int i = 0; i < 256; i++)
+    {
+        histogram[i] = 0;
+    }
+    
 
     Uint32* pixels = (Uint32*) img->pixels;
 
@@ -25,6 +31,16 @@ int* findHistogram(SDL_Surface* img){
         }        
     }
     
+    /*
+    int wh = img->w*img->h;
+
+    for (int i = 0; i < 256; i++)
+    {
+        histogram[i] = histogram[i] / wh;
+    }
+    */
+
+
     return histogram;
 }
 
