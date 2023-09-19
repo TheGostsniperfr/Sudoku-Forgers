@@ -4,8 +4,11 @@
 
 #define HISTO_W_BAR 50
 
-int* findHistogram(SDL_Surface* img){
-    int* histogram = (int*)malloc(256 * sizeof(int)) ;
+#define HISTO_WIDTH 1000  // Width of the histogram image
+#define HISTO_HEIGHT 800 // Height of the histogram image
+
+double* findHistogram(SDL_Surface* img){
+    double* histogram = (double*)malloc(256 * sizeof(double)) ;
 
     for (int i = 0; i < 256; i++)
     {
@@ -31,23 +34,23 @@ int* findHistogram(SDL_Surface* img){
         }        
     }
     
-    /*
-    int wh = img->w*img->h;
+    
+    //normalisation of the histogram
 
-    for (int i = 0; i < 256; i++)
-    {
-        histogram[i] = histogram[i] / wh;
+    for (int i = 0; i < 256; i++) {
+        histogram[i] /= (img->w * img->h);
     }
-    */
+        
 
 
     return histogram;
 }
 
 
-SDL_Surface* createHistogramImg(int* histogram) {
-    // Get histogram max value for the height
-    int maxVal = histogram[0];
+
+
+SDL_Surface* createHistogramImg(double* histogram) {
+    double maxVal = histogram[0];
 
     for (int i = 0; i < 256; i++) {
         if (maxVal < histogram[i]) {
@@ -55,15 +58,17 @@ SDL_Surface* createHistogramImg(int* histogram) {
         }
     }
 
-    SDL_Surface* outputSurface = SDL_CreateRGBSurfaceWithFormat(0, 256 * HISTO_W_BAR, maxVal, 32, SDL_PIXELFORMAT_ABGR8888);
+    SDL_Surface* outputSurface = SDL_CreateRGBSurfaceWithFormat(0, HISTO_WIDTH, HISTO_HEIGHT, 32, SDL_PIXELFORMAT_ABGR8888);
     Uint32 pixel = SDL_MapRGBA(outputSurface->format, 255, 0, 0, 0);
 
     for (int x = 0; x < 256; x++) {
+        int barHeight = (int)((histogram[x] / maxVal) * HISTO_HEIGHT);
+
         SDL_Rect rect;
-        rect.x = x * HISTO_W_BAR;
-        rect.y = maxVal - histogram[x]; 
-        rect.w = HISTO_W_BAR;
-        rect.h = histogram[x];
+        rect.x = x * (HISTO_WIDTH / 256);
+        rect.y = HISTO_HEIGHT - barHeight;
+        rect.w = HISTO_WIDTH / 256;
+        rect.h = barHeight;
 
         SDL_FillRect(outputSurface, &rect, pixel);
     }
