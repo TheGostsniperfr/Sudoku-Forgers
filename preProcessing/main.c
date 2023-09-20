@@ -8,7 +8,7 @@
 int main(){
     
 
-    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_02.jpeg");
+    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_03.jpeg");
     
     if(img == NULL){
         printf("Error to load img !\n");
@@ -19,18 +19,17 @@ int main(){
 
         img = applyGaussianFilter(img);
         saveImg(img, "GaussianOutput.jpg");
-        
-        
 
         double* histo;
         histo = findHistogram(img);
 
         SDL_Surface* histoImg = createHistogramImg(histo);
         saveImg(histoImg, "HistoGram.jpg");
+        free(histoImg);        
 
-        double threshold = findOtsuSigma(histo);
+        double threshold = findOtsuThreshold(histo, img->w*img->h);
 
-        img = imgToBin(img, threshold);
+        img = binarization(img, threshold);
         saveImg(img, "Binarized.jpg");
 
         free(histo);        

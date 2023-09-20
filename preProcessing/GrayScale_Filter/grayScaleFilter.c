@@ -2,6 +2,17 @@
 #include "SDL2/SDL_image.h"
 #include "../SDL_Function/sdlFunction.h"
 
+
+/***************************************************************
+ *  Function applyGrayScaleFilter: 
+ *
+ *  Apply the graysscale filter on an image
+ *
+ *  @input :
+ *      - inputSurface (SDL_Surface*) : img to apply the grayscale filter
+ *  @output :
+ *      - outputSurface (SDL_Surface*) : output image with the grayscale filter applied
+***************************************************************/
 SDL_Surface* applyGrayScaleFilter(SDL_Surface* inputSurface){
 
     SDL_Surface *outputSurface = SDL_ConvertSurfaceFormat(inputSurface, SDL_PIXELFORMAT_ABGR8888, 0);

@@ -4,7 +4,20 @@
 
 #include <stdio.h>
 
-double findOtsuSigma(double* histogram, int numPixels) {
+
+/***************************************************************
+ *  Function findOtsuThreshold: 
+ *
+ *  Find the optimal threshold using Otsu method
+ *
+ *  @input :
+ *      - histogram (double*) : histogram of the image
+ *      - numPixels (int) : total number of pixel in the image
+ *  @output :
+ *      - threshold (double) : the optimal threshold
+***************************************************************/
+double findOtsuThreshold(double* histogram, int numPixels) {
+
     double sigma_max = -1;
     int optimal_threshold = 0;
 
@@ -47,9 +60,18 @@ double findOtsuSigma(double* histogram, int numPixels) {
 }
 
 
-
-
-SDL_Surface* imgToBin(SDL_Surface* img, double threshold){
+/***************************************************************
+ *  Function binarization: 
+ *
+ *  Binarization of the image, set p(i) white if p(i).Value > threshold, else p(i) = black
+ *
+ *  @input :
+ *      - img (SDL_Surface*) : input image to binarisied
+ *      - threshold (double) : the optimal threshold of the input image
+ *  @output :
+ *      - output image (SDL_Surface*) : the binarised image (with otsu method)
+***************************************************************/
+SDL_Surface* binarization(SDL_Surface* img, double threshold){
     Uint32* pixels = img->pixels;
 
     SDL_Surface *outputSurface = SDL_ConvertSurfaceFormat(img, SDL_PIXELFORMAT_ABGR8888, 0);
@@ -68,7 +90,7 @@ SDL_Surface* imgToBin(SDL_Surface* img, double threshold){
             Uint8 r, ignore_g, ignore_b, ignore_a;
             SDL_GetRGBA(pixel, img->format, &r, &ignore_g, &ignore_b, &ignore_a);
 
-            if(r < threshold){
+            if(r > threshold){
                 pixelsOut[y * img->w + x] = SDL_MapRGBA(img->format, 255, 255, 255, 255);
             }else{
                 pixelsOut[y * img->w + x] = SDL_MapRGBA(img->format, 0, 0, 0, 255);

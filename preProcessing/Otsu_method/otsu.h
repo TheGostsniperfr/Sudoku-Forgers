@@ -9,8 +9,8 @@
 #include "SDL2/SDL_image.h"
 #include "../SDL_Function/sdlFunction.h"
 
-double findOtsuSigma(double* histogram);
-SDL_Surface* imgToBin(SDL_Surface* img, double threshold);
+double findOtsuThreshold(double* histogram, int numPixels);
+SDL_Surface* binarization(SDL_Surface* img, double threshold);
 
 
 #endif

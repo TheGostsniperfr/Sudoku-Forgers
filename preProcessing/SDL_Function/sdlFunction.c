@@ -3,6 +3,16 @@
 #include <err.h>
 
 
+/***************************************************************
+ *  Function loadImg: 
+ *
+ *  Function to load and convert image in SDL_PIXELFORMAT_ABGR8888 pixel format
+ *
+ *  @input :
+ *      - path (*path) : path of the image to load
+ *  @output :
+ *      - output image (SDL_Surface*) : the image loaded
+***************************************************************/
 SDL_Surface* loadImg(char *path){    
     SDL_Surface* image = IMG_Load(path);
 
@@ -12,27 +22,22 @@ SDL_Surface* loadImg(char *path){
     }
 
     //Convert to rgba 8888
+    image = SDL_ConvertSurfaceFormat(image, SDL_PIXELFORMAT_ABGR8888, 0);
+
 
     return image;
 }
 
+
+/***************************************************************
+ *  Function saveImg: 
+ *
+ *  Function to save an image
+ *
+ *  @input :
+ *      - image (SDL_Surface*) : the image to save
+ *      - filename (char *) : the name of the image to save
+***************************************************************/
 void saveImg(SDL_Surface* image, char *filename){
     IMG_SaveJPG(image, filename, 100);    
-}
-
-
-SDL_Surface* fillRect(SDL_Surface* img, int _x1, int _x2, int _y1, int _y2, Uint32 pixel){
-
-    Uint32* pixels = (Uint32*) img->pixels;
-
-    for (int x = _x1; x < _x2; x++)
-    {
-        for (int y = _y1; y < _y2; y++)
-        {
-            //set new pixel
-            pixels[y * img->w + x] = pixel;
-        }
-    }
-
-    return img;
 }

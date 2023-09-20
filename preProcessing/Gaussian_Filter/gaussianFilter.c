@@ -13,7 +13,14 @@
 //Standard deviation of the gaussian matrix
 #define KERNEL_SIGMA 3
 
-
+/***************************************************************
+ *  Function createGaussianKernel: 
+ *
+ *  Create a gaussian kernel with defined KERNEL_SIZE and KERNEL_SIGMA
+ *
+ *  @output :
+ *      - (double**) : matrix of the lernel
+***************************************************************/
 double** createGaussianKernel(){
     //sum of all number in the kernel is equal to 1
 
@@ -43,7 +50,14 @@ double** createGaussianKernel(){
     return kernel;
 }
 
-//debug function to print the gaussian kernel
+/***************************************************************
+ *  Function categorical_cross_entropy_loss: 
+ *
+ *  Debug function to print the gaussian kernel
+ *
+ *  @input :
+ *      - kernel (double**) : Gaussian kernel
+***************************************************************/
 void printKernel(double** kernel){
     for (int y = 0; y < KERNEL_SIZE; y++)
     {
@@ -56,7 +70,16 @@ void printKernel(double** kernel){
 }
 
 
-
+/***************************************************************
+ *  Function applyGaussianFilter: 
+ *
+ *  Apply the gaussian filter on an image
+ *
+ *  @input :
+ *      - inputSurface (SDL_Surface*) : img to apply the gaussian filter
+ *  @output :
+ *      - outputSurface (SDL_Surface*) : output image with the gaussian filter applied
+***************************************************************/
 SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
 
     double** kernel = createGaussianKernel();    
