@@ -173,7 +173,7 @@ void sudokuSolver(int grid[9][9]) {
 
 
 /***************************************************************
- *  Function loadFile: 
+ *  Function loadGrid: 
  *
  *  Open matrix file and load data into 9x9 matrix
  *
@@ -184,11 +184,11 @@ void sudokuSolver(int grid[9][9]) {
  *      - (int) : 0 -> no error, 1 -> error to load data
 ***************************************************************/
 
-int loadFile(const char *filename, int grid[9][9]) {
+int loadGrid(const char *filename, int grid[9][9]) {
     FILE *file = fopen(filename, "r");
 
     if (file == NULL) {
-        perror("loadFile -> Error to open file");
+        perror("loadGrid -> Error to open file");
         return 1; 
     }
 
@@ -249,6 +249,7 @@ void saveMatrix(const char *filename, int grid[9][9]) {
 }
 
 
+
 /***************************************************************
  *  Function main: 
  *
@@ -256,7 +257,7 @@ void saveMatrix(const char *filename, int grid[9][9]) {
  * 
  *  Usage : ./<exe_name> <input_matrix.result> <output_matrix.result> 
 ***************************************************************/
-
+/*
 int main(int argc, char *argv[]) {
     if (argc != 3) {
         printf("Usage: %s <input_matrix.result> <output_matrix.result>\n", argv[0]);
@@ -268,7 +269,7 @@ int main(int argc, char *argv[]) {
 
     int testGrid[9][9];
 
-    if (loadFile(inputFileName, testGrid) == 0) {
+    if (loadGrid(inputFileName, testGrid) == 0) {
 
         //solve grid : 
         sudokuSolver(testGrid);
@@ -283,3 +284,5 @@ int main(int argc, char *argv[]) {
 
     return 0; 
 }
+
+*/

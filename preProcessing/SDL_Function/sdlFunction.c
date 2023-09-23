@@ -41,3 +41,9 @@ SDL_Surface* loadImg(char *path){
 void saveImg(SDL_Surface* image, char *filename){
     IMG_SaveJPG(image, filename, 100);    
 }
+
+
+void drawRect(SDL_Surface* surface, int x0, int y0, int w, int h, Uint32 pixel){
+    SDL_Rect rect =  {x0, y0, w ,h};
+    SDL_FillRect(surface, &rect, pixel);
+}

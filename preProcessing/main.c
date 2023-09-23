@@ -8,7 +8,7 @@
 int main(){
     
 
-    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_03.jpeg");
+    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_02.jpeg");
     
     if(img == NULL){
         printf("Error to load img !\n");
