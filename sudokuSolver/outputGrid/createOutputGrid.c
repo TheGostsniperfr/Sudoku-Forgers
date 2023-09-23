@@ -11,17 +11,42 @@
 #define GRID_HEIGHT 1000
 
 //wirdth of each border of the sudoku grid in px
-#define SMALL_BORDER 2
-#define LARGE_BORDER 8
+#define WIDTH_BORDER 15
+#define RATIO_BORDER 0.5
+#define NB_SUB_square 3
 
-void createSquare(SDL_Surface* img, int x0, int y0, int w, int h, Uint32 pixelLine, Uint32 pixelBg, int lW){
-    
 
-    drawRect(img, x0, y0, w, h, pixelLine);
+void createGrid(SDL_Surface* img, int x_0, int y_0, int w, double widthBorder, int depthLevel, Uint32 lineColor, Uint32 bgColor){
+    if(depthLevel <= 0){
+        return;
+    }
 
-    drawRect(img, x0+lW, y0+lW, w-2*lW, h-2*lW, pixelBg);
+    //Draw line
+    drawRect(img, x_0, y_0, w, w, lineColor);
 
+    //Draw bg
+    drawRect(img, x_0+widthBorder, y_0+widthBorder, w-2*widthBorder, w-2*widthBorder, bgColor);
+
+
+    int new_widthBorder = (int) (widthBorder * RATIO_BORDER);
+    int new_w = w / NB_SUB_square ;
+
+
+    for (int x = 0; x < NB_SUB_square; x++)
+    {
+        for (int y = 0; y < NB_SUB_square; y++)
+        {
+            
+            int new_x_0 = x_0 + widthBorder - new_widthBorder + x * (new_w - new_widthBorder);
+            int new_y_0 = y_0 + widthBorder - new_widthBorder + y * (new_w - new_widthBorder);
+
+            
+
+            createGrid(img, new_x_0, new_y_0, new_w, new_widthBorder, depthLevel-1, lineColor, bgColor);
+        }        
+    }
 }
+
 
 SDL_Surface* createOutputGrid(const char *path){
     int testGrid[9][9];
@@ -40,24 +65,7 @@ SDL_Surface* createOutputGrid(const char *path){
     Uint32 blackPixel = SDL_MapRGBA(outputImg->format, 0, 0, 0, 0);
 
 
-
-    
-
-    int squareWidth = GRID_HEIGHT / 9;
-
-    for (int y = 0; y < 3; y++)
-    {
-        for (int x = 0; x < 3; x++)
-        {
-            createSquare(outputImg, x * squareWidth, y * squareWidth, squareWidth, squareWidth, blackPixel, whitePixel, SMALL_BORDER);
-        }
-        
-    }
-    
-    
-    
-    
-    
+    createGrid(outputImg, 0,0, outputImg->w, WIDTH_BORDER, 3, blackPixel, whitePixel);
 
     
     saveImg(outputImg, "outputGrid.jpg");
