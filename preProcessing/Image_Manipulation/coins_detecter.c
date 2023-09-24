@@ -1,24 +1,20 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
 #include "../SDL_Function/sdlFunction.h"
+#include "math.h"
 
+#include "pixel.h"
 
 /***************************************************************
- *  Function ....: 
- *
+ *  Function detecterCoins: 
  *  
+ *  Fonction to find all the corner of the sudoku's grid
  *
  *  @input :
  *      - 
  *  @output :
  *      - 
 ***************************************************************/
-Uint8 getPixel(SDL_Surface* surface, int x, int y) {
-    int Bytes_par_pixel = surface->format->BytesPerPixel;
-    Uint8 *pixel = (Uint8 *)surface->pixels + y * surface->pitch + x * Bytes_par_pixel;
-    return *pixel;
-}
-
 void detecterCoins(SDL_Surface* surface, int* points) {
     // Initialisation des valeurs minimales/maximales
     int minSum = surface->w + surface->h;
@@ -28,7 +24,7 @@ void detecterCoins(SDL_Surface* surface, int* points) {
 
     for (int y = 0; y < surface->h; ++y) {
         for (int x = 0; x < surface->w; ++x) {
-            Uint8 pixelValue = getPixel(surface, x, y);
+            Uint8 pixelValue = getPixel8(surface, x, y);
             if (pixelValue != 0xff) {
                 // Si le pixel est blanc on continue sans entrer dans la boucle
                 // Sinon l'on vérifie si l'on est arrivé a un coin
@@ -44,8 +40,8 @@ void detecterCoins(SDL_Surface* surface, int* points) {
 
                 if (sum >= maxSum) {
                     maxSum = sum;
-                    points[4] = x; // oin inferieur droite -> x
-                    points[5] = y; // oin inferieur droite -> y
+                    points[4] = x; // coin inferieur droite -> x
+                    points[5] = y; // coin inferieur droite -> y
                 }
 
                 if (diff < minDiff) {
@@ -62,48 +58,4 @@ void detecterCoins(SDL_Surface* surface, int* points) {
             }
         }
     }
-}
-
-/***************************************************************
- *  Function ....: 
- *
- *  
- *
- *  @input :
- *      - 
- *  @output :
- *      - 
-***************************************************************/
-int** create_homo_matrix(int* coordonate)
-{
-    
-}
-
-
-/***************************************************************
- *  Function ....: 
- *
- *  
- *
- *  @input :
- *      - 
- *  @output :
- *      - 
-***************************************************************/
-//interpolation fonction
-
-
-/***************************************************************
- *  Function ....: 
- *
- *  
- *
- *  @input :
- *      - 
- *  @output :
- *      - 
-***************************************************************/
-SDL_Surface* application(SDL_Surface* surface)
-{
-
 }

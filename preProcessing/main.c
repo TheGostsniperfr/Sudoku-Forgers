@@ -3,6 +3,7 @@
 #include "GrayScale_Filter/grayScaleFilter.h"
 #include "Histogram_Lib/histogram.h"
 #include "Otsu_method/otsu.h"
+#include "Image_Manipulation/rotation.h"
 
 
 int main(){
@@ -31,6 +32,9 @@ int main(){
 
         img = binarization(img, threshold);
         saveImg(img, "Binarized.jpg");
+
+        SDL_Surface* rotated_img = Rotated_image(img, 10);
+        saveImg(rotated_img, "Rotated_img.jpg");
 
         free(histo);        
     }    
