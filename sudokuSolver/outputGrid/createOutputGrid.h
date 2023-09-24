@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include "../../preProcessing/SDL_Function/sdlFunction.h"
 #include "../solver/sudoku_solver.h"
+#include <SDL_ttf.h>
+
 
 SDL_Surface* createOutputGrid(const char *path);
 #endif

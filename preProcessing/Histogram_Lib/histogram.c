@@ -11,7 +11,7 @@
 /***************************************************************
  *  Function findHistogram: 
  *
- *  Calculation the histogra of the input image
+ *  Calculation the histogram of the input image
  *
  *  @input :
  *      - img (SDL_Surface*) : input image to calcul the histogram
