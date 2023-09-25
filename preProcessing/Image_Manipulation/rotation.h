@@ -9,5 +9,6 @@
 #include "pixel.h"
 
 SDL_Surface* Rotated_image(SDL_Surface* image, double angle);
+double Find_angle_to_Rotate(SDL_Surface* image);
 
 #endif

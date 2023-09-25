@@ -6,7 +6,7 @@ all:
 	gcc -Wall -Wextra -c Otsu_method/otsu.c `sdl2-config --cflags --libs` -lSDL2_image	
 	gcc -Wall -Wextra -c Image_Manipulation/pixel.c `sdl2-config --cflags --libs` -lSDL2_image	
 	gcc -Wall -Wextra -c Image_Manipulation/coins_detecter.c `sdl2-config --cflags --libs` -lSDL2_image	
-	gcc -Wall -Wextra -c Image_Manipulation/rotation.c `sdl2-config --cflags --libs` -lSDL2_image	
+	gcc -Wall -Wextra -c Image_Manipulation/rotation.c `sdl2-config --cflags --libs` -lSDL2_image -lm
 
 	gcc -Wall -Wextra -g -o main main.c sdlFunction.o gaussianFilter.o grayScaleFilter.o histogram.o otsu.o coins_detecter.o rotation.o pixel.o -lm `sdl2-config --cflags --libs` -lSDL2_image
 

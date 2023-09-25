@@ -4,9 +4,42 @@
 #include "math.h"
 
 #include "pixel.h"
+#include "coins_detecter.h"
 
 // Define Pi
 #define M_PI 3.14159265358979323846
+
+
+/* double Find_angle_to_Rotate(SDL_Surface* image)
+{
+    //Initialize angle and the array of the corners
+    double angle = 0;
+    int points[8];
+
+    //Get the corners of the image
+    detecterCoins(image, points);
+
+    //Get the coordonates of the lower left corner
+    int ll_x = points[2];
+    int ll_y = points[3];
+    //printf("(%d,%d) lower left coordonates\n", ll_x, ll_y);
+
+    //Get the coordonates of the lower right corner
+    int lr_x = points[4];
+    int lr_y = points[5];
+    //printf("(%d,%d) lower right coordonates\n", lr_x, lr_y);
+
+    //Get the length and the width between these two corners
+    int width = ll_y - lr_y;   
+    int length = ll_x - lr_x;
+    //printf("%d and %d ditance segment\n", width, length);
+
+    //Get the angle to rotate the image
+    angle = atan(round(length/width));
+ 
+    //return the round of the angle
+    return angle;
+} */
 
 
 SDL_Surface* Rotated_image(SDL_Surface* image, double angle)
