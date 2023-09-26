@@ -20,7 +20,8 @@ int main(){
         return 1; 
     }
 
-    createOutputGrid(outputFileName);
+    SDL_Surface* finalGrid = createOutputGrid();
+    saveImg(finalGrid, "outputGrid.jpg");
 
 
     return 0; 
