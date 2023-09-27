@@ -124,7 +124,7 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
             pixels[y * outputSurface->w + x] = newPixel;
         }
     }
-
+    free(kernel);
 
     return outputSurface;
 
