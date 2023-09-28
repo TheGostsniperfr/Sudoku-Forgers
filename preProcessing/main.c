@@ -4,6 +4,7 @@
 #include "Histogram_Lib/histogram.h"
 #include "Otsu_method/otsu.h"
 #include "Image_Manipulation/rotation.h"
+#include "Morphology/morphology.h"
 
 
 int main(){
@@ -33,12 +34,15 @@ int main(){
         img = binarization(img, threshold);
         saveImg(img, "Binarized.jpg");
 
+        img = applyMorphology(img, 1);
+        saveImg(img, "Morphology.jpg");
+
         /* double angle;
         angle = Find_angle_to_Rotate(img);
         printf("%lf\n", angle); */
 
-        SDL_Surface* rotated_img = Rotated_image(img, -45);
-        saveImg(rotated_img, "Rotated_img.jpg");
+        //SDL_Surface* rotated_img = Rotated_image(img, -45);
+        //saveImg(rotated_img, "Rotated_img.jpg");
 
         free(histo);        
     }    
