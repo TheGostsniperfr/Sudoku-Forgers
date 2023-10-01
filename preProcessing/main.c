@@ -34,7 +34,9 @@ int main(){
         img = binarization(img, threshold);
         saveImg(img, "Binarized.jpg");
 
+        img = applyMorphology(img, 0);
         img = applyMorphology(img, 1);
+
         saveImg(img, "Morphology.jpg");
 
         /* double angle;
