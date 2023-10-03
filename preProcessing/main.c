@@ -3,14 +3,19 @@
 #include "GrayScale_Filter/grayScaleFilter.h"
 #include "Histogram_Lib/histogram.h"
 #include "Otsu_method/otsu.h"
-#include "Image_Manipulation/rotation.h"
+#include "Rotation/rotation.h"
 #include "Morphology/morphology.h"
 
 
-int main(){
-    
+/*
+#include "Homography/homography.h"
+*/
 
-    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_05.jpeg");
+
+int main(){
+
+
+    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_01.jpeg");
     
     if(img == NULL){
         printf("Error to load img !\n");
@@ -45,6 +50,11 @@ int main(){
 
         //SDL_Surface* rotated_img = Rotated_image(img, -45);
         //saveImg(rotated_img, "Rotated_img.jpg");
+
+        /* 
+        SDL_Surface* homographic_img = Homography_Transform(img, 100);
+        saveImg(homographic_img, "Homographic_img.jpg"); 
+        */
 
         free(histo);        
     }    

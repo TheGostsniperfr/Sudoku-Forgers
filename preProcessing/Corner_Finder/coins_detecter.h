@@ -6,7 +6,7 @@
 #include "../SDL_Function/sdlFunction.h"
 #include "math.h"
 
-#include "pixel.h"
+#include "../Pixel/pixel.h"
 
 void detecterCoins(SDL_Surface* surface, int* points);
 

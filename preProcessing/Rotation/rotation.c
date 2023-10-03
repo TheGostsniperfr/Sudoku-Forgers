@@ -3,8 +3,8 @@
 #include "../SDL_Function/sdlFunction.h"
 #include "math.h"
 
-#include "pixel.h"
-#include "coins_detecter.h"
+#include "../Pixel/pixel.h"
+#include "../Corner_Finder/coins_detecter.h"
 
 // Define Pi
 #define M_PI 3.14159265358979323846
@@ -38,7 +38,7 @@
     angle = atan(round(length/width));
  
     //return the round of the angle
-    return angle;
+    return (angle*180)/M_PI;
 } */
 
 

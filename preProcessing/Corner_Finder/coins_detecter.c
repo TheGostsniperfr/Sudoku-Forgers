@@ -3,7 +3,7 @@
 #include "../SDL_Function/sdlFunction.h"
 #include "math.h"
 
-#include "pixel.h"
+#include "../Pixel/pixel.h"
 
 /***************************************************************
  *  Function detecterCoins: 
