@@ -15,8 +15,9 @@
  *  @output :
  *      - 
 ***************************************************************/
-void detecterCoins(SDL_Surface* surface, int* points) {
-    // Initialisation des valeurs minimales/maximales
+int* FindCoins(SDL_Surface* surface) {
+    int* points = (int*)malloc(8 * sizeof(int));
+    // Initialisation of all the max/min values
     int minSum = surface->w + surface->h;
     int maxSum = 0;
     int minDiff = surface->w > surface->h ? surface->w : surface->h;
@@ -26,36 +27,37 @@ void detecterCoins(SDL_Surface* surface, int* points) {
         for (int x = 0; x < surface->w; ++x) {
             Uint8 pixelValue = getPixel8(surface, x, y);
             if (pixelValue != 0xff) {
-                // Si le pixel est blanc on continue sans entrer dans la boucle
-                // Sinon l'on vérifie si l'on est arrivé a un coin
+                // If the pixel is white continue without entering the "if"
+                // Else we verify if we are at a corner
 
                 int sum = x + y;
                 int diff = x - y;
 
                 if (sum < minSum) {
                     minSum = sum;
-                    points[0] = x; // coin superieur gauche -> x
-                    points[1] = y; // coin superieur gauche -> y
+                    points[0] = x; // upper left corner -> x
+                    points[1] = y; // upper left corner -> y
                 }
 
                 if (sum >= maxSum) {
                     maxSum = sum;
-                    points[4] = x; // coin inferieur droite -> x
-                    points[5] = y; // coin inferieur droite -> y
+                    points[4] = x; // lower right corner -> x
+                    points[5] = y; // lower right corner -> y
                 }
 
                 if (diff < minDiff) {
                     minDiff = diff;
-                    points[2] = x; // coin inferieur gauche -> x
-                    points[3] = y; // coin inferieur gauche -> y
+                    points[2] = x; // lower left corner -> x
+                    points[3] = y; // lower left corner -> y
                 }
 
                 if (diff > maxDiff) {
                     maxDiff = diff;
-                    points[6] = x; // coin superieur droite -> x
-                    points[7] = y; // coin superieur droite -> y
+                    points[6] = x; // upper right corner -> x
+                    points[7] = y; // upper right corner -> y
                 }
             }
         }
     }
+    return points;
 }

@@ -14,10 +14,7 @@
 {
     //Initialize angle and the array of the corners
     double angle = 0;
-    int points[8];
-
-    //Get the corners of the image
-    detecterCoins(image, points);
+    int* points = FindCoins(image);
 
     //Get the coordonates of the lower left corner
     int ll_x = points[2];

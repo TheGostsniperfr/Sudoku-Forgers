@@ -24,8 +24,7 @@
 double* Fill_Matrix(SDL_Surface* image, int size)
 {
     //Get corner of the grid
-    int points[8];
-    detecterCoins(image, points);
+    int* points = FindCoins(image);
 
     /*
     Fill and initialize the matrix :
