@@ -11,5 +11,5 @@
 #include <SDL_ttf.h>
 
 
-SDL_Surface* createOutputGrid();
+SDL_Surface* createOutputGrid(int gS);
 #endif

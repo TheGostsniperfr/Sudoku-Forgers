@@ -29,8 +29,8 @@
 
 #define FONT_RATIO 0.8
 
-static int defaultGrid[9][9];
-static int solvedGrid[9][9];
+static int** defaultGrid;
+static int** solvedGrid;
 
 static Uint32 lineColor;
 static Uint32 bgColor;
@@ -173,15 +173,25 @@ void gridBuilder(SDL_Surface* img){
  *  @output :
  *      - img (SDL_Surface*) : final img of the final grid
 ***************************************************************/
-SDL_Surface* createOutputGrid(){
+SDL_Surface* createOutputGrid(int gS){
+
+    //alloc grid
+    defaultGrid = (int**)calloc(gS, sizeof(int*));
+    for(int i = 0; i < gS; i++){
+        defaultGrid[i] = (int*)calloc(gS, sizeof(int));
+    }
+
+    solvedGrid = (int**)calloc(gS, sizeof(int*));
+    for(int i = 0; i < gS; i++){
+        solvedGrid[i] = (int*)calloc(gS, sizeof(int));
+    }
 
     //Load sudoku grids (file.result)
-
-    if(loadGrid(PATH_INPUT_GRID, defaultGrid) == 1){
+    if(loadGrid(PATH_INPUT_GRID, defaultGrid, gS) == 1){
         errx(1, "Error can't to load default grid.");
     }
     
-    if(loadGrid(PATH_SOLVED_GRID, solvedGrid) == 1){
+    if(loadGrid(PATH_SOLVED_GRID, solvedGrid, gS) == 1){
         errx(1, "Error can't to load solved grid.");
     }
 

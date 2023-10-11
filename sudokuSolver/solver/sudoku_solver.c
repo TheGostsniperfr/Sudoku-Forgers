@@ -29,10 +29,10 @@ int testGrid[9][9] = {
  *      - (int) : 0 -> false, 1 -> true
 ***************************************************************/
 
-int isRulesRespected(int grid[9][9], int row, int col, int num) {
+int isRulesRespected(int** grid, int gS, int row, int col, int num) {
 
     // Check current row and column
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < gS; i++) {
         if (grid[row][i] == num || grid[i][col] == num) {
             return 0; 
         }
@@ -64,9 +64,9 @@ int isRulesRespected(int grid[9][9], int row, int col, int num) {
  *      - col (int*) : pointer to store the col of the empty cell
 ***************************************************************/
 
-void findEmptyCell(int grid[9][9], int* row, int* col) {
-    for (*row = 0; *row < 9; (*row)++) {
-        for (*col = 0; *col < 9; (*col)++) {
+void findEmptyCell(int** grid, int gS, int* row, int* col) {
+    for (*row = 0; *row < gS; (*row)++) {
+        for (*col = 0; *col < gS; (*col)++) {
             if (grid[*row][*col] == 0) {
                 return;
             }
@@ -87,9 +87,9 @@ void findEmptyCell(int grid[9][9], int* row, int* col) {
  *      - destination (int array) : the destination grid
 ***************************************************************/
 
-void copyGrid(int source[9][9], int destination[9][9]) {
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
+void copyGrid(int** source, int** destination, int gS) {
+    for (int i = 0; i < gS; i++) {
+        for (int j = 0; j < gS; j++) {
             destination[i][j] = source[i][j];
         }
     }
@@ -105,9 +105,9 @@ void copyGrid(int source[9][9], int destination[9][9]) {
  *      - grid (int array) : the grid to print
 ***************************************************************/
 
-void printGrid(int grid[9][9]) {
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
+void printGrid(int** grid, int gS) {
+    for (int i = 0; i < gS; i++) {
+        for (int j = 0; j < gS; j++) {
             printf("%d ", grid[i][j]);
         }
         printf("\n");
@@ -127,19 +127,19 @@ void printGrid(int grid[9][9]) {
  *      - (int) : 0 -> no solution, 1 -> solution found
 ***************************************************************/
 
-int solver(int grid[9][9]) {
+int solver(int** grid, int gS) {
     int row, col;
-    findEmptyCell(grid, &row, &col);
+    findEmptyCell(grid, gS, &row, &col);
 
     if (row == -1) {
         return 1; 
     }
 
-    for (int num = 1; num <= 9; num++) {
-        if (isRulesRespected(grid, row, col, num)) {
+    for (int num = 1; num <= gS; num++) {
+        if (isRulesRespected(grid, gS, row, col, num)) {
             grid[row][col] = num;
 
-            if (solver(grid)) {
+            if (solver(grid, gS)) {
                 return 1; 
             }
 
@@ -160,14 +160,16 @@ int solver(int grid[9][9]) {
  *      - grid (int array) : the Sudoku grid to solve and print
 ***************************************************************/
 
-void sudokuSolver(int grid[9][9]) {
+int sudokuSolver(int** grid, int gS) {
     //int solvedGrid[9][9];
     //copyGrid(grid, solvedGrid);
 
-    if (solver(grid)) {
-        printGrid(grid);
+    if (solver(grid, gS)) {
+        //printGrid(grid);
+        return 0;
     } else {
-        printf("Grid is impossible\n");
+        //printf("Grid is impossible\n");
+        return 1;
     }
 }
 
@@ -184,7 +186,7 @@ void sudokuSolver(int grid[9][9]) {
  *      - (int) : 0 -> no error, 1 -> error to load data
 ***************************************************************/
 
-int loadGrid(const char *filename, int grid[9][9]) {
+int loadGrid(const char *filename, int** grid, int gS) {
     FILE *file = fopen(filename, "r");
 
     if (file == NULL) {
@@ -196,11 +198,11 @@ int loadGrid(const char *filename, int grid[9][9]) {
     int row = 0;
     int col = 0;
 
-    while ((character = fgetc(file)) != EOF && row < 9 && col < 9) {
+    while ((character = fgetc(file)) != EOF && row < gS && col < gS) {
         if (character >= '0' && character <= '9') {
             grid[row][col] = character - '0';
             col++;
-            if (col == 9) {
+            if (col == gS) {
                 col = 0;
                 row++;
             }
@@ -209,7 +211,7 @@ int loadGrid(const char *filename, int grid[9][9]) {
 
     fclose(file);
 
-    if (row != 9 || col != 0) {
+    if (row != gS || col != 0) {
         printf("File does not contain a valid matrix\n");
         return 1; 
     }
@@ -228,7 +230,7 @@ int loadGrid(const char *filename, int grid[9][9]) {
  *      - grid (int array) : grid of sudoku
 ***************************************************************/
 
-void saveMatrix(const char *filename, int grid[9][9]) {
+void saveMatrix(const char *filename, int** grid, int gS) {
     FILE *file = fopen(filename, "w"); 
 
     if (file == NULL) {
@@ -236,8 +238,8 @@ void saveMatrix(const char *filename, int grid[9][9]) {
         return; 
     }
 
-    for (int row = 0; row < 9; row++) {
-        for (int col = 0; col < 9; col++) {
+    for (int row = 0; row < gS; row++) {
+        for (int col = 0; col < gS; col++) {
             fprintf(file, "%d", grid[row][col]);
         }
         if (row != 8) {
@@ -247,42 +249,3 @@ void saveMatrix(const char *filename, int grid[9][9]) {
 
     fclose(file); 
 }
-
-
-
-/***************************************************************
- *  Function main: 
- *
- *  load, solved and save solved grid into result file
- * 
- *  Usage : ./<exe_name> <input_matrix.result> <output_matrix.result> 
-***************************************************************/
-/*
-int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        printf("Usage: %s <input_matrix.result> <output_matrix.result>\n", argv[0]);
-        return 1; 
-    }
-
-    const char *inputFileName = argv[1];
-    const char *outputFileName = argv[2];
-
-    int testGrid[9][9];
-
-    if (loadGrid(inputFileName, testGrid) == 0) {
-
-        //solve grid : 
-        sudokuSolver(testGrid);
-
-        saveMatrix(outputFileName, testGrid);
-
-        printf("The matrix was successfully saved : %s\n", outputFileName);
-    } else {
-        printf("An error has occurred while loading the file : %s\n", inputFileName);
-        return 1; 
-    }
-
-    return 0; 
-}
-
-*/
