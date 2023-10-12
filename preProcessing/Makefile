@@ -7,12 +7,12 @@ all:
 	gcc -Wall -Wextra -c Morphology/morphology.c `sdl2-config --cflags --libs` -lSDL2_image	
 	
 	gcc -Wall -Wextra -c Pixel/pixel.c `sdl2-config --cflags --libs` -lSDL2_image	
-	gcc -Wall -Wextra -c Corner_Finder/coins_detecter.c `sdl2-config --cflags --libs` -lSDL2_image		
+	gcc -Wall -Wextra -c Corner_Finder/FindCorners.c `sdl2-config --cflags --libs` -lSDL2_image		
 	gcc -Wall -Wextra -c Rotation/rotation.c `sdl2-config --cflags --libs` -lSDL2_image -lm
 	gcc -Wall -Wextra -c Matrix/mat.c `sdl2-config --cflags --libs` -lSDL2_image -lm
 	gcc -Wall -Wextra -c Homography/homography.c `sdl2-config --cflags --libs` -lSDL2_image -lm
 
-	gcc -Wall -Wextra -g -o main main.c sdlFunction.o gaussianFilter.o grayScaleFilter.o histogram.o otsu.o morphology.o coins_detecter.o rotation.o pixel.o homography.o mat.o -lm `sdl2-config --cflags --libs` -lSDL2_image
+	gcc -Wall -Wextra -g -o main main.c sdlFunction.o gaussianFilter.o grayScaleFilter.o histogram.o otsu.o morphology.o FindCorners.o rotation.o pixel.o homography.o mat.o -lm `sdl2-config --cflags --libs` -lSDL2_image
 
 clean:
 	rm -f sdlFunction

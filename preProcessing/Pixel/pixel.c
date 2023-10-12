@@ -11,7 +11,7 @@ Uint8 getPixel8(SDL_Surface* surface, int x, int y) {
 }
 
 
-void putPixel(SDL_Surface *surface, int x, int y, uint32_t pixel)
+void putPixel(SDL_Surface*surface, int x, int y, uint32_t pixel)
 {
     int bpp = surface->format->BytesPerPixel;
 
@@ -47,14 +47,8 @@ void putPixel(SDL_Surface *surface, int x, int y, uint32_t pixel)
 
 uint32_t getPixel32_t(SDL_Surface *surface, int x, int y)
 {
-    if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
-        printf("Bruh moment at x = %d, y = %d\n", x, y);    
-    }
-    uint32_t result =
-        *(uint32_t *) ((uint8_t *)
+    return *(uint32_t *) ((uint8_t *)
             surface->pixels
                 + y * surface->pitch
                 + x * surface->format->BytesPerPixel);
-
-    return result;
 }

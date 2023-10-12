@@ -61,7 +61,7 @@ void Sub_Mat(double* matA, double* matB, int height, int width)
 //Make the transposition of a matrix
 void Transpose_Mat(double* mat, double* result, int height, int width)
 {
-    for(int iHeight = 0; iHeight < height; iHeight++)
+    for(int iHeight = 0; iHeight < height*width; iHeight++)
     {
         int i = iHeight/height;
         int j = iHeight%height;
@@ -69,31 +69,31 @@ void Transpose_Mat(double* mat, double* result, int height, int width)
     }
 }
 
-//
-void Trans_Mat(double* mat, double* temp, long size, long a, long b, int cols)
+void Trans_Mat(double *A, double *temp, int a, int b, int size, int cols)
 {
-    int i = 0;
-    int j = 0;
-
-    //looping for each element of the martix
-    for(int row = 0; row < size; row++)
+    int i = 0, j = 0;
+ 
+    // Looping for each element of the matrix
+    for (int row = 0; row < size; row++)
     {
-        for(int col = 0; col < size; col++)
+        for (int col = 0; col < size; col++)
         {
-            if(row != a && col != b)
+            //  Copying into temporary matrix only those element
+            //  which are not in given row and column
+            if (row != a && col != b)
             {
-                temp[i*cols+j] = mat[row*cols+col];
-
-                if(j == size)
+                
+                temp[i*cols+j++] = A[row*cols+col];
+                // Row is filled, so increase row index and reset col index
+                if (j == size - 1)
                 {
                     j = 0;
                     i++;
                 }
-            }   
+            }
         }
     }
 }
-
 
 //Make the determinat of the matrix
 double Det_Mat(double* mat, int size, int cols)
@@ -109,7 +109,7 @@ double Det_Mat(double* mat, int size, int cols)
 
     for(int i = 0; i < size; i++)
     {
-        Trans_Mat(mat, temp, size, 0, i, cols);
+        Trans_Mat(mat, temp, 0, i, size, cols);
         det += sign * mat[i] * Det_Mat(temp, size-1, cols);
 
         sign = -sign;
@@ -124,7 +124,7 @@ double Det_Mat(double* mat, int size, int cols)
 //
 void Adj_Mat(double* mat, double* adj, int size)
 {
-    if(size == 0)
+    if(size == 1)
     {
         adj[0] = 1;
         return;
@@ -137,7 +137,7 @@ void Adj_Mat(double* mat, double* adj, int size)
     {
         for(int j = 0; j < size; j++)
         {
-            Trans_Mat(mat, temp, size, i, j , size);
+            Trans_Mat(mat, temp, i, j, size, size);
 
             if((i+j)%2 == 0)
             {    
@@ -177,5 +177,5 @@ int Inverse_Mat(double* mat, double* inverse, int size)
     }
 
     free(adj);
-    return 1;
+    return !0;
 }

@@ -5,8 +5,10 @@
 #include <err.h>
 
 #include "../Pixel/pixel.h"
-#include "../Corner_Finder/coins_detecter.h"
+#include "../Corner_Finder/FindCorners.h"
 #include "../Matrix/mat.h"
+
+#include <stdio.h> // a enlever
 
 #define FILL(mat, x, y) mat[x*8+y]
 
@@ -88,7 +90,7 @@ double* Fill_Matrix(SDL_Surface* image, int size)
     double* transpose_mat = calloc(8*8, sizeof(double));
     //Get the transpose matrix from mat
     Transpose_Mat(mat, transpose_mat, 8, 8);
-    
+
     //Get the multiplication with transpose_mat and mat
     double* mult_mat = calloc(8*8, sizeof(double));
     Mult_Mat(transpose_mat, mat, 8, 8, 8, mult_mat);
@@ -114,15 +116,14 @@ double* Fill_Matrix(SDL_Surface* image, int size)
     free(inverse_mat);
     free(transpose_mat);
 
-    //Get the multiplication with mat_mult and corner_matrix
+    //Create the matrix that'll be returned
     double* result = calloc(8, sizeof(double));
 
-    Mult_Mat(mult_mat, corner_matrix, 8, 8, 1, result);
-    
+    Mult_Mat(mat_mult, corner_matrix, 8, 8, 1, result);
     //Free mat_mult because we don't need it anymore
-    free(mult_mat);
+    free(mat_mult);
 
-    //return the homography transform matrix
+    //return the homography transform matrix    
     return result;
 }
 
@@ -142,7 +143,7 @@ double* Fill_Matrix(SDL_Surface* image, int size)
 SDL_Surface* Homography_Transform(SDL_Surface* image, int size)
 {
     //Get the homography transform matrix
-    double* mat = Fill_Matrix(image, size);
+    double* mat = Fill_Matrix(image, size); 
 
     //Create a new surface to draw the homographic transformation from image
     SDL_Surface* new_img = SDL_CreateRGBSurface(0, size, size, 32, 0, 0, 0, 0);

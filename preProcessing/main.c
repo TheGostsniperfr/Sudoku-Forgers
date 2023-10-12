@@ -7,15 +7,15 @@
 #include "Morphology/morphology.h"
 
 
-/*
+
 #include "Homography/homography.h"
-*/
+
 
 
 int main(){
 
 
-    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_01.jpeg");
+    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_04.jpeg");
     
     if(img == NULL){
         printf("Error to load img !\n");
@@ -39,22 +39,19 @@ int main(){
         img = binarization(img, threshold);
         saveImg(img, "Binarized.jpg");
 
+            
         img = applyMorphology(img, 0);
         img = applyMorphology(img, 1);
 
         saveImg(img, "Morphology.jpg");
 
-        /* double angle;
-        angle = Find_angle_to_Rotate(img);
-        printf("%lf\n", angle); */
 
-        //SDL_Surface* rotated_img = Rotated_image(img, -45);
-        //saveImg(rotated_img, "Rotated_img.jpg");
+        Save_RotatedImg(img, 45);
 
-        /* 
-        SDL_Surface* homographic_img = Homography_Transform(img, 100);
-        saveImg(homographic_img, "Homographic_img.jpg"); 
-        */
+        
+        /* SDL_Surface* homographic_img = Homography_Transform(img, 1000);
+        saveImg(homographic_img, "Homographic_img.jpg");  */
+
 
         free(histo);        
     }    

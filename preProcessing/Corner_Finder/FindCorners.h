@@ -1,5 +1,5 @@
-#ifndef COINS_DETECTER_H
-#define COINS_DETECTER_H   
+#ifndef FIND_CORNERS_H
+#define FIND_CORNERS_H   
 
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
@@ -8,6 +8,6 @@
 
 #include "../Pixel/pixel.h"
 
-void detecterCoins(SDL_Surface* surface, int* points);
+int* FindCoins(SDL_Surface* surface);
 
 #endif

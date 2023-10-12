@@ -6,7 +6,7 @@
 #include "../SDL_Function/sdlFunction.h"
 
 #include "../Pixel/pixel.h"
-#include "../Corner_Finder/coins_detecter.h"
+#include "../Corner_Finder/FindCorners.h"
 #include "../Matrix/mat.h"
 
 double* Fill_Matrix(SDL_Surface* image, int size);
