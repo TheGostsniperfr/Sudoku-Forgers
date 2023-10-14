@@ -1,17 +1,107 @@
 #include <stdio.h>
+#include <string.h>
+#include <err.h>
+#include "../convertLib/sudokuConvert.h"
+#include <stdlib.h>
 
 
-int testGrid[9][9] = {
-    {5, 4, 0, 0, 2, 0, 8, 0, 6},
-    {0, 1, 9, 0, 0, 7, 0, 0, 3},
-    {0, 0, 0, 3, 0, 0, 2, 1, 0},
-    {9, 0, 0, 4, 0, 5, 0, 2, 0},
-    {0, 0, 1, 0, 0, 0, 6, 0, 4},
-    {6, 0, 4, 0, 3, 2, 0, 8, 0},
-    {0, 6, 0, 0, 0, 0, 1, 9, 0},
-    {4, 0, 2, 0, 0, 9, 0, 0, 5},
-    {0, 9, 0, 0, 7, 0, 4, 0, 2}
-};
+/***************************************************************
+ *  Function isGridValid: 
+ *
+ *  Check if the sudoku grid is valid
+ *
+ *  @input :
+ *      - grid (int **) : the grid of the game
+ *      - gS (int) : size of the grid
+ *
+ *  @output :
+ *      - (int) : 0 -> false, 1 -> true
+***************************************************************/
+int isGridValid(int** grid, int gS){
+
+    if(gS != 9 && gS != 16){
+        
+        return 0;
+    }
+    
+    //create "present number sheet"
+    //to check if a number is already present
+    char* lNb = calloc(gS+1, sizeof(char));
+
+    //check row lines
+    for (int row = 0; row < gS; row++)
+    {
+        for(int col = 0; col < gS; col++){
+            if(grid[row][col] == -1){
+                continue;
+            }
+
+            if(lNb[grid[row][col]] == 1){
+                //number already present
+
+                return 0;
+            }  
+            lNb[grid[row][col]] = 1;
+        }   
+
+        //Reset present list
+        memset(lNb, 0, (gS+1) * sizeof(char));
+    }
+    
+
+    //check col lines
+    for (int col = 0; col < gS; col++)
+    {
+        for(int row = 0; row < gS; row++){
+            if(grid[row][col] == -1){
+                continue;
+            }
+
+            if(lNb[grid[row][col]] == 1){
+                //number already present
+
+                return 0;
+            }  
+            lNb[grid[row][col]] = 1;
+        }   
+
+        //Reset present list
+        memset(lNb, 0, (gS+1) * sizeof(char));
+    }
+
+
+    //check sub square
+    int sbLth = gS == 9 ? 3 : 4;
+    for (int i = 0; i < gS; i+= sbLth)
+    {
+        for (int j = 0; j < gS; j+= sbLth)
+        {
+            for (int x = i; x < i + sbLth; x++)
+            {
+                for (int y = j; y < j + sbLth; y++)
+                {
+                    if(grid[x][y] == -1){
+                        continue;
+                    }
+
+                    if(lNb[grid[x][y]] == 1){
+                        //number already present
+
+                        return 0;
+                    }  
+                    lNb[grid[x][y]] = 1;
+                }                
+            }
+
+            //Reset present list
+            memset(lNb, 0, (gS+1) * sizeof(char));            
+        }        
+    }
+
+    free(lNb);
+    return 1;
+}
+
 
 
 /***************************************************************
@@ -20,7 +110,8 @@ int testGrid[9][9] = {
  *  Check if the number respects the game's rule
  *
  *  @input :
- *      - grid (int array) : the grid of the game
+ *      - grid (int **) : the grid of the game
+ *      - gS (int) : size of the grid
  *      - row (int) : row of the number to check
  *      - col (int) : col of the number to check
  *      - num (int) : number to check
@@ -30,26 +121,37 @@ int testGrid[9][9] = {
 ***************************************************************/
 
 int isRulesRespected(int** grid, int gS, int row, int col, int num) {
-
-    // Check current row and column
-    for (int i = 0; i < gS; i++) {
-        if (grid[row][i] == num || grid[i][col] == num) {
-            return 0; 
+    //check col
+    for (int i = 0; i < gS; i++)
+    {
+        if(grid[row][i] == num){
+            return 0;
         }
     }
 
-    // Check current area
-    int start_row = 3 * (row / 3);
-    int start_col = 3 * (col / 3);
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (grid[start_row + i][start_col + j] == num) {
-                return 0; 
+    //check row
+    for (int i = 0; i < gS; i++)
+    {
+        if(grid[i][col] == num){
+            return 0;
+        }
+    }
+
+    //check subSquare
+    int subLth = gS == 9 ? 3 : 4;
+    int startRow = row - (row % subLth);
+    int startCol = col - (col % subLth);
+    
+    for (int i = 0; i < subLth; i++)
+    {
+        for (int j = 0; j < subLth; j++)
+        {
+            if(grid[i + startRow][j + startCol] == num){
+                return 0;
             }
-        }
+        }        
     }
-
-    return 1; 
+    return 1;    
 }
 
 
@@ -59,7 +161,8 @@ int isRulesRespected(int** grid, int gS, int row, int col, int num) {
  *  Find the next empty cell in the grid
  *
  *  @input :
- *      - grid (int array) : the grid of the game
+ *      - grid (int **) : the grid of the game
+ *      - gS (int) : size of the grid
  *      - row (int*) : pointer to store the row of the empty cell
  *      - col (int*) : pointer to store the col of the empty cell
 ***************************************************************/
@@ -67,7 +170,7 @@ int isRulesRespected(int** grid, int gS, int row, int col, int num) {
 void findEmptyCell(int** grid, int gS, int* row, int* col) {
     for (*row = 0; *row < gS; (*row)++) {
         for (*col = 0; *col < gS; (*col)++) {
-            if (grid[*row][*col] == 0) {
+            if (grid[*row][*col] == -1) {
                 return;
             }
         }
@@ -83,8 +186,9 @@ void findEmptyCell(int** grid, int gS, int* row, int* col) {
  *  Copy the values from the source grid to the destination grid
  *
  *  @input :
- *      - source (int array) : the source grid
- *      - destination (int array) : the destination grid
+ *      - source (int **) : the source grid
+ *      - destination (int**) : the destination grid
+ *      - gS (int) : size of the grid
 ***************************************************************/
 
 void copyGrid(int** source, int** destination, int gS) {
@@ -102,13 +206,18 @@ void copyGrid(int** source, int** destination, int gS) {
  *  Print the Sudoku grid
  *
  *  @input :
- *      - grid (int array) : the grid to print
+ *      - grid (int **) : the grid to print
+ *      - gS (int) : size of the grid
 ***************************************************************/
 
 void printGrid(int** grid, int gS) {
     for (int i = 0; i < gS; i++) {
         for (int j = 0; j < gS; j++) {
-            printf("%d ", grid[i][j]);
+            if(grid[i][j] == -1){
+                printf(".");
+            }else{                
+                printf("%d", grid[i][j]);
+            }            
         }
         printf("\n");
     }
@@ -121,10 +230,11 @@ void printGrid(int** grid, int gS) {
  *  Solve the Sudoku puzzle recursively
  *
  *  @input :
- *      - grid (int array) : the Sudoku grid to solve
+ *      - grid (int **) : the Sudoku grid to solve
  *
  *  @output :
  *      - (int) : 0 -> no solution, 1 -> solution found
+ *      - gS (int) : size of the grid
 ***************************************************************/
 
 int solver(int** grid, int gS) {
@@ -132,7 +242,7 @@ int solver(int** grid, int gS) {
     findEmptyCell(grid, gS, &row, &col);
 
     if (row == -1) {
-        return 1; 
+        return 1;
     }
 
     for (int num = 1; num <= gS; num++) {
@@ -140,14 +250,14 @@ int solver(int** grid, int gS) {
             grid[row][col] = num;
 
             if (solver(grid, gS)) {
-                return 1; 
+                return 1;
             }
 
-            grid[row][col] = 0;
-        }
+            grid[row][col] = -1;
+        }   
     }
 
-    return 0; 
+    return 0;
 }
 
 
@@ -157,19 +267,24 @@ int solver(int** grid, int gS) {
  *  Solve the Sudoku puzzle and print the solution
  *
  *  @input :
- *      - grid (int array) : the Sudoku grid to solve and print
+ *      - grid (int **) : the Sudoku grid to solve and print
+ *      - gS (int) : size of the grid
+ * 
+ *  @output : 
+ *      - (bool) : sucess -> 1, else 0
 ***************************************************************/
 
 int sudokuSolver(int** grid, int gS) {
-    //int solvedGrid[9][9];
-    //copyGrid(grid, solvedGrid);
+
+    if(isGridValid(grid, gS) == 0){
+        printf("test18\n");
+        return 0;
+    }
 
     if (solver(grid, gS)) {
-        //printGrid(grid);
-        return 0;
-    } else {
-        //printf("Grid is impossible\n");
         return 1;
+    } else {
+        return 0;
     }
 }
 
@@ -181,7 +296,8 @@ int sudokuSolver(int** grid, int gS) {
  *
  *  @input :
  *      - filename (char) : name of the file to open
- *      - grid (int array) : grid of sudoku
+ *      - grid (int**) : grid of sudoku
+ *      - gS (int) : size of the grid
  * @output : 
  *      - (int) : 0 -> no error, 1 -> error to load data
 ***************************************************************/
@@ -198,15 +314,35 @@ int loadGrid(const char *filename, int** grid, int gS) {
     int row = 0;
     int col = 0;
 
-    while ((character = fgetc(file)) != EOF && row < gS && col < gS) {
-        if (character >= '0' && character <= '9') {
-            grid[row][col] = character - '0';
-            col++;
-            if (col == gS) {
-                col = 0;
-                row++;
-            }
+    while ((character = fgetc(file)) != EOF && row < gS && col < gS) {        
+
+        if(character == '\n'){
+            continue;
         }
+
+        if(character == '.'){
+            //-1 is the separator in the grid
+            grid[row][col] = -1;
+            
+        }else{
+            int nb = charToInt((char)character);
+
+            //9x9 takes [1-9] possible value in grid 
+            //16x16 takes [1-16] possibles value in grid
+            if(gS == 16){
+                nb++;
+            }
+
+            grid[row][col] = nb;
+            
+        }
+
+        col++;
+        if (col == gS) {
+            col = 0;
+            row++;
+        }
+        
     }
 
     fclose(file);
@@ -230,9 +366,8 @@ int loadGrid(const char *filename, int** grid, int gS) {
  *      - grid (int array) : grid of sudoku
 ***************************************************************/
 
-void saveMatrix(const char *filename, int** grid, int gS) {
+void saveGrid(const char *filename, int** grid, int gS) {
     FILE *file = fopen(filename, "w"); 
-
     if (file == NULL) {
         perror("saveMatrix -> Error to open file");
         return; 
@@ -240,11 +375,21 @@ void saveMatrix(const char *filename, int** grid, int gS) {
 
     for (int row = 0; row < gS; row++) {
         for (int col = 0; col < gS; col++) {
-            fprintf(file, "%d", grid[row][col]);
+            if(grid[row][col] == -1){
+                fprintf(file, ".");
+            }
+            else{
+                int nb = grid[row][col];
+                if(gS == 16){
+                    nb--;
+                }                
+
+                fprintf(file, "%c", intToChar(nb));
+            }            
         }
-        if (row != 8) {
-            fprintf(file, "\n"); 
-        }
+        
+        fprintf(file, "\n"); 
+        
     }
 
     fclose(file); 

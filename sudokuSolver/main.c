@@ -1,26 +1,31 @@
 #include "outputGrid/createOutputGrid.h"
 #include "solver/sudoku_solver.h"
+#include "convertLib/sudokuConvert.h"
 
 int main(){
-    const char *inputFileName = "../data/input_matrix/input_matrix.result";
+    const char *inputFileName = "../data/input_matrix/input_matrix16x162";
     const char *outputFileName = "grid.result";
 
-    int gridSize = 9;
+    int gS = gridSize(inputFileName);
 
-    int** grid = (int**)calloc(gridSize, sizeof(int*));
-    for(int i = 0; i < gridSize; i++){
-        grid[i] = (int*)calloc(gridSize, sizeof(int));
+    int** grid = (int**)calloc(gS, sizeof(int*));
+    for(int i = 0; i < gS; i++){
+        grid[i] = (int*)calloc(gS, sizeof(int));
     }
 
-    if (loadGrid(inputFileName, grid, gridSize) == 0) {
+
+    if (loadGrid(inputFileName, grid, gS) == 0) {
+
 
         //solve grid : 
-        if(sudokuSolver(grid, gridSize) == 1){
+        if(sudokuSolver(grid, gS) == 0){
             //impossible grid;
+            printf("grid is impossible\n");
             
-        }
+        }        
 
-        saveMatrix(outputFileName, grid, gridSize);
+        saveGrid(outputFileName, grid, gS);
+
 
         printf("The matrix was successfully saved : %s\n", outputFileName);
     } else {
@@ -28,8 +33,14 @@ int main(){
         return 1; 
     }
 
-    SDL_Surface* finalGrid = createOutputGrid(gridSize);
-    saveImg(finalGrid, "outputGrid.jpg");
+    //SDL_Surface* finalGrid = createOutputGrid(gS);
+    //saveImg(finalGrid, "outputGrid.jpg");
+
+    for (int i = 0; i < gS; i++)
+    {
+        free(grid[i]);        
+    }
+    
     free(grid);
 
 

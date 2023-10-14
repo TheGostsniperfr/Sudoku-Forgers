@@ -7,12 +7,13 @@
 #include "../../preProcessing/SDL_Function/sdlFunction.h"
 #include "../solver/sudoku_solver.h"
 #include <SDL_ttf.h>
+#include "../convertLib/sudokuConvert.h"
 
 
 //path to file :
 
 //path to grid (input and solved)
-#define PATH_INPUT_GRID "../data/input_matrix/input_matrix.result"
+#define PATH_INPUT_GRID "../data/input_matrix/input_matrix9x9"
 #define PATH_SOLVED_GRID "grid.result"
 
 //path to digit font
@@ -117,7 +118,7 @@ void createGrid(SDL_Surface* img, int x_0, int y_0, int w, double widthBorder, i
 
                 new_id =  x + 3 * y;                
 
-                if(defaultGrid[(id/3)*3 + y][(id%3)*3 + x] == 0){
+                if(defaultGrid[(id/3)*3 + y][(id%3)*3 + x] == -1){
                     new_id = solvedGrid[(id/3)*3 + y][(id%3)*3 + x];
                     createGrid(img, new_x_0, new_y_0, new_w, new_widthBorder, depthLevel, digitColor, new_id);
                     continue;
