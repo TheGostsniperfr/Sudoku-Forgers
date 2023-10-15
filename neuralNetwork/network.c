@@ -8,6 +8,7 @@
 #include "../imageReader/imageReader.h"
 
 #define NET_SAVE_PATH "netSave.txt"
+#define NET_SAVE_XOR_PATH "netXorSave.txt"
 #define true 1
 #define false 0
 
@@ -574,10 +575,10 @@ NeuralNetwork* loadNetwork(char* filename){
  *
  *  @input :
  *      - net (NeuralNetwork*) : neural network to train
- *      - tD (TrainingPara) : paramters of training
+ *      - tP (TrainingPara) : paramters of training
 
 ***************************************************************/
-void digitTraining(NeuralNetwork* net, TrainingPara tD){
+void digitTraining(NeuralNetwork* net, TrainingPara tP){
     //Check if the network is valid
     if(net->layers[0].nb_neurons != 784
             && net->layers[net->nb_layers-1].nb_neurons != 10){
@@ -600,12 +601,12 @@ void digitTraining(NeuralNetwork* net, TrainingPara tD){
         errx(1, "Error to load data training.");
     }
 
-    if(batch > tD.batchSize){
-        batch = tD.batchSize;
+    if(batch > tP.batchSize){
+        batch = tP.batchSize;
     }
 
 
-    for (int epoch = 0; epoch < tD.nbEpoch; epoch++) {
+    for (int epoch = 0; epoch < tP.nbEpoch; epoch++) {
         int correctPredictions = 0;
 
         for (int imageI = 0; imageI < batch; imageI++) {
@@ -633,18 +634,18 @@ void digitTraining(NeuralNetwork* net, TrainingPara tD){
             trueProbs[correctDigit] = 1.0;
 
             //back propagation
-            backPropagation(net, output, trueProbs, tD.learningRate);
+            backPropagation(net, output, trueProbs, tP.learningRate);
         }
 
-        if(tD.printDebug == true){
+        if(tP.printDebug == true){
             // Calculating the percentage of correct answers
-            double accuracy = (double)correctPredictions / tD.batchSize * 100.0;
+            double accuracy = (double)correctPredictions / tP.batchSize * 100.0;
             printf("Epoch %d, Correct answers : %.2f%%\n",
                 epoch + 1, accuracy);
         }
     }
 
-    if(tD.saveTraining == 1){
+    if(tP.saveTraining == 1){
         saveNetwork(NET_SAVE_PATH, net);
     }
 
@@ -652,7 +653,74 @@ void digitTraining(NeuralNetwork* net, TrainingPara tD){
     free(labels);
 }
 
+/***************************************************************
+ *  Function xorTraining :
+ *
+ *  Train the neural network to digit recognition
+ *
+ *  @input :
+ *      - net (NeuralNetwork*) : neural network to train
+ *      - tP (TrainingPara) : paramters of training
 
+***************************************************************/
+void xorTraining(NeuralNetwork* net, TrainingPara tP){
+    //Check if the network is valid
+    if(net->layers[0].nb_neurons != 2
+            && net->layers[net->nb_layers-1].nb_neurons != 2){
+
+        errx(1, "Error : Network para not valid for xor recognition.");
+    }
+
+
+    for (int epoch = 0; epoch < tP.nbEpoch; epoch++) {
+        int correctPredictions = 0;
+
+        for (int batch = 0; batch < tP.batchSize; batch++)
+        {
+            //generate a xor data
+            double inputA = rand() % 2;
+            double inputB = rand() % 2;
+            int result = inputA != inputB;
+
+            net->layers[0].neurons[0].output = inputA;
+            net->layers[0].neurons[1].output = inputB;
+
+            hiddenPropagation(net);
+
+            double output[2];
+            outputPropagation(net, output);
+
+            int digitRecognised = 0;
+            for (int i = 1; i < net->layers[0].nb_neurons; i++) {
+                if (output[i] > output[digitRecognised]) {
+                    digitRecognised = i;
+                }
+            }
+
+            // check if the prediction is correct
+            if (digitRecognised == result) {
+                correctPredictions++;
+            }
+
+            double trueProbs[2] = {0.0};
+            trueProbs[result] = 1.0;
+
+            //back propagation
+            backPropagation(net, output, trueProbs, tP.learningRate);
+        }
+
+        if(tP.printDebug == true){
+            // Calculating the percentage of correct answers
+            double accuracy = (double)correctPredictions / tP.batchSize * 100.0;
+            printf("Epoch %d, Correct answers : %.2f%%\n",
+                epoch + 1, accuracy);
+        }
+    }
+
+    if(tP.saveTraining == 1){
+        saveNetwork(NET_SAVE_XOR_PATH, net);
+    }
+}
 
 
 /***************************************************************
@@ -694,7 +762,10 @@ NeuralNetwork* createNetwork(NetworkPara netPara){
 
     //Alloc memory for neurons in each layer
     for (int layer_i = 0; layer_i < net->nb_layers; layer_i++) {
-        net->layers[layer_i].neurons = (Neuron *)malloc(net->layers[layer_i].nb_neurons * sizeof(Neuron));
+        net->layers[layer_i].neurons = (Neuron *)malloc(
+            net->layers[layer_i]
+                .nb_neurons * sizeof(Neuron));
+
         if (net->layers[layer_i].neurons == NULL) {
             errx(1, "Error to alloc memory to neurons");
         }
@@ -708,6 +779,10 @@ NeuralNetwork* createNetwork(NetworkPara netPara){
 
 
 int main() {
+
+    /*
+
+    //digit recognition
 
     NetworkPara netPara = {
         .nbNeuronsFirstLayer = 784,
@@ -727,7 +802,29 @@ int main() {
         .saveTraining = true,
     };
 
-    digitTraining(net, trainPara);
+    digitTraining(net, trainPara);*/
+
+
+    // xor recognition
+
+    NetworkPara netPara = {
+        .nbHiddenLayers = 1,
+        .nbNeuronsFirstLayer = 2,
+        .nbNeuronsHiddenLayer = 5,
+        .nbNeuronsOutputLayer = 2,
+    };
+
+    NeuralNetwork* net = createNetwork(netPara);
+
+    TrainingPara trainPara = {
+        .batchSize = 1000,
+        .learningRate = 10,
+        .nbEpoch = 100,
+        .printDebug = true,
+        .saveTraining = true,
+    };
+
+    xorTraining(net, trainPara);
 
 
     destroy_network(net);
