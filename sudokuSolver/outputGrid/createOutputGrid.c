@@ -5,15 +5,15 @@
 #include <stdlib.h>
 #include <math.h>
 #include "../../preProcessing/SDL_Function/sdlFunction.h"
-#include "../solver/sudoku_solver.h"
+#include "../sudokuSolver/sudoku_solver.h"
 #include <SDL_ttf.h>
-#include "../convertLib/sudokuConvert.h"
+#include "../aux/sudokuUtil.h"
 
 
 //path to file :
 
 //path to grid (input and solved)
-#define PATH_INPUT_GRID "../data/input_matrix/input_matrix9x9"
+#define PATH_INPUT_GRID "../data/input_matrix/input_matrix16x162"
 #define PATH_SOLVED_GRID "grid.result"
 
 //path to digit font
@@ -26,23 +26,29 @@
 //width of each border of the sudoku grid in px
 #define WIDTH_BORDER 15
 #define RATIO_BORDER 0.5
-#define NB_SUB_square 3
 
 #define FONT_RATIO 0.8
 
-static int** defaultGrid;
-static int** solvedGrid;
-
-static Uint32 lineColor;
-static Uint32 bgColor;
-
-static TTF_Font* font;
+typedef struct GridPara{
+    SDL_Surface* img;
+    double x_0;
+    double y_0;
+    double w;
+    double widthBorder;
+    int depthLevel;
+    Uint32 digitColor;
+    int id;
+    Uint32 lineColor;
+    Uint32 bgColor;
+    TTF_Font* font;
+    int gS;
+} GridPara;
 
 
 /***************************************************************
- *  Function createGrid: 
+ *  Function createGrid:
  *
- *  Recursif function to create all square with digit of the grid 
+ *  Recursif function to create all square with digit of the grid
  *
  *  @intput :
  *      - img (SDL_Surface*) : input image (only background)
@@ -51,94 +57,140 @@ static TTF_Font* font;
  *      - w (int) : width of the square to draw
  *      - widthBorder (double) : witdh of sqare's borders to draw
  *      - depthLevel (int) : level of the recursion (nb of recursion inside)
- *      - digitColor (Uint32) : color of the digit 
+ *      - digitColor (Uint32) : color of the digit
  *      - id (int) : id of the current case (use to calculate x,y in the grid)
 ***************************************************************/
 
-void createGrid(SDL_Surface* img, int x_0, int y_0, int w, double widthBorder, int depthLevel, Uint32 digitColor, int id){
-    
-    if(depthLevel <= 0){
+void createGrid(GridPara gP, SudokuGrid defaultSG, SudokuGrid solvedSG){
+
+    if(gP.depthLevel <= 0){
         return;
     }
 
     //Draw line
-    drawRect(img, x_0, y_0, w, w, lineColor);
+    drawRect(
+            gP.img,
+            gP.x_0,
+            gP.y_0,
+            gP.w,
+            gP.w,
+            gP.lineColor
+        );
 
     //Draw bg
-    drawRect(img, x_0+widthBorder, y_0+widthBorder, w-2*widthBorder, w-2*widthBorder, bgColor);
+    drawRect(
+            gP.img,
+            (int)gP.x_0+gP.widthBorder,
+            (int)gP.y_0+gP.widthBorder,
+            (int)gP.w-2*gP.widthBorder,
+            (int)gP.w-2*gP.widthBorder,
+            gP.bgColor
+        );
 
 
     //write digit
-    if(depthLevel == 1){
+    if(gP.depthLevel == 1){
         char chiffreStr[2];
-        snprintf(chiffreStr, 2, "%c", '0' + id);  
+        snprintf(chiffreStr, 2, "%c", '0' + gP.id);
 
         Uint8 r,g,b;
-        SDL_GetRGB(digitColor, img->format, &r, &g, &b);
+        SDL_GetRGB(gP.digitColor, gP.img->format, &r, &g, &b);
 
         SDL_Color textColor = {r, g, b, 255};
-        SDL_Surface* textSurface = TTF_RenderText_Solid(font, chiffreStr, textColor);
+        SDL_Surface* textSurface = TTF_RenderText_Solid(gP.font, chiffreStr, textColor);
 
         if (!textSurface) {
             errx(1, "Error to create text surface.\n");
             return;
         }
 
-        int textX = (x_0 + widthBorder + (w - 2 * widthBorder) / 2) - textSurface->w / 2;
-        int textY = (y_0 + widthBorder + (w - 2 * widthBorder) / 2) - textSurface->h / 2;
-        
+        int textX = (gP.x_0 + gP.widthBorder + (gP.w - 2 * gP.widthBorder) / 2) - textSurface->w / 2;
+        int textY = (gP.y_0 + gP.widthBorder + (gP.w - 2 * gP.widthBorder) / 2) - textSurface->h / 2;
+
 
         SDL_Rect dstRect = {textX, textY, textSurface->w, textSurface->h};
 
-        SDL_BlitSurface(textSurface, NULL, img, &dstRect);
+        SDL_BlitSurface(textSurface, NULL, gP.img, &dstRect);
         SDL_FreeSurface(textSurface);
         return;
     }
 
     //start to create sub square / recurtion
-    int new_widthBorder = (int) (widthBorder * RATIO_BORDER);
-    int new_w = w / NB_SUB_square ;
-    depthLevel--;
+    double new_widthBorder = (gP.widthBorder * RATIO_BORDER);
+    double new_w = gP.w / gP.gS ;
+    gP.depthLevel--;
 
-    for (int x = 0; x < NB_SUB_square; x++)
+    for (int x = 0; x < gP.gS; x++)
     {
-        for (int y = 0; y < NB_SUB_square; y++)
-        {            
-            int new_x_0 = x_0 + widthBorder - new_widthBorder + x * (new_w - new_widthBorder);
-            int new_y_0 = y_0 + widthBorder - new_widthBorder + y * (new_w - new_widthBorder);
+        for (int y = 0; y < gP.gS; y++)
+        {
+            double new_x_0 =   gP.x_0 +
+                            gP.widthBorder -
+                            new_widthBorder +
+                            x * (new_w - new_widthBorder);
 
-            int new_id = id;
+            double new_y_0 =   gP.y_0 +
+                            gP.widthBorder -
+                            new_widthBorder +
+                            y * (new_w - new_widthBorder);
 
-            if(depthLevel == 2){
-                new_id = x + y * 3;
+            int new_id = gP.id;
+
+            if(gP.depthLevel == 2){
+                new_id = x + y * gP.gS;
             }
 
-            if(depthLevel == 1){
+            if(gP.depthLevel == 1){
                 //get digit to write in grid with diff color for solved digit
 
-                new_id =  x + 3 * y;                
+                new_id =  x + gP.gS * y;
 
-                if(defaultGrid[(id/3)*3 + y][(id%3)*3 + x] == -1){
-                    new_id = solvedGrid[(id/3)*3 + y][(id%3)*3 + x];
-                    createGrid(img, new_x_0, new_y_0, new_w, new_widthBorder, depthLevel, digitColor, new_id);
+                if(defaultSG.grid[(int)((gP.id/gP.gS)*gP.gS + y)][(int)((gP.id%gP.gS)*gP.gS + x)] == -1){
+                    new_id = solvedSG.grid[(int)((gP.id/gP.gS)*gP.gS + y)][(int)((gP.id%gP.gS)*gP.gS + x)];
+
+                    GridPara tempGP = gP;
+                    tempGP.x_0 = new_x_0;
+                    tempGP.y_0 = new_y_0;
+                    tempGP.w = new_w;
+                    tempGP.widthBorder = new_widthBorder;
+                    tempGP.id = new_id;
+
+                    createGrid(tempGP, defaultSG, solvedSG);
+
                     continue;
 
                 }else{
-                    new_id = defaultGrid[(id/3)*3 + y][(id%3)*3 + x];
-                    createGrid(img, new_x_0, new_y_0, new_w, new_widthBorder, depthLevel, lineColor, new_id);
+                    new_id = defaultSG.grid[(int)((gP.id/gP.gS)*gP.gS + y)][(int)((gP.id%gP.gS)*gP.gS + x)];
+
+                    GridPara tempGP = gP;
+                    tempGP.x_0 = new_x_0;
+                    tempGP.y_0 = new_y_0;
+                    tempGP.w = new_w;
+                    tempGP.widthBorder = new_widthBorder;
+                    tempGP.digitColor = gP.lineColor;
+                    tempGP.id = new_id;
+
+                    createGrid(tempGP, defaultSG, solvedSG);
                     continue;
                 }
             }
 
-            createGrid(img, new_x_0, new_y_0, new_w, new_widthBorder, depthLevel, digitColor, new_id);
-        }        
+            GridPara tempGP = gP;
+            tempGP.x_0 = new_x_0;
+            tempGP.y_0 = new_y_0;
+            tempGP.w = new_w;
+            tempGP.widthBorder = new_widthBorder;
+            tempGP.id = new_id;
+
+            createGrid(tempGP, defaultSG, solvedSG);
+        }
     }
-    
+
 }
 
 
 /***************************************************************
- *  Function gridBuilder: 
+ *  Function gridBuilder:
  *
  *  hat function to create grid
  *
@@ -146,12 +198,10 @@ void createGrid(SDL_Surface* img, int x_0, int y_0, int w, double widthBorder, i
  *      - img (SDL_Surface*) : input surface to build grid
 ***************************************************************/
 
-void gridBuilder(SDL_Surface* img){
-    
-    //base color
-    bgColor = SDL_MapRGBA(img->format, 255, 255, 255, 0);
-    lineColor = SDL_MapRGBA(img->format, 0, 0, 0, 0);
+void gridBuilder(SDL_Surface* img, TTF_Font* font, SudokuGrid defaultSG,
+                    SudokuGrid solvedSG){
 
+    Uint32 bgColor = SDL_MapRGBA(img->format, 255, 255, 255, 0);
 
     //create background of the grid
     SDL_Rect rect =  {0, 0, GRID_WIDTH ,GRID_HEIGHT};
@@ -162,66 +212,56 @@ void gridBuilder(SDL_Surface* img){
 
 
     //start recursion of the grid build
-    createGrid(img, 0,0, img->w, WIDTH_BORDER, 3, digitColor, 0);
+
+    GridPara gP = {
+        .img = img,
+        .x_0 = 0,
+        .y_0 = 0,
+        .w = img->w,
+        .widthBorder = WIDTH_BORDER,
+        .depthLevel = 3,
+        .digitColor = digitColor,
+        .id = 0,
+        .lineColor = SDL_MapRGBA(img->format, 0, 0, 0, 0),
+        .bgColor = bgColor,
+        .font = font,
+        .gS = defaultSG.gS == 9 ? 3 : 4
+    };
+
+
+    createGrid(gP, defaultSG, solvedSG);
 }
 
 
 /***************************************************************
- *  Function gridBuilder: 
+ *  Function gridBuilder:
  *
  *  main function to create all the final grid
  *
  *  @output :
  *      - img (SDL_Surface*) : final img of the final grid
 ***************************************************************/
-SDL_Surface* createOutputGrid(int gS){
+SDL_Surface* createOutputGrid(SudokuGrid defaultSG, SudokuGrid solvedSG){
 
-    //alloc grid
-    defaultGrid = (int**)calloc(gS, sizeof(int*));
-    for(int i = 0; i < gS; i++){
-        defaultGrid[i] = (int*)calloc(gS, sizeof(int));
-    }
-
-    solvedGrid = (int**)calloc(gS, sizeof(int*));
-    for(int i = 0; i < gS; i++){
-        solvedGrid[i] = (int*)calloc(gS, sizeof(int));
-    }
-
-    //Load sudoku grids (file.result)
-    if(loadGrid(PATH_INPUT_GRID, defaultGrid, gS) == 1){
-        errx(1, "Error can't to load default grid.");
-    }
-    
-    if(loadGrid(PATH_SOLVED_GRID, solvedGrid, gS) == 1){
-        errx(1, "Error can't to load solved grid.");
-    }
-
-
-    //Init SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        errx(1,"Error to init SDL.\n");        
-    }
-
-
-    //Init TTF 
+    //Init TTF
     if (TTF_Init() < 0) {
-        errx(1,"Error to init TTF.\n");
+        errx(EXIT_FAILURE ,"⚠️ Error to init TTF. ⚠️");
     }
 
 
     //Load font to write digit
-    font = TTF_OpenFont(PATH_FONT, GRID_WIDTH/9 * FONT_RATIO);
+    TTF_Font* font = TTF_OpenFont(PATH_FONT, GRID_WIDTH/9 * FONT_RATIO);
     if (!font) {
-        errx(1, "Error to load font.ttf.\n");        
+        errx(EXIT_FAILURE, "⚠️ Error to load font.ttf. ⚠️");
     }
 
 
-    //Create output surface 
+    //Create output surface
     SDL_Surface* outputImg = SDL_CreateRGBSurfaceWithFormat(0, GRID_WIDTH, GRID_HEIGHT, 32, SDL_PIXELFORMAT_ABGR8888);
 
 
     //build representation grid of sudokuGrid
-    gridBuilder(outputImg);
+    gridBuilder(outputImg, font, defaultSG, solvedSG);
 
 
 
