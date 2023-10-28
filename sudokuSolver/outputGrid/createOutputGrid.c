@@ -7,7 +7,7 @@
 #include "../../preProcessing/SDL_Function/sdlFunction.h"
 #include "../sudokuSolver/sudoku_solver.h"
 #include <SDL_ttf.h>
-#include "../aux/sudokuUtil.h"
+#include "../sudokuAux/sudokuUtil.h"
 
 
 //path to file :

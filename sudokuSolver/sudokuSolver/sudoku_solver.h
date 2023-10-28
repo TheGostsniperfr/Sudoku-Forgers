@@ -4,7 +4,7 @@
 #include <err.h>
 #include <stdio.h>
 #include <math.h>
-#include "../aux/sudokuUtil.h"
+#include "../sudokuAux/sudokuUtil.h"
 
 int sudokuSolver(SudokuGrid sG);
 

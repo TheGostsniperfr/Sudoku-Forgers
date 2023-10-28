@@ -1,5 +1,5 @@
-#include "aux/sudokuUtil.h"
-#include "aux/sudokuHandle.h"
+#include "sudokuAux/sudokuUtil.h"
+#include "sudokuAux/sudokuHandle.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
