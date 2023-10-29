@@ -22,5 +22,6 @@ int saveGrid(const char *filename, SudokuGrid sG);
 void freeGrid(SudokuGrid sG);
 int** allocGrid(int gS);
 char* concateStr(char* a1, char* a2);
+void printSection(char* sectionName);
 
 #endif

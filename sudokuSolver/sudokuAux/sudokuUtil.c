@@ -60,7 +60,7 @@ char intToChar(int nb){
         return ('A' + nb - 10);
     }
 
-    return -1;
+    return '?';
 }
 
 
@@ -288,6 +288,17 @@ void copyGrid(SudokuGrid sG1, SudokuGrid sG2) {
 }
 
 
+/***************************************************************
+ *  Function concateStr:
+ *
+ *  Cocate a1 with a2 without input string edit
+ *
+ *  @input :
+ *      - a1 (char*) : string a1
+ *      - a2 (char*) : string a2
+ * @output :
+ *      - (char*) : concatened string : a1+a2
+***************************************************************/
 
 char* concateStr(char* a1, char* a2){
     char* result = malloc(strlen(a1) + strlen(a2) + 1);
@@ -300,4 +311,42 @@ char* concateStr(char* a1, char* a2){
     strcat(result, a2);
 
     return result;
+}
+
+
+/***************************************************************
+ *  Function printSection:
+ *
+ *  Print a section in the console
+ *
+ *  @input :
+ *      - sectionName (char*) : the name of the section
+***************************************************************/
+
+void printSection(char* sectionName){
+
+    int totalWidthSize = 60;
+
+
+    for (int i = 0; i < totalWidthSize; i++)
+    {
+        printf("#");
+    }
+
+    printf("\n\n");
+
+    for (int i = 0; i < totalWidthSize/2-(int)strlen(sectionName); i++)
+    {
+        printf(" ");
+    }
+
+    printf("Grid Printed : %s", sectionName);
+
+    printf("\n\n");
+
+    for (int i = 0; i < totalWidthSize; i++)
+    {
+        printf("#");
+    }
+    printf("\n\n");
 }

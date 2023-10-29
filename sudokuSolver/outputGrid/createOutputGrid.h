@@ -11,6 +11,15 @@
 #include <SDL_ttf.h>
 
 
-SDL_Surface* createOutputGrid(SudokuGrid defaultSG, SudokuGrid solvedSG);
+typedef struct GridPara {
+    double fontRatio;
+    double borderRatio;
+    double gridPxSize;
+    double widthBorder;
+
+}GridPara;
+
+SDL_Surface* createOutputGrid(SudokuGrid defaultSG, SudokuGrid solvedSG,
+                                GridPara gP);
 
 #endif
