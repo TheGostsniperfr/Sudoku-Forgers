@@ -1,10 +1,9 @@
-#include "sudokuUtil.h"
-#include"../sudokuSolver/sudoku_solver.h"
 #include <string.h>
-#include "sudokuUtil.h"
-#include "../outputGrid/createOutputGrid.h"
-#include "sudokuUtil.h"
 
+#include "sudokuSolver/sudokuSolver/sudoku_solver.h"
+#include "sudokuSolver/sudokuAux/sudokuUtil.h"
+#include "sudokuSolver/outputGrid/createOutputGrid.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
 
 /***************************************************************
