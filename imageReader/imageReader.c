@@ -196,11 +196,11 @@ int main(int argc, char *argv[]) {
 
     //afficherValeursPixels(images, indiceImageAVisualiser, largeurImage, hauteurImage);
     // N'oubliez pas de libérer la mémoire une fois que vous avez terminé
-   
+
 
     uint8_t label = labels[indiceImageAVisualiser];
     printf("Label de l'image à l'indice %d : %d\n", indiceImageAVisualiser, label);
-    
+
     afficherImageGTK(images, indiceImageAVisualiser, largeurImage, hauteurImage);
 
 

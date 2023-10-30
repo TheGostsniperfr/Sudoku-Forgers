@@ -1,15 +1,13 @@
 CC = gcc -I../../include
-CFLAGS = $(shell sdl2-config --cflags) -Wall -Wextra
-LDLIBS = $(shell sdl2-config --libs) -lSDL2_image -lSDL2_ttf -lm
+CFLAGS = -Wall -Wextra
+LDLIBS = -lm
 
 SRC_DIR = ./
 
 SRC = $(shell find $(SRC_DIR) -type f -name "*.c")
 
-SRC += ../preProcessing/SDL_Function/sdlFunction.c
-
 OBJ = ${SRC:.c=.o}
-TARGET = solver
+TARGET = neuralNetwork
 
 all: $(TARGET)
 
@@ -23,7 +21,6 @@ clean:
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
 	rm -f $(TARGET)
 
-	rm -f ../preProcessing/SDL_Function/sdlFunction.o
 
 
 
