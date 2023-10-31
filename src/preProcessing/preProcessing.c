@@ -2,59 +2,119 @@
 #include "preProcessing/Gaussian_Filter/gaussianFilter.h"
 #include "preProcessing/GrayScale_Filter/grayScaleFilter.h"
 #include "preProcessing/Histogram_Lib/histogram.h"
-#include "preProcessing/Otsu_method/otsu.h"
+#include "preProcessing/binarization_method/otsu.h"
 #include "preProcessing/Morphology/morphology.h"
+#include "preProcessing/binarization_method/adaptiveThreshold.h"
 
 //#include "Rotation/rotation.h"
 
+#include "preProcessing/preProcessingAux/preProcessingHandle.h"
+#include "GUI/handleUtils.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define NB_FLAGS 2
+
+Option options[] = {
+    {"-all", handleAllSteps},
+    {"-r", handleTurnNDegree},
+    {"--help", handlePrintHelp}
+};
 
 
 
 
-int main(){
+
+int main(int argc, char* argv[]){
+    /*
+        Usage :
+            ./solver <inputGrid> -> solve the grid and create
+                                    outputGrid.result
+                                    in the same folder
+    */
 
 
-    SDL_Surface* img = loadImg("../../data/sudoku_default_images/image_04.jpeg");
+    //Init flags
+    Flag* flags = (Flag*)malloc(NB_FLAGS * sizeof(Flag));
 
-    if(img == NULL){
-        printf("Error to load img !\n");
+    for (int i = 0; i < NB_FLAGS; i++)
+    {
+        flags->flag = NULL;
+        flags->value = 0;
+    }
+
+    flags[0].flag = "-save";
+    flags[1].flag = "-verbose";
+
+
+    //find flags
+
+    for (int i = 1; i < argc; i++)
+    {
+        for (size_t j = 0; j < NB_FLAGS; j++)
+        {
+            if(strcmp(argv[i], flags[j].flag) == 0){
+                flags[j].value = 1;
+            }
+
+        }
+    }
+
+    int optionFound  = 0;
+    char* InputImgPath = "";
+
+    if(argc > 1 && argv[1][0] != '-'){
+        InputImgPath = argv[1];
+
+        optionFound ++;
+        argc--;
+        argv++;
     }else{
+        handlePrintHelp(0, argv, "", flags);
+        return EXIT_SUCCESS;
+    }
 
-        img = applyGrayScaleFilter(img);
-        saveImg(img, "GrayScaleOutput.jpg");
+    for (int i = 1; i < argc; i++)
+    {
+        char* currentArg = argv[i];
 
-        img = applyGaussianFilter(img);
-        saveImg(img, "GaussianOutput.jpg");
+        for (size_t j = 0; j < sizeof(options) / sizeof(options[0]); j++)
+        {
 
-        double* histo;
-        histo = findHistogram(img);
+            if(strcmp(currentArg, options[j].flag) == 0){
+                optionFound = 1;
+                int subArgStart = i + 1;
+                int subArgEnd = subArgStart;
+                while(subArgEnd < argc && argv[subArgEnd][0] != '-'){
+                    subArgEnd++;
+                }
 
-        SDL_Surface* histoImg = createHistogramImg(histo);
-        saveImg(histoImg, "HistoGram.jpg");
-        free(histoImg);
+                options[j].action(
+                    subArgEnd - subArgStart,
+                    argv + subArgStart,
+                    InputImgPath,
+                    flags
+                );
 
-        double threshold = findOtsuThreshold(histo, img->w*img->h);
+                i = subArgEnd - 1;
+                break;
+            }
+        }
 
-        img = binarization(img, threshold);
-        saveImg(img, "Binarized.jpg");
+    }
 
+    if(optionFound == 0){
+        handlePrintHelp(0, argv, "", flags);
+    }
 
-        img = applyMorphology(img, 0);
-        img = applyMorphology(img, 1);
-
-        saveImg(img, "Morphology.jpg");
-
-
-        //Save_RotatedImg(img, 45);
-
-
-        /* SDL_Surface* homographic_img = Homography_Transform(img, 1000);
-        saveImg(homographic_img, "Homographic_img.jpg");  */
-
-
-        free(histo);
+    if(optionFound == 1 && InputImgPath != 0){
+        handleAllSteps(argc, argv, InputImgPath, flags);
     }
 
 
-    SDL_FreeSurface(img);
+
+    free(flags);
+    return EXIT_SUCCESS;
 }

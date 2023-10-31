@@ -5,6 +5,9 @@
 #include "sudokuSolver/outputGrid/createOutputGrid.h"
 #include "preProcessing/SDL_Function/sdlFunction.h"
 
+#include "GUI/handleUtils.h"
+
+
 
 /***************************************************************
  *  Function handleSolver:
@@ -19,7 +22,9 @@
 
 int handleSolver(int argc,
         char* argv[] __attribute__((unused)),
-        char* gridPath){
+        char* gridPath,
+        Flag* flags)
+    {
 
     /*
         Usage:
@@ -30,7 +35,16 @@ int handleSolver(int argc,
         errx(EXIT_FAILURE, ERROR_NB_ARG);
     }
 
+    if(flags[0].value == 1){
+        printf("🚀 Starting to solve\n");
+    }
+
     SudokuGrid sG = loadGrid(gridPath);
+
+    if(flags[1].value == 1){
+        printSection(gridPath);
+        printGrid(sG);
+    }
 
     //solve grid :
     if(sudokuSolver(sG) == 0){
@@ -40,7 +54,17 @@ int handleSolver(int argc,
 
     saveGrid(concateStr(gridPath, ".result"), sG);
 
+    if(flags[2].value == 1){
+        printSection(concateStr(gridPath, ".result"));
+
+        printGrid(sG);
+    }
+
     freeGrid(sG);
+
+    if(flags[0].value == 1){
+        printf("✅ Success to solve grid\n");
+    }
 
     return EXIT_SUCCESS;
 }
@@ -59,7 +83,9 @@ int handleSolver(int argc,
 
 int handleConsoleGridPrint(int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
-        char* gridPath){
+        char* gridPath,
+        Flag* flags __attribute__((unused)))
+    {
     /*
         Usage :
             [-p] -> print the input grid
@@ -96,14 +122,19 @@ int handleConsoleGridPrint(int argc __attribute__((unused)),
  *      - gridPath (char*) : path of the input grid
 ***************************************************************/
 
-int handleConsoleOutputGridPrint(int argc, char* argv[] ,char* gridPath){
+int handleConsoleOutputGridPrint(
+        int argc,
+        char* argv[],
+        char* gridPath,
+        Flag* flags )
+    {
 
     /*
         Usage :
             [-po] -> print output grid
     */
 
-    handleConsoleGridPrint(argc, argv, concateStr(gridPath, ".result"));
+    handleConsoleGridPrint(argc, argv, concateStr(gridPath, ".result"), flags);
 
     return EXIT_SUCCESS;
 }
@@ -122,20 +153,26 @@ int handleConsoleOutputGridPrint(int argc, char* argv[] ,char* gridPath){
 
 int handleGenerateGridImg(int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
-        char* gridPath){
+        char* gridPath,
+        Flag* flags)
+    {
     /*
         Usage :
             [-g|-generateImg] -> generate an output grid
     */
 
    if(argc == 0){
-        errx(EXIT_FAILURE, "Usage : -g <grid width (px)>"
+        errx(EXIT_FAILURE, "Usage : -g <grid width (px)> "
                             "<border ratio> <width border> <font ratio>");
    }
 
    if(argc != 4){
         errx(EXIT_FAILURE, ERROR_NB_ARG);
    }
+
+    if(flags[0].value == 1){
+        printf("🚀 Starting to generate image.\n");
+    }
 
     SudokuGrid defaultSG = loadGrid(gridPath);
 
@@ -154,6 +191,36 @@ int handleGenerateGridImg(int argc __attribute__((unused)),
 
     freeGrid(defaultSG);
     freeGrid(solvedSG);
+
+    if(flags[0].value == 1){
+        printf("✅ Success to generate image.\n");
+    }
+
+    return EXIT_SUCCESS;
+}
+
+
+
+int handlePrintHelp(
+        int argc __attribute__((unused)),
+        char* argv[] __attribute__((unused)),
+        char* inputImgPath __attribute__((unused)),
+        Flag* flags __attribute__((unused)))
+    {
+    /*
+        Usage :
+            [--help] -> print the help
+    */
+
+   printf(
+        "Usage : solver [Grid DIR] [OPTIONS]\n\n"
+        "-p             ->      Print input grid\n"
+        "-po            ->      Print output grid\n"
+        "-g <grid width (px)> <border ratio> <width border> <font ratio>\n"
+        "               ->      Generate output image\n"
+        "-verbose       ->      Print verbose\n"
+        "--help         ->      Show the help panel\n"
+    );
 
     return EXIT_SUCCESS;
 }

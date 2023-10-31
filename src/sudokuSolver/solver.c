@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <err.h>
 #include "sudokuSolver/sudokuAux/sudokuUtil.h"
 #include "sudokuSolver/sudokuAux/sudokuHandle.h"
+#include "GUI/handleUtils.h"
+
+#define NB_FLAGS 4
 
 
 Option options[] = {
-    {"-p", handleConsoleGridPrint},
-    {"-po", handleConsoleOutputGridPrint},
     {"-g", handleGenerateGridImg},
 };
 
@@ -21,22 +22,47 @@ int main(int argc, char* argv[]){
                                     in the same folder
     */
 
-   char* gridPath;
+   //Init flags
+    Flag* flags = (Flag*)malloc(NB_FLAGS * sizeof(Flag));
+
+    for (int i = 0; i < NB_FLAGS; i++)
+    {
+        flags->flag = NULL;
+        flags->value = 0;
+    }
+
+    flags[0].flag = "-verbose";
+    flags[1].flag = "-p";
+    flags[2].flag = "-po";
+    flags[3].flag = "-g";
 
 
+    //find flags
+
+    for (int i = 1; i < argc; i++)
+    {
+        for (size_t j = 0; j < NB_FLAGS; j++)
+        {
+            if(strcmp(argv[i], flags[j].flag) == 0){
+                flags[j].value = 1;
+            }
+
+        }
+    }
+
+    char* gridPath;
     int optionFound  = 0;
 
 
     if(argc > 1 && argv[1][0] != '-'){
         gridPath = argv[1];
-        handleSolver(argc, argv, gridPath);
-
-
+        handleSolver(argc, argv, gridPath, flags);
         optionFound ++;
         argc--;
         argv++;
     }else{
-        errx(EXIT_FAILURE, ERROR_NB_ARG);
+        handlePrintHelp(0, argv, "", flags);
+        return EXIT_SUCCESS;
     }
 
 
@@ -59,7 +85,9 @@ int main(int argc, char* argv[]){
 
                 options[j].action(
                     subArgEnd - subArgStart,
-                    argv + subArgStart, gridPath
+                    argv + subArgStart,
+                    gridPath,
+                    flags
                 );
 
                 i = subArgEnd - 1;
@@ -69,8 +97,8 @@ int main(int argc, char* argv[]){
 
     }
 
-    if(optionFound  == 0){
-        printf("❗ Usage : ./solver <gridPath>\n");
+    if(optionFound == 0){
+        handlePrintHelp(0, argv, "", flags);
     }
 
 

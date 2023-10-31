@@ -4,7 +4,6 @@
 
 #include <stdlib.h>
 
-#define ERROR_NB_ARG "⚠️ Number of arguments does not match. ⚠️"
 
 typedef struct SudokuGrid
 {

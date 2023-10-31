@@ -90,7 +90,6 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
 
     Uint32* pixels = (Uint32*) outputSurface->pixels;
 
-    // Copie de l'image d'entrée dans l'image de sortie en utilisant des boucles
     for (int y = 0; y < outputSurface->h; ++y) {
         for (int x = 0; x < outputSurface->w; ++x) {
             //get pixel

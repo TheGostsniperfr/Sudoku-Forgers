@@ -6,7 +6,7 @@
 #include "preProcessing/SDL_Function/sdlFunction.h"
 
 double findOtsuThreshold(double* histogram, int numPixels);
-SDL_Surface* binarization(SDL_Surface* img, double threshold);
+SDL_Surface* otsuBinarization(SDL_Surface* img, double threshold);
 
 
 #endif

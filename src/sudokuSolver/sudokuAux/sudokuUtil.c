@@ -2,6 +2,10 @@
 #include <err.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
+#include "GUI/handleUtils.h"
+
 
 typedef struct SudokuGrid
 {
@@ -85,8 +89,12 @@ int gridSize(const char* filename){
     int count = 0;
     int character;
 
-    while ((character = fgetc(file)) != EOF && character != '\n') {
-        count++;
+    while ((character = fgetc(file)) != EOF
+            && character != '\n') {
+
+        if(character != ' '){
+            count++;
+        }
     }
 
     fclose(file);
@@ -154,8 +162,20 @@ int saveGrid(const char *filename, SudokuGrid sG) {
         errx(EXIT_FAILURE , "saveMatrix -> Error to open file");
     }
 
+    int size = sqrt(sG.gS);
+
+
     for (int row = 0; row < sG.gS; row++) {
+        if(row % size == 0 && row != 0){
+               fprintf(file, "\n");
+        }
+
         for (int col = 0; col < sG.gS; col++) {
+
+            if(col % size == 0 && col != 0){
+               fprintf(file, " ");
+            }
+
             if(sG.grid[row][col] == -1){
                 fprintf(file, ".");
             }
@@ -170,7 +190,6 @@ int saveGrid(const char *filename, SudokuGrid sG) {
         }
 
         fprintf(file, "\n");
-
     }
 
     fclose(file);
@@ -207,7 +226,7 @@ SudokuGrid loadGrid(const char *filename) {
 
     while ((character = fgetc(file)) != EOF && row < sG.gS && col < sG.gS) {
 
-        if(character == '\n'){
+        if(character == '\n' || character == ' '){
             continue;
         }
 
@@ -256,16 +275,32 @@ SudokuGrid loadGrid(const char *filename) {
  *      - gS (int) : size of the grid
 ***************************************************************/
 void printGrid(SudokuGrid sG) {
+    int size = sqrt(sG.gS);
+
     for (int i = 0; i < sG.gS; i++) {
+        if(i % size == 0 && i != 0){
+               printf("\n");
+        }
+
         for (int j = 0; j < sG.gS; j++) {
+            if(j % size == 0 && j != 0){
+               printf(" ");
+        }
+
             if(sG.grid[i][j] == -1){
                 printf(".");
             }else{
-                printf("%d", sG.grid[i][j]);
+                int nb = sG.grid[i][j];
+                if(sG.gS == 16){
+                    nb--;
+                }
+                printf("%c", intToChar(nb));
             }
         }
         printf("\n");
     }
+
+    printf("\n");
 }
 
 
@@ -340,7 +375,7 @@ void printSection(char* sectionName){
         printf(" ");
     }
 
-    printf("Grid Printed : %s", sectionName);
+    printf("🖨️  Grid printed : %s", sectionName);
 
     printf("\n\n");
 

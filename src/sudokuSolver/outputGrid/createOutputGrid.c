@@ -32,6 +32,7 @@ typedef struct SubGridPara{
     Uint32 bgColor;
     TTF_Font* font;
     int gS;
+    Uint32 bgColor2;
 } SubGridPara;
 
 
@@ -153,12 +154,14 @@ void createGrid(SubGridPara sGP, GridPara gP, SudokuGrid defaultSG,
                 //get digit to write in grid with diff color for solved digit
 
                 new_id =  x + sGP.gS * y;
+                int tempX = (int)((sGP.id%sGP.gS)*sGP.gS + x);
+                int tempY = (int)((sGP.id/sGP.gS)*sGP.gS + y);
 
-                if(defaultSG.grid[(int)((sGP.id/sGP.gS)*sGP.gS + y)]
-                                [(int)((sGP.id%sGP.gS)*sGP.gS + x)] == -1){
+                if(defaultSG.grid[tempY]
+                                [tempX] == -1){
                     int new_id = solvedSG.grid
-                        [(int)((sGP.id/sGP.gS)*sGP.gS + y)]
-                        [(int)((sGP.id%sGP.gS)*sGP.gS + x)];
+                        [tempY]
+                        [tempX];
 
                     if(sGP.gS == 4){
                         new_id--;
@@ -177,8 +180,8 @@ void createGrid(SubGridPara sGP, GridPara gP, SudokuGrid defaultSG,
 
                 }else{
                     new_id = defaultSG.grid
-                        [(int)((sGP.id/sGP.gS)*sGP.gS + y)]
-                        [(int)((sGP.id%sGP.gS)*sGP.gS + x)];
+                        [tempY]
+                        [tempX];
 
                     if(sGP.gS == 4){
                         new_id--;
@@ -191,6 +194,8 @@ void createGrid(SubGridPara sGP, GridPara gP, SudokuGrid defaultSG,
                     tempGP.widthBorder = new_widthBorder;
                     tempGP.digitColor = sGP.lineColor;
                     tempGP.id = new_id;
+                    tempGP.bgColor = sGP.bgColor2;
+
 
                     createGrid(tempGP, gP, defaultSG, solvedSG);
                     continue;
@@ -234,6 +239,9 @@ void gridBuilder(SDL_Surface* img, TTF_Font* font, GridPara gP,
     //Color of the digit (default : red)
     Uint32 digitColor = SDL_MapRGBA(img->format, 255, 0, 0, 0);
 
+    //light gray color
+    Uint32 bgColor2 = SDL_MapRGBA(img->format, 225, 225, 225, 0);
+
 
     //start recursion of the grid build
 
@@ -249,7 +257,8 @@ void gridBuilder(SDL_Surface* img, TTF_Font* font, GridPara gP,
         .lineColor = SDL_MapRGBA(img->format, 0, 0, 0, 0),
         .bgColor = bgColor,
         .font = font,
-        .gS = defaultSG.gS == 9 ? 3 : 4
+        .gS = defaultSG.gS == 9 ? 3 : 4,
+        .bgColor2 = bgColor2
     };
 
 

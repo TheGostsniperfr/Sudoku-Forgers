@@ -61,7 +61,7 @@ double findOtsuThreshold(double* histogram, int numPixels) {
 
 
 /***************************************************************
- *  Function binarization:
+ *  Function otsuBinarization:
  *
  *  Binarization of the image, set p(i) white if p(i).Value > threshold, else p(i) = black
  *
@@ -71,12 +71,16 @@ double findOtsuThreshold(double* histogram, int numPixels) {
  *  @output :
  *      - output image (SDL_Surface*) : the binarised image (with otsu method)
 ***************************************************************/
-SDL_Surface* binarization(SDL_Surface* img, double threshold){
+SDL_Surface* otsuBinarization(SDL_Surface* img, double threshold){
     Uint32* pixels = img->pixels;
 
     SDL_Surface *outputSurface = SDL_ConvertSurfaceFormat(img, SDL_PIXELFORMAT_ABGR8888, 0);
 
     Uint32* pixelsOut = outputSurface->pixels;
+
+    Uint32 white = SDL_MapRGBA(img->format, 255, 255, 255, 255);
+    Uint32 black = SDL_MapRGBA(img->format, 0, 0, 0, 255);
+
 
 
     for (int x = 0; x < img->w; x++)
@@ -91,9 +95,9 @@ SDL_Surface* binarization(SDL_Surface* img, double threshold){
             SDL_GetRGBA(pixel, img->format, &r, &ignore_g, &ignore_b, &ignore_a);
 
             if(r > threshold){
-                pixelsOut[y * img->w + x] = SDL_MapRGBA(img->format, 255, 255, 255, 255);
+                pixelsOut[y * img->w + x] = white;
             }else{
-                pixelsOut[y * img->w + x] = SDL_MapRGBA(img->format, 0, 0, 0, 255);
+                pixelsOut[y * img->w + x] = black;
             }
         }
     }
