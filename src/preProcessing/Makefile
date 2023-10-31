@@ -6,10 +6,9 @@ SRC_DIR = ./
 
 SRC = $(shell find $(SRC_DIR) -type f -name "*.c")
 
-SRC += ../preProcessing/SDL_Function/sdlFunction.c
 
 OBJ = ${SRC:.c=.o}
-TARGET = solver
+TARGET = preProcessing
 
 all: $(TARGET)
 
@@ -21,13 +20,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
-	rm -f $(TARGET)
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.jpg")
-	rm -f $(shell find $(SRC_DIR) -type f -name "*.result")
 
-	rm -f ../preProcessing/SDL_Function/sdlFunction.o
-
-
+	rm -f $(TARGET)
 
 
 clean-obj:
