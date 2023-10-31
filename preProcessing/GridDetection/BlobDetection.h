@@ -1,11 +1,11 @@
-#ifndef BLOBDETECTION_H
-#define BLOBDETECTION_H 
-
-#include <SDL2/SDL.h>
+#include <SLD2/SDL.h>
 #include "SDL2/SDL_image.h"
 #include "../SDL_Function/sdlFunction.h"
-#include "../Pixel/pixel.h"
+#include "../Rotation/rotation.h"
 #include <err.h>
+
+#ifndef BLOBDETECTION_H
+#define BLOBDETECTION_H 
 
 typedef struct Point{
 	int x;
