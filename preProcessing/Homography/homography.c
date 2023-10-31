@@ -8,8 +8,6 @@
 #include "../Corner_Finder/FindCorners.h"
 #include "../Matrix/mat.h"
 
-#include <stdio.h> // a enlever
-
 #define FILL(mat, x, y) mat[x*8+y]
 
 /***************************************************************
