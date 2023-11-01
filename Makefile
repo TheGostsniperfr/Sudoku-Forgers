@@ -8,12 +8,16 @@ solver:
 network:
 	make -C $(SRC_DIR)/neuralNetwork
 
+pre:
+	make -C $(SRC_DIR)/preProcessing
+
 
 
 clean:
 	make -C $(SRC_DIR)/sudokuSolver clean
 	make -C $(SRC_DIR)/neuralNetwork clean
-	rm -f $(shell find $(SRC_DIR) -type f -name "*.jpg")
+	make -C $(SRC_DIR)/preProcessing clean
+	rm -f $(shell find ./ -type f -name "*.jpg")
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.result")
 
 	clear
