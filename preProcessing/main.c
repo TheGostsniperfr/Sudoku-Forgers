@@ -5,17 +5,17 @@
 #include "Otsu_method/otsu.h"
 #include "Rotation/rotation.h"
 #include "Morphology/morphology.h"
-
-
-
 #include "Homography/homography.h"
 
+#include "Rotation/spin_rotate.h"
+#include "Bilinear_Interpolation/bilinear_interpolation.h"
 
+#include "Division9/division_by_9.h"
 
 int main(){
 
-
-    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_04.jpeg");
+    SDL_Surface* img = loadImg("../data/sudoku_default_images/image_01.jpeg");
+    
     
     if(img == NULL){
         printf("Error to load img !\n");
@@ -45,15 +45,20 @@ int main(){
 
         saveImg(img, "Morphology.jpg");
 
+        //Save_RotatedImg(img, 45);
 
-        Save_RotatedImg(img, 45);
+        SDL_Surface* homograhpy_img = Homography_Transform(img, 1000);
+        saveImg(homograhpy_img, "Homography_img.jpg");
 
-        
-        /* SDL_Surface* homographic_img = Homography_Transform(img, 1000);
-        saveImg(homographic_img, "Homographic_img.jpg");  */
+        SDL_Surface* bilinear_img = Bilinear_Interpolation(img, 2000, 2000);
+        saveImg(bilinear_img, "Bilinear_img.jpg");
 
+        //Spin_rotate(img);
 
-        free(histo);        
+        SDL_Surface** res = Division9(img);
+        saveImg(res[4], "image_3_28x28.jpg");
+
+        free(histo);       
     }    
 
     

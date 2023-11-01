@@ -12,7 +12,11 @@ all:
 	gcc -Wall -Wextra -c Matrix/mat.c `sdl2-config --cflags --libs` -lSDL2_image -lm
 	gcc -Wall -Wextra -c Homography/homography.c `sdl2-config --cflags --libs` -lSDL2_image -lm
 
-	gcc -Wall -Wextra -g -o main main.c sdlFunction.o gaussianFilter.o grayScaleFilter.o histogram.o otsu.o morphology.o FindCorners.o rotation.o pixel.o homography.o mat.o -lm `sdl2-config --cflags --libs` -lSDL2_image
+	gcc -Wall -Wextra -c Rotation/spin_rotate.c `sdl2-config --cflags --libs` -lSDL2_image -lm
+	gcc -Wall -Wextra -c Bilinear_Interpolation/bilinear_interpolation.c `sdl2-config --cflags --libs` -lSDL2_image -lm
+	gcc -Wall -Wextra -c Division9/division_by_9.c `sdl2-config --cflags --libs` -lSDL2_image -lm
+
+	gcc -Wall -Wextra -g -o main main.c sdlFunction.o gaussianFilter.o grayScaleFilter.o histogram.o otsu.o morphology.o FindCorners.o rotation.o pixel.o homography.o mat.o spin_rotate.o bilinear_interpolation.o division_by_9.o -lm `sdl2-config --cflags --libs` -lSDL2_image
 
 clean:
 	rm -f sdlFunction
@@ -25,6 +29,9 @@ clean:
 	rm -f rotation
 	rm -f pixel
 	rm -f mat
+	rm -f spin_rotate
+	rm -f bilinear_interpolation
+	rm -f division_by_9
 	rm -f main
 	rm -f *.o
 	rm -f *.jpeg
