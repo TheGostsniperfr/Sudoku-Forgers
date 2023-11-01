@@ -110,7 +110,7 @@ int main(int argc, char* argv[]){
     }
 
     if(optionFound == 1 && InputImgPath != 0){
-        handleAllSteps(argc, argv, InputImgPath, flags);
+        //handleAllSteps(argc, argv, InputImgPath, flags);
     }
 
 

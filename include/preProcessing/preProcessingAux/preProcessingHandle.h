@@ -4,11 +4,6 @@
 #include <string.h>
 #include "GUI/handleUtils.h"
 
-typedef struct Flag{
-    char* flag;
-    int value;
-} Flag;
-
 
 
 int handleAllSteps(

@@ -5,6 +5,9 @@
 #include "preProcessing/GrayScale_Filter/grayScaleFilter.h"
 #include "preProcessing/Histogram_Lib/histogram.h"
 #include "preProcessing/Morphology/morphology.h"
+#include "preProcessing/contrast_Filter/contrastFilter.h"
+#include "preProcessing/Illuminatio_Filter/IlluminatioFilter.h"
+#include "preProcessing/median_Filter/medianFilter.h"
 
 #include "preProcessing/preProcessingAux/preProcessingHandle.h"
 
@@ -52,6 +55,57 @@ int handleAllSteps(
         }
 
         if(flags[1].value == 1){
+            printf("🚀 Starting to apply contrast filter.\n");
+        }
+
+        img = applyContrastFilter(img);
+
+        if(flags[1].value == 1){
+            printf("✅ Success to apply contrast filter.\n");
+        }
+
+        if(flags[0].value == 1){
+            saveImg(img, "ContrastOutput.jpg");
+            if(flags[1].value == 1){
+                printf("💾 Success to save ContrastOutput.jpg\n");
+            }
+        }
+
+        if(flags[1].value == 1){
+            printf("🚀 Starting to apply illumination filter.\n");
+        }
+
+        img = applyIlluminationFilter(img);
+
+        if(flags[1].value == 1){
+            printf("✅ Success to apply illumination filter.\n");
+        }
+
+        if(flags[0].value == 1){
+            saveImg(img, "IlluminationOutput.jpg");
+            if(flags[1].value == 1){
+                printf("💾 Success to save IlluminationOutput.jpg\n");
+            }
+        }
+
+        if(flags[1].value == 1){
+            printf("🚀 Starting to apply median filter.\n");
+        }
+
+        img = applyMedianFilter(img);
+
+        if(flags[1].value == 1){
+            printf("✅ Success to apply median filter.\n");
+        }
+
+        if(flags[0].value == 1){
+            saveImg(img, "MedianOutput.jpg");
+            if(flags[1].value == 1){
+                printf("💾 Success to save MedianOutput.jpg\n");
+            }
+        }
+
+        if(flags[1].value == 1){
             printf("🚀 Starting to apply gaussian filter.\n");
         }
         img = applyGaussianFilter(img);
@@ -66,8 +120,8 @@ int handleAllSteps(
                 printf("💾 Success to save GaussianOutput.jpg\n");
             }
 
-        }
-
+        }/*
+        //Otsu method (old global method)
         if(flags[1].value == 1){
             printf("🚀 Starting to calcul histogram.\n");
         }
@@ -104,17 +158,33 @@ int handleAllSteps(
                 printf("💾 Success to save Binarized.jpg\n");
             }
         }
+        */
 
+        if(flags[1].value == 1){
+            printf("🚀 Starting to apply adaptive threshold.\n");
+        }
+        img = applyAdaptiveThreshold(img);
 
-        //img = applyAdaptiveThreshold(img);
-        //saveImg(img, "Binarized.jpg");
+        if(flags[1].value == 1){
+            printf("✅ Success to apply adaptive threshold.\n");
+        }
+
+        if(flags[0].value == 1){
+            saveImg(img, "Binarized.jpg");
+            if(flags[1].value == 1){
+                printf("💾 Success to save Binarized.jpg\n");
+            }
+
+        }
 
         if(flags[1].value == 1){
             printf("🚀 Starting to apply morphology filter.\n");
         }
 
+        //dilate
         img = applyMorphology(img, 0);
-        img = applyMorphology(img, 1);
+        //erode
+        //img = applyMorphology(img, 1);
 
         if(flags[1].value == 1){
             printf("✅ Success to apply morphology.\n");
@@ -209,6 +279,7 @@ int handlePrintHelp(
         "Usage : preProcessing [IMAGE DIR] [OPTIONS]\n\n"
         "-all           ->      Do all the steps\n"
         "-r <number>    ->      Rotate and save the image by n degrees\n"
+        "-save          ->      Save all steps images\n"
         "-verbose       ->      Print verbose\n"
         "--help         ->      Show the help panel\n"
     );

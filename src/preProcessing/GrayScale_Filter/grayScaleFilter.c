@@ -32,8 +32,8 @@ SDL_Surface* applyGrayScaleFilter(SDL_Surface* inputSurface){
             SDL_GetRGBA(pixel, inputSurface->format, &r, &g, &b, &a);
 
             //set the new pixel (gray = 0.299 * R + 0.587 * G + 0.114 * B)
-            Uint8 gray = (Uint8)((r + g + b) / 3);
-
+            //Uint8 gray = (Uint8)((r + g + b) / 3);
+            Uint8 gray = (Uint8) (0.299 * r + 0.587 * g + 0.114 * b);
             Uint32 newPixel = SDL_MapRGBA(inputSurface->format, gray, gray, gray, a);
 
 
