@@ -5,8 +5,8 @@
 
 void noise_detetcion(SDL_Surface** images)
 {
-    for (size_t i = 0; i < 9; i++)
-    {
-            Blob(images[i]);
-    }
+	for (size_t i = 0; i < 9; i++)
+	{
+			Blob(images[i]);
+	}
 }

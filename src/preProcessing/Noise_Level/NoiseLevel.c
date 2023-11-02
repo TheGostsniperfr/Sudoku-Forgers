@@ -9,42 +9,42 @@
 #define NOISE_THRESHOLD 0.5
 
 int calculNoiseLevel(SDL_Surface* img){
-    Uint32* pixels = (Uint32*) img->pixels;
-    int k = NOISE_WINDOW_SIZE / 2;
-    int totalNoise = 0;
+	Uint32* pixels = (Uint32*) img->pixels;
+	int k = NOISE_WINDOW_SIZE / 2;
+	int totalNoise = 0;
 
-    for (int x = 0; x < img->w; x++)
-    {
-        for (int y = 0; y < img->h; y++)
-        {
-            //calcul the mean value of neightbours pixels
-            double mean = 0;
+	for (int x = 0; x < img->w; x++)
+	{
+		for (int y = 0; y < img->h; y++)
+		{
+			//calcul the mean value of neightbours pixels
+			double mean = 0;
 
-            for (int i = x - k; i <= x + k; i++)
-            {
-                for (int j = y - k; j <= y + k; j++)
-                {
-                    //check valid coordonate
-                    if (i >= 0 && i < img->w &&
-                            j >= 0 && j < img->h)
-                    {
-                        mean += getPixelGrayScale(pixels[j * img->w + i]);
-                    }
-                }
-            }
+			for (int i = x - k; i <= x + k; i++)
+			{
+				for (int j = y - k; j <= y + k; j++)
+				{
+					//check valid coordonate
+					if (i >= 0 && i < img->w &&
+							j >= 0 && j < img->h)
+					{
+						mean += getPixelGrayScale(pixels[j * img->w + i]);
+					}
+				}
+			}
 
-            mean /= 9;
+			mean /= 9;
 
-            double val = 1 -
-                (getPixelGrayScale(pixels[y * img->w + x]) / mean);
+			double val = 1 -
+				(getPixelGrayScale(pixels[y * img->w + x]) / mean);
 
-            val = fabs(val);
+			val = fabs(val);
 
-            if(val > NOISE_THRESHOLD){
-                totalNoise++;
-            }
-        }
-    }
+			if(val > NOISE_THRESHOLD){
+				totalNoise++;
+			}
+		}
+	}
 
-    return totalNoise;
+	return totalNoise;
 }

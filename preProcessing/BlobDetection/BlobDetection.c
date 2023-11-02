@@ -4,7 +4,7 @@
 #include <err.h>
 
 /*****************************************************************************
- *  Function Fill: 
+ *  Function Fill:
  *
  *  Fills all pixels connected by the same color and counts size
  *  of the current blob
@@ -15,12 +15,14 @@
  * 		- x,y (int) : coordinates of the pixel to start filling from
  * 		- R,G,B (Uint8) : color in which the pixels have to change
  * 		- Func (char) : if 0 : counts size and colors, if 1 : only counts size
- * 
+ *
  * 	@output :
  * 		- (int) : Size of the blob
 ******************************************************************************/
 
-int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G, Uint8 B, char Func) {
+int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G,
+	Uint8 B, char Func)
+{
 
 	//Variables for color comparison and result
 	Uint8 r = 0;
@@ -59,25 +61,25 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G, Uint8
 				}
 			}
 			if (y +1<src->h && x+1<src->w){
-				SDL_GetRGB(pixels[(y+1)*src->h +  (x+1)], src->format, &r, &g, &b);
+				SDL_GetRGB(pixels[(y+1)*src->h+(x+1)],src->format, &r, &g, &b);
 				if(r == R && g == G && b == B){
 					res = res +Fill(src, pixels, x+1, y+1, R, G, B, Func);
 				}
 			}
 			if (y +1<src->h && x-1>0){
-				SDL_GetRGB(pixels[(y+1)*src->h +  (x-1)], src->format, &r, &g, &b);
+				SDL_GetRGB(pixels[(y+1)*src->h+(x-1)],src->format, &r, &g, &b);
 				if(r == R && g == G && b == B){
 					res = res +Fill(src, pixels, x-1, y+1, R, G, B, Func);
 				}
 			}
 			if (y -1<src->h && x-1>0){
-				SDL_GetRGB(pixels[(y-1)*src->h +  (x-1)], src->format, &r, &g, &b);
+				SDL_GetRGB(pixels[(y-1)*src->h+(x-1)],src->format, &r, &g, &b);
 				if(r == R && g == G && b == B){
 					res = res +Fill(src, pixels, x-1, y-1, R, G, B, Func);
 				}
 			}
 			if (y-1<src->h && x+1<src->w){
-				SDL_GetRGB(pixels[(y-1)*src->h +  (x+1)], src->format, &r, &g, &b);
+				SDL_GetRGB(pixels[(y-1)*src->h+(x+1)],src->format, &r, &g, &b);
 				if(r == R && g == G && b == B){
 					res = res +Fill(src, pixels, x+1, y-1, R, G, B, Func);
 				}
@@ -89,7 +91,7 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G, Uint8
 }
 
 /***************************************************************
- *  Function Blob: 
+ *  Function Blob:
  *
  *  Finds grid by performing Blob Detection
  *
@@ -157,7 +159,7 @@ void Blob(char *path){
 
 	//creates a surface from the pixel array and saves it
 	SDL_Surface* res = SDL_CreateRGBSurfaceFrom(pixels,
-	src->w, 
+	src->w,
 	src->h,
 	src->format->BitsPerPixel,
 	src->pitch,
@@ -165,6 +167,6 @@ void Blob(char *path){
 	src->format->Gmask,
 	src->format->Bmask,
 	src->format->Amask);
-	
-	saveImg(res, "BlobResult.jpg"); 
-	}
+
+	saveImg(res, "BlobResult.jpg");
+}

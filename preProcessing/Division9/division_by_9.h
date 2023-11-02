@@ -9,7 +9,8 @@
 #include "../Matrix/mat.h"
 
 double* Fill_Matrix_Division(int size, int* points);
-SDL_Surface* Homography_Transform_Division(SDL_Surface* image, int size, int* points);
+SDL_Surface* Homography_Transform_Division(SDL_Surface* image, int size,
+	int* points);
 SDL_Surface** Division9(SDL_Surface* image);
 
 #endif

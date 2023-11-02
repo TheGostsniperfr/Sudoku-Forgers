@@ -8,7 +8,8 @@
 #include "rotation.h"
 
 void draw_rotated(SDL_Renderer* renderer, SDL_Texture* texture);
-void event_loop(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Surface* image);
+void event_loop(SDL_Renderer* renderer, SDL_Texture* texture,
+	SDL_Surface* image);
 void Spin_rotate(SDL_Surface* image);
 
 #endif
