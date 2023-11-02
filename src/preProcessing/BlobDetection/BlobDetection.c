@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../../../preProcessing/SDL_Function/sdlFunction.h"
+#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
 #include <err.h>
 
 /*****************************************************************************
@@ -100,7 +100,7 @@ void Blob(SDL_Surface* src){
 		for(int j =0;j<src->w;j++){
 			SDL_GetRGB(pixels[i*src->h +  j], src->format, &r, &g, &b);
 			rgb = (r+g+b)/3;
-			if (rgb<250){
+			if (rgb<45){
 				size = Fill(src, pixels, j, i, r, g, b, 0, 0, 255);
 				if (size>area_max){
 					area_max = size;
@@ -114,8 +114,8 @@ void Blob(SDL_Surface* src){
 	for (int i = 0; i<src->h;i++){
 		for (int j = 0; j<src->w; j++){
 			SDL_GetRGB(pixels[i*src->h +  j], src->format, &r, &g, &b);
-			rgb = (r+g+b);
-			if (rgb==255){
+			rgb = (r+g+b)/3;
+			if (rgb<255){
 				size = Fill(src, pixels, j, i, r, g, b, 0, 0, 255);
 				if (size!=area_max){
 					Fill(src, pixels, j, i, r, g, b, 0, 0, 0);

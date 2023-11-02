@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "preProcessing/SDL_Function/sdlFunction.h"
+#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
 
 #ifndef NOISE_DETECTION_H
 #define NOISE_DETECTION_H
