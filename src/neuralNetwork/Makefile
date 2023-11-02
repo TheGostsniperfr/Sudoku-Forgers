@@ -7,7 +7,7 @@ SRC_DIR = ./
 SRC = $(shell find $(SRC_DIR) -type f -name "*.c")
 
 OBJ = ${SRC:.c=.o}
-TARGET = neuralNetwork
+TARGET = network
 
 all: $(TARGET)
 

@@ -4,7 +4,18 @@
 #include <string.h>
 #include "GUI/handleUtils.h"
 
+typedef struct Option
+{
+    char* flag;
+    int(*action)
+        (
+            int argc,
+            char* argv[],
+            char* inputImgPath,
+            Flag* flag
+        );
 
+} Option;
 
 int handleAllSteps(
         int argc,

@@ -12,43 +12,6 @@
 #define true 1
 #define false 0
 
-typedef struct Neuron {
-    double *weights;
-    double bias;
-    double output;
-} Neuron;
-
-typedef struct Layer {
-    int nb_neurons;
-    Neuron *neurons;
-} Layer;
-
-typedef struct NeuralNetwork {
-    int nb_layers;
-    Layer *layers;
-} NeuralNetwork;
-
-typedef struct TrainingPara {
-    int nbEpoch;
-    int batchSize;
-    double learningRate;
-
-    //save -> 1, else -> 0
-    int saveTraining;
-
-    //print debug -> 1, else -> 0
-    int printDebug;
-} TrainingPara;
-
-typedef struct NetworkPara{
-    int nbNeuronsFirstLayer;
-    int nbNeuronsHiddenLayer;
-    int nbNeuronsOutputLayer;
-    int nbHiddenLayers;
-} NetworkPara;
-
-
-
 //We put 0.01 instead of 0 to avoid dead neurons.
 double relu(double x) {
     if(x > 0.0){

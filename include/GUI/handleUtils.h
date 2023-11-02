@@ -9,18 +9,7 @@ typedef struct Flag{
     int value;
 } Flag;
 
-typedef struct Option
-{
-    char* flag;
-    int(*action)
-        (
-            int argc,
-            char* argv[],
-            char* inputImgPath,
-            Flag* flag
-        );
 
-} Option;
 
 
 #endif

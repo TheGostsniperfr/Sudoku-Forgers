@@ -133,8 +133,8 @@ void afficherValeursPixels(uint8_t *images, int n, int largeurImage, int hauteur
 }
 
 void GetImage(uint8_t **image, uint8_t *label, int *imageRes, int n) {
-    const char *nomFichierImages = "../data/train-images.idx3-ubyte";
-    const char *nomFichierLabels = "../data/train-labels.idx1-ubyte";
+    const char *nomFichierImages = "../../data/train-images.idx3-ubyte";
+    const char *nomFichierLabels = "../../data/train-labels.idx1-ubyte";
     uint8_t *images, *labels;
     int nombreImages, largeurImage, hauteurImage, nombreLabels;
 
@@ -150,8 +150,8 @@ void GetImage(uint8_t **image, uint8_t *label, int *imageRes, int n) {
 }
 
 void GetImages(uint8_t ***images, uint8_t **labels, int *imageRes, int *nbImages) {
-    const char *nomFichierImages = "../data/train-images.idx3-ubyte";
-    const char *nomFichierLabels = "../data/train-labels.idx1-ubyte";
+    const char *nomFichierImages = "../../data/train-images.idx3-ubyte";
+    const char *nomFichierLabels = "../../data/train-labels.idx1-ubyte";
     uint8_t *_images, *_labels;
     int nombreImages, largeurImage, hauteurImage, nombreLabels;
 

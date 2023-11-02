@@ -19,7 +19,6 @@ int calculNoiseLevel(SDL_Surface* img){
         {
             //calcul the mean value of neightbours pixels
             double mean = 0;
-            int nbPx = 0;
 
             for (int i = x - k; i <= x + k; i++)
             {
@@ -30,7 +29,6 @@ int calculNoiseLevel(SDL_Surface* img){
                             j >= 0 && j < img->h)
                     {
                         mean += getPixelGrayScale(pixels[j * img->w + i]);
-                        nbPx++;
                     }
                 }
             }

@@ -77,7 +77,7 @@ SDL_Surface* applyAdaptiveThreshold(SDL_Surface* inputImg) {
     }
 
     int count = 0;
-    int x1, y1, x2, y2;
+    int x1, x2, y1, y2;
 
     Uint32 whitePx = SDL_MapRGB(outputImg->format, 255, 255, 255);
     Uint32 blackPx = SDL_MapRGB(outputImg->format, 0, 0, 0);
@@ -127,6 +127,3 @@ SDL_Surface* applyAdaptiveThreshold(SDL_Surface* inputImg) {
 
     return outputImg;
 }
-
-
-
