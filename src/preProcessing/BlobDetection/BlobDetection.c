@@ -20,7 +20,8 @@
  * 		- (int) : Size of the blob
 ******************************************************************************/
 
-int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G, Uint8 B, Uint8 R2, Uint8 G2, Uint8 B2) {
+int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, 
+Uint8 G, Uint8 B, Uint8 R2, Uint8 G2, Uint8 B2) {
 	//Variables for color comparison and result
 	Uint8 r = 0;
 	Uint8 g = 0;
@@ -35,7 +36,8 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G, Uint8
 		return 0;
 	}
 
-	//Iterates through the blob's neighbours to find neighbours and colors them in blue
+	//Iterates through the blob's neighbours to find neighbours and colors them
+	//in blue
 	pixels[y*src->w+x] = SDL_MapRGB(src->format,R2, G2, B2);
 	SDL_GetRGB(pixels[y*src->w +  x], src->format, &r, &g, &b);
 	if (y +1<src->h){
