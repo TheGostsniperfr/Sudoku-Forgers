@@ -142,9 +142,9 @@ int handlePrintHelp(
     {
     printf(
             "Usage : network [OPTIONS]\n\n"
-            "-xorTraining  <number epoch> <batch size> <learning rate>\n"
+            "-xorTrain  <number epoch> <batch size> <learning rate>\n"
             "                   ->  Start xor training\n"
-            "-digitsTraining <number epoch> <batch size> <learning rate>\n"
+            "-digitsTrain <number epoch> <batch size> <learning rate>\n"
             "                   ->  Start digits training\n"
             "-load <path>       ->      Load a neural network\n"
             "-test <input>      ->      Test network with input\n"
