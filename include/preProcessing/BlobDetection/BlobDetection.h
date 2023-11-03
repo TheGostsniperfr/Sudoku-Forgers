@@ -6,7 +6,7 @@
 #include "../SDL_Function/sdlFunction.h"
 #include <err.h>
 
-void Blob(SDL_Surface* src);
+SDL_Surface* Blob(SDL_Surface* src);
 
 int Fill
 (
