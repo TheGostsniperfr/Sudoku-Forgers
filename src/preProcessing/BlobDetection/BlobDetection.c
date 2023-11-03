@@ -131,7 +131,6 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	src->format->Gmask,
 	src->format->Bmask,
 	src->format->Amask);
-	IMG_SaveJPG(src, "GridOnly.jpg", 100);
 	
 	//modifies pointer size and returns the surface
 	*size_max = area_max;
