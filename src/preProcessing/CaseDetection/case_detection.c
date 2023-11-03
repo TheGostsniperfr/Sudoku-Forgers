@@ -5,6 +5,7 @@
 #include <err.h>
 
 #include "preProcessing/Matrix/mat.h"
+#include "preProcessing/CaseDetection/case_detection.h"
 
 //#include "stdio.h" // a enlever //
 
@@ -187,9 +188,7 @@ SDL_Surface** Division9(SDL_Surface* image)
 {
     int* points = (int*)malloc(8 * sizeof(int));
 
-    SDL_Surface* img = SDL_CreateRGBSurface(0, 28, 28, 32, 0, 0, 0, 0);
-
-    SDL_Surface** result = (SDL_Surface**)malloc(81 * sizeof(img));
+    SDL_Surface** result = (SDL_Surface**)malloc(81 * sizeof(GridCell));
 
     /*
     points[0] -> upper left x
@@ -234,8 +233,8 @@ SDL_Surface** Division9(SDL_Surface* image)
             }
             printf("-----------------\n");
             */
-
-            result[i] = Homography_Transform_Division(image, 28, points);
+            SDL_Surface* img= Homography_Transform_Division(image, 28, points);
+            result[ref].
             ref++;
         }
     }
