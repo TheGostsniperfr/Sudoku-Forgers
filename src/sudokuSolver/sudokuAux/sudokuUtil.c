@@ -90,7 +90,7 @@ int gridSize(const char* filename){
     int character;
 
     while ((character = fgetc(file)) != EOF
-            && character != '\n') {
+            && character != '\n' && character != '\r') {
 
         if(character != ' '){
             count++;
@@ -226,7 +226,7 @@ SudokuGrid loadGrid(const char *filename) {
 
     while ((character = fgetc(file)) != EOF && row < sG.gS && col < sG.gS) {
 
-        if(character == '\n' || character == ' '){
+        if(character == '\n' ||character == '\r' || character == ' '){
             continue;
         }
 
