@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "preProcessing/SDL_Function/sdlFunction.h"
 #include "sudokuSolver/sudokuSolver/sudoku_solver.h"

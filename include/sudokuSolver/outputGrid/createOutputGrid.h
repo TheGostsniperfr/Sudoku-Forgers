@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "../../preProcessing/SDL_Function/sdlFunction.h"
 #include "../sudokuSolver/sudoku_solver.h"
-#include <SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 
 
 typedef struct GridPara {
