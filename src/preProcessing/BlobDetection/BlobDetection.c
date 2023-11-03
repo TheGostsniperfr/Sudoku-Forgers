@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 #include <err.h>
 
 /*****************************************************************************
@@ -138,7 +138,7 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	return src;
 }
 
-int main(int argc, char* argv[]) {
+/*int main(int argc, char* argv[]) {
 	if (argc!=2){
 		return 1;
 	}
@@ -151,4 +151,4 @@ int main(int argc, char* argv[]) {
 	int max = 0;
 	Blob(image, &max);
 	printf("%d\n", max);
-}
+}*/
