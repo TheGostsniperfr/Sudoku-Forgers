@@ -1,10 +1,10 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 #include <err.h>
 
 /*****************************************************************************
- *  Function Fill: 
+ *  Function Fill:
  *
  *  Fills all pixels connected by the same color and counts size
  *  of the current blob
@@ -13,10 +13,10 @@
  *      - src (SDL_Surface*) : Image to modify
  * 		- pixels (Uint32*) : Array of pixels from src
  * 		- x,y (int) : coordinates of the pixel to start filling from
- * 		- R,G,B (Uint8) : 
+ * 		- R,G,B (Uint8) :
  * 		- R2, G2, B2 (Uint8) : color in which the pixels have to change
  * 		- Func (char) : if 0 : counts size and colors, if 1 : only counts size
- * 
+ *
  * 	@output :
  * 		- (int) : Size of the blob
 ******************************************************************************/
@@ -67,7 +67,7 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G, Uint8
 }
 
 /***************************************************************
- *  Function Blob: 
+ *  Function Blob:
  *
  *  Finds grid by performing Blob Detection
  *
@@ -126,7 +126,7 @@ void Blob(SDL_Surface* src){
 
 	//creates a surface from the pixel array and saves it
 	src = SDL_CreateRGBSurfaceFrom(pixels,
-	src->w, 
+	src->w,
 	src->h,
 	src->format->BitsPerPixel,
 	src->pitch,
@@ -136,6 +136,9 @@ void Blob(SDL_Surface* src){
 	src->format->Amask);
 	IMG_SaveJPG(src, "test2.jpg", 100);
 }
+
+
+/*
 
 int main(int argc, char* argv[]) {
 	if (argc!=2){
@@ -149,3 +152,5 @@ int main(int argc, char* argv[]) {
 	image = SDL_ConvertSurfaceFormat(image, SDL_PIXELFORMAT_ABGR8888, 0);
 	Blob(image);
 }
+
+*/

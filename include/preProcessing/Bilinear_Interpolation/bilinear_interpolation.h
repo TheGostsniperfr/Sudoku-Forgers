@@ -3,8 +3,13 @@
 
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
-SDL_Surface* Bilinear_Interpolation(SDL_Surface* image, int output_width, int output_height);
+SDL_Surface* Bilinear_Interpolation
+(
+    SDL_Surface* image,
+    int output_width,
+    int output_height
+);
 
 #endif

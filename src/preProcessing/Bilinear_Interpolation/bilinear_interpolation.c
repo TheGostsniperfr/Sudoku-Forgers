@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
+
 
 
 /***************************************************************
@@ -37,10 +38,33 @@ SDL_Surface* Bilinear_Interpolation(SDL_Surface* image, int output_width,
 
 			Uint32* input_pixels = (Uint32*)image->pixels;
 
-			Uint32 ul = input_pixels[floor(gy) * output_image->w + floor(gx)];
-			Uint32 ur = input_pixels[ceil(gy) * output_image->w + floor(gx)];
-			Uint32 ll = input_pixels[floor(gy) * output_image->w + ceil(gx)];
-			Uint32 lr = input_pixels[ceil(gy) * output_image->w + ceil(gx)];
+			Uint32 ul = input_pixels
+			[
+				(int)floor(gy) *
+				output_image->w +
+				(int)floor(gx)
+			];
+
+			Uint32 ur = input_pixels
+			[
+				(int)ceil(gy) *
+				output_image->w +
+				(int)floor(gx)
+			];
+
+			Uint32 ll = input_pixels
+			[
+				(int)floor(gy) *
+				output_image->w +
+				(int)ceil(gx)
+			];
+
+			Uint32 lr = input_pixels
+			[
+				(int)ceil(gy) *
+				output_image->w +
+				(int)ceil(gx)
+			];
 
 			Uint8 ul_r, ul_g, ul_b, ul_a;
 			SDL_GetRGBA(ul, image->format, &ul_r, &ul_g, &ul_b, &ul_a);

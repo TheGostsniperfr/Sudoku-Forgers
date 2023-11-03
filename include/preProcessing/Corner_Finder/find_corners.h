@@ -3,8 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../SDL_Function/sdlFunction.h"
-#include "math.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
+#include "preProcessing/Matrix/mat.h"
 
 int* FindCoins(SDL_Surface* surface);
 

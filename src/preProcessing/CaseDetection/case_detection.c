@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
 #include <err.h>
 
@@ -163,7 +163,7 @@ SDL_Surface* Homography_Transform_Division(SDL_Surface* image, int size,
                 Uint32* new_pixels = (Uint32*)new_img->pixels;
 				Uint32* pixels = (Uint32*)image->pixels;
 
-				Uint32 pixel = pixels[y * image->w + x];
+				Uint32 pixel = pixels[(int)y * image->w + (int)x];
 				new_pixels[j + new_img->w + i] = pixel;
             }
         }

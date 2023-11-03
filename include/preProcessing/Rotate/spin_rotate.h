@@ -3,13 +3,26 @@
 
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
-#include "rotate.h"
+#include "preProcessing/Rotate/rotate.h"
 
-void draw_rotated(SDL_Renderer* renderer, SDL_Texture* texture);
-void event_loop(SDL_Renderer* renderer, SDL_Texture* texture,
-	SDL_Surface* image);
-void Spin_rotate(SDL_Surface* image);
+void draw_rotated
+(
+	SDL_Renderer* renderer,
+	SDL_Texture* texture
+);
+
+void event_loop
+(
+	SDL_Renderer* renderer,
+	SDL_Texture* texture,
+	SDL_Surface* image
+);
+
+void Spin_rotate
+(
+	SDL_Surface* image
+);
 
 #endif
