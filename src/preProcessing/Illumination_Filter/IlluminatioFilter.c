@@ -10,7 +10,12 @@
 
 SDL_Surface* applyIlluminationFilter(SDL_Surface* img){
 
-    SDL_Surface *outImg = SDL_ConvertSurfaceFormat(img, SDL_PIXELFORMAT_ABGR8888, 0);
+    SDL_Surface *outImg = SDL_ConvertSurfaceFormat
+                            (
+                                img,
+                                SDL_PIXELFORMAT_ABGR8888,
+                                0
+                            );
 
     Uint32* inPixels = (Uint32*) img->pixels;
     Uint32* outPixels = (Uint32*) outImg->pixels;

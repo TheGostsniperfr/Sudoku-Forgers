@@ -6,8 +6,19 @@
 #include <err.h>
 
 SDL_Surface* loadImg(char *path);
+
 void saveImg(SDL_Surface* image, char *filename);
-void drawRect(SDL_Surface* surface, int x0, int y0, int w, int h, Uint32 pixel);
+
+void drawRect
+(
+    SDL_Surface* surface,
+    int x0,
+    int y0,
+    int w,
+    int h,
+    Uint32 pixel
+);
+
 int getPixelGrayScale(Uint32 pixel);
 
 #endif

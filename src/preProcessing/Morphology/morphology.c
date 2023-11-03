@@ -30,7 +30,9 @@ int isPixelValidMotif(Uint32* pixels, int x, int y, int w, int h){
                 //mode 1 -> eraser
                 //if pixel on motif is equal to 0
                 //-> set white current px
-                if(mode == 0 && getPixelGrayScale(pixels[tempY * w + tempX]) < 128){
+                if(mode == 0 &&
+                    getPixelGrayScale(pixels[tempY * w + tempX]) < 128)
+                {
 
                     return 0;
                 }
@@ -38,7 +40,9 @@ int isPixelValidMotif(Uint32* pixels, int x, int y, int w, int h){
                 //mode 0 -> dilatation
                 //if pixel on motif is equal to 255
                 //->set black erase current px
-                else if(mode == 1 && getPixelGrayScale(pixels[tempY * w + tempX]) > 128){
+                else if(mode == 1 &&
+                        getPixelGrayScale(pixels[tempY * w + tempX]) > 128)
+                {
                     return 0;
                 }
             }
@@ -54,7 +58,13 @@ int isPixelValidMotif(Uint32* pixels, int x, int y, int w, int h){
 
 
 SDL_Surface* applyMorphology(SDL_Surface* img, int _mode){
-    SDL_Surface* outImg = SDL_ConvertSurfaceFormat(img, SDL_PIXELFORMAT_ABGR8888,0);
+    SDL_Surface* outImg = SDL_ConvertSurfaceFormat
+                            (
+                                img,
+                                SDL_PIXELFORMAT_ABGR8888,
+                                0
+                            );
+
     Uint32* currentPixels = outImg->pixels;
     Uint32* oldPixels = img->pixels;
 

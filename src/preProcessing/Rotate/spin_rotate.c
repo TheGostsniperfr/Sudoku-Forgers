@@ -79,7 +79,12 @@ void Spin_rotate(SDL_Surface* image)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
 	// Creates a renderer.
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_Renderer* renderer = SDL_CreateRenderer
+								(
+									window,
+									-1,
+									SDL_RENDERER_ACCELERATED
+								);
 	if (renderer == NULL)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 

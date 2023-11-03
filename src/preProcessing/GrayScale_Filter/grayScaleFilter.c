@@ -11,11 +11,17 @@
  *  @input :
  *      - inputSurface (SDL_Surface*) : img to apply the grayscale filter
  *  @output :
- *      - outputSurface (SDL_Surface*) : output image with the grayscale filter applied
+ *      - outputSurface (SDL_Surface*) : output image with the
+ *                                          grayscale filter applied
 ***************************************************************/
 SDL_Surface* applyGrayScaleFilter(SDL_Surface* inputSurface){
 
-    SDL_Surface *outputSurface = SDL_ConvertSurfaceFormat(inputSurface, SDL_PIXELFORMAT_ABGR8888, 0);
+    SDL_Surface *outputSurface = SDL_ConvertSurfaceFormat
+                                    (
+                                        inputSurface,
+                                        SDL_PIXELFORMAT_ABGR8888,
+                                        0
+                                    );
 
     Uint32* pixels = (Uint32*) outputSurface->pixels;
 
@@ -34,8 +40,14 @@ SDL_Surface* applyGrayScaleFilter(SDL_Surface* inputSurface){
             //set the new pixel (gray = 0.299 * R + 0.587 * G + 0.114 * B)
             //Uint8 gray = (Uint8)((r + g + b) / 3);
             Uint8 gray = (Uint8) (0.299 * r + 0.587 * g + 0.114 * b);
-            Uint32 newPixel = SDL_MapRGBA(inputSurface->format, gray, gray, gray, a);
-
+            Uint32 newPixel = SDL_MapRGBA
+                                (
+                                    inputSurface->format,
+                                    gray,
+                                    gray,
+                                    gray,
+                                    a
+                                );
 
             //set new pixel
             pixels[y * outputSurface->w + x] = newPixel;

@@ -46,7 +46,8 @@ double* findHistogram(SDL_Surface* img){
     }
 
 
-    //normalisation of the histogram (divised by the total of pixel in the image)
+    //normalisation of the histogram (divised by the total of
+    //pixel in the image)
 
     for (int i = 0; i < 256; i++) {
         histogram[i] /= (img->w * img->h);
@@ -66,7 +67,8 @@ double* findHistogram(SDL_Surface* img){
  *  @input :
  *      - histogram (double*) : histogram of an image
  *  @output :
- *      - histogram image (SDL_Surface*) : the graphic representation of the image histogram
+ *      - histogram image (SDL_Surface*) : the graphic representation
+ *                                          of the image histogram
 ***************************************************************/
 SDL_Surface* createHistogramImg(double* histogram) {
     double maxVal = histogram[0];
@@ -77,7 +79,15 @@ SDL_Surface* createHistogramImg(double* histogram) {
         }
     }
 
-    SDL_Surface* outputSurface = SDL_CreateRGBSurfaceWithFormat(0, HISTO_WIDTH, HISTO_HEIGHT, 32, SDL_PIXELFORMAT_ABGR8888);
+    SDL_Surface* outputSurface = SDL_CreateRGBSurfaceWithFormat
+                                    (
+                                        0,
+                                        HISTO_WIDTH,
+                                        HISTO_HEIGHT,
+                                        32,
+                                        SDL_PIXELFORMAT_ABGR8888
+                                    );
+
     Uint32 pixel = SDL_MapRGBA(outputSurface->format, 255, 0, 0, 0);
 
     for (int x = 0; x < 256; x++) {
