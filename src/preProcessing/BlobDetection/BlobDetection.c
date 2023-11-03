@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "preProcessing/SDL_Function/sdlFunction.h"
+#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
 #include <err.h>
 
 /*****************************************************************************
@@ -13,9 +13,8 @@
  *      - src (SDL_Surface*) : Image to modify
  * 		- pixels (Uint32*) : Array of pixels from src
  * 		- x,y (int) : coordinates of the pixel to start filling from
- * 		- R,G,B (Uint8) :
+ * 		- R,G,B (Uint8) : color of the starting pixel
  * 		- R2, G2, B2 (Uint8) : color in which the pixels have to change
- * 		- Func (char) : if 0 : counts size and colors, if 1 : only counts size
  *
  * 	@output :
  * 		- (int) : Size of the blob
@@ -31,7 +30,7 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G, Uint8
 
 	//tests if pixel is the right color
 	SDL_GetRGB(pixels[y*src->h +  x], src->format, &r, &g, &b);
-	Uint8 rgb = r + g + b;
+	Uint32 rgb = r + g + b;
 	if (rgb != rgb2){
 		return 0;
 	}
@@ -72,15 +71,16 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, Uint8 R, Uint8 G, Uint8
  *  Finds grid by performing Blob Detection
  *
  *  @input :
- *      - (src*) : Surface of the image to modify
+ *      - src (SDL_Surface*) : Surface of the image to modify
+ * 		- size_max (int*) : size of the max blob
 ***************************************************************/
 
-void Blob(SDL_Surface* src){
+SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	//creates pixel array from the image
 	Uint32* pixels = src->pixels;
 
-	//error handling for array creation and surface creation from path
-	if ((pixels==NULL)||(src==NULL)){
+	//error handling for array creation 
+	if (pixels==NULL){
 		warn("Not enough storage for this operation");
 	}
 
@@ -93,7 +93,7 @@ void Blob(SDL_Surface* src){
 	Uint8 r = 0;
 	Uint8 g = 0;
 	Uint8 b = 0;
-	Uint8 rgb = 0;
+	Uint32 rgb = 0;
 
 	//runs through the image to find the biggest blob
 	for(int i = 0; i<src->h;i++){
@@ -104,7 +104,6 @@ void Blob(SDL_Surface* src){
 				size = Fill(src, pixels, j, i, r, g, b, 0, 0, 255);
 				if (size>area_max){
 					area_max = size;
-					printf("%d\n", size);
 				}
 			}
 		}
@@ -114,17 +113,15 @@ void Blob(SDL_Surface* src){
 	for (int i = 0; i<src->h;i++){
 		for (int j = 0; j<src->w; j++){
 			SDL_GetRGB(pixels[i*src->h +  j], src->format, &r, &g, &b);
-			rgb = (r+g+b)/3;
-			if (rgb<255){
-				size = Fill(src, pixels, j, i, r, g, b, 0, 0, 255);
-				if (size!=area_max){
-					Fill(src, pixels, j, i, r, g, b, 0, 0, 0);
+			rgb = r+g+b;
+			if (rgb==255){
+				size = Fill(src, pixels, j, i, r, g, b, r, g, b);
+				if (size<area_max){
+					Fill(src, pixels, j, i, r, g, b, 255, 255, 255);
 				}
 			}
 		}
 	}
-
-	//creates a surface from the pixel array and saves it
 	src = SDL_CreateRGBSurfaceFrom(pixels,
 	src->w,
 	src->h,
@@ -134,11 +131,12 @@ void Blob(SDL_Surface* src){
 	src->format->Gmask,
 	src->format->Bmask,
 	src->format->Amask);
-	IMG_SaveJPG(src, "test2.jpg", 100);
+	IMG_SaveJPG(src, "GridOnly.jpg", 100);
+	
+	//modifies pointer size and returns the surface
+	*size_max = area_max;
+	return src;
 }
-
-
-/*
 
 int main(int argc, char* argv[]) {
 	if (argc!=2){
@@ -150,7 +148,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 	image = SDL_ConvertSurfaceFormat(image, SDL_PIXELFORMAT_ABGR8888, 0);
-	Blob(image);
+	int max = 0;
+	Blob(image, &max);
+	printf("%d\n", max);
 }
-
-*/
