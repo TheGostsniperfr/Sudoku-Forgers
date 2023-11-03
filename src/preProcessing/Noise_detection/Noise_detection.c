@@ -2,20 +2,14 @@
 #include "SDL2/SDL_image.h"
 #include "preProcessing/SDL_Function/sdlFunction.h"
 #include "preProcessing/BlobDetection/BlobDetection.h"
+#include "preProcessing/CaseDetection/case_detection.h"
 
 
-typedef struct GridCell {
-	(int, int) position;
-	SDL_Surface* image;
-	int size = 28;
-}GridCell;
-
-
-GridCell* noise_detetcion(SDL_Surface** images)
+GridCell* noise_detetcion(GridCell* images)
 {
-	GridCell* clean_img =  malloc(9 * sizeof(GridCell));
-	for (size_t i = 0; i < 9; i++)
+	GridCell* clean_img =  malloc(81 * sizeof(GridCell));
+	for (size_t i = 0; i < 81; i++)
 	{
-		Blob(images[i], 1);
+		clean_img[i]->image = Blob(images[i]->image, 1);
 	}
 }
