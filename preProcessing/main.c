@@ -15,8 +15,8 @@
 int main(){
 
     SDL_Surface* img = loadImg("../data/sudoku_default_images/image_01.jpeg");
-    
-    
+
+
     if(img == NULL){
         printf("Error to load img !\n");
     }else{
@@ -32,14 +32,14 @@ int main(){
 
         SDL_Surface* histoImg = createHistogramImg(histo);
         saveImg(histoImg, "HistoGram.jpg");
-        free(histoImg);        
+        free(histoImg);
 
         double threshold = findOtsuThreshold(histo, img->w*img->h);
 
         img = binarization(img, threshold);
         saveImg(img, "Binarized.jpg");
 
-            
+
         img = applyMorphology(img, 0);
         img = applyMorphology(img, 1);
 
@@ -47,20 +47,20 @@ int main(){
 
         //Save_RotatedImg(img, 45);
 
-        SDL_Surface* homograhpy_img = Homography_Transform(img, 1000);
-        saveImg(homograhpy_img, "Homography_img.jpg");
+        //SDL_Surface* homograhpy_img = Homography_Transform(img, 1000);
+        //saveImg(homograhpy_img, "Homography_img.jpg");
 
-        SDL_Surface* bilinear_img = Bilinear_Interpolation(img, 2000, 2000);
-        saveImg(bilinear_img, "Bilinear_img.jpg");
+        //SDL_Surface* bilinear_img = Bilinear_Interpolation(img, 2000, 2000);
+        //saveImg(bilinear_img, "Bilinear_img.jpg");
 
-        //Spin_rotate(img);
+        Spin_rotate(img);
 
-        SDL_Surface** res = Division9(img);
-        saveImg(res[4], "image_3_28x28.jpg");
+        //SDL_Surface** res = Division9(img);
+        //saveImg(res[4], "image_3_28x28.jpg");
 
-        free(histo);       
-    }    
+        free(histo);
+    }
 
-    
+
     SDL_FreeSurface(img);
 }

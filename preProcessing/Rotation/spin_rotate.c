@@ -17,10 +17,10 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* texture,
 	draw_rotated(renderer, texture);
 
 	int angle = 0;
+	SDL_Surface* img;
 
 	while (1)
 	{
-		SDL_Surface* img;
 
 		// Waits for an event.
 		SDL_WaitEvent(&event);
@@ -30,39 +30,41 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* texture,
 			// If the "quit" button is pushed, ends the event loop.
 			case SDL_QUIT:
 				return;
-
-			// If the window is resized, updates and redraws the diagonals.
 			case SDL_WINDOWEVENT:
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 				{
 					draw_rotated(renderer, texture);
 				}
 				break;
+			/*
 			case SDL_MOUSEWHEEL:
 				if(event.wheel.y > 0)
 				{
-					angle += 1;
+					angle += 15;
 				}
 				else
 				{
-					angle -= 1;
+					angle -= 15;
 				}
 				break;
+			*/
+			case SDL_KEYDOWN:
+				switch(event.key.keysym.sym)
+				{
+					case SDLK_UP:
+						angle += 10;
+						break;
+					case SDLK_DOWN:
+						angle -= 10;
+						break;
+     			}
 		}
-		if(angle > 0)
-		{
-			//scroll up
-			img = Rotated_image(image, angle);
-			texture = SDL_CreateTextureFromSurface(renderer, img);
-			draw_rotated(renderer, texture);
-		}
-		else if (angle <= 0)
-		{
-			//scroll down
-			img = Rotated_image(image, angle);
-			texture = SDL_CreateTextureFromSurface(renderer, img);
-			draw_rotated(renderer, texture);
-		}
+
+		img = Rotated_image(image, angle);
+		texture = SDL_CreateTextureFromSurface(renderer, img);
+		draw_rotated(renderer, texture);
+
+		//SDL_Delay(50);
 	}
 }
 
