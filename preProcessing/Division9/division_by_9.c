@@ -233,7 +233,7 @@ SDL_Surface** Division9(SDL_Surface* image)
             printf("-----------------\n");
             */
 
-            result[i] = Homography_Transform_Division(image, 28, points);
+            result[ref] = Homography_Transform_Division(image, 28, points);
             ref++;
         }
     }

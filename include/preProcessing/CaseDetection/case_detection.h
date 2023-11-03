@@ -7,10 +7,10 @@
 #include "preProcessing/Matrix/mat.h"
 
 typedef struct GridCell {
-    int positionX;
-    int positionY;
-    SDL_Surface* image;
-    int size = 28;
+	int positionX;
+	int positionY;
+	SDL_Surface* image;
+	int size;
 }GridCell;
 
 double* Fill_Matrix_Division(int size, int* points);
