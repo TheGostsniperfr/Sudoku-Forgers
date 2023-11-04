@@ -7,6 +7,7 @@
 void draw_rotated(SDL_Renderer* renderer, SDL_Texture* texture)
 {
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
+	SDL_DestroyTexture(texture);
 	SDL_RenderPresent(renderer);
 }
 
@@ -80,13 +81,14 @@ void Spin_rotate(SDL_Surface* image)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
 	// Creates a window.
-	SDL_Window* window = SDL_CreateWindow("Automatic rotated image", 0, 0, 100,
+	SDL_Window* window = SDL_CreateWindow("Manual rotated image", 0, 0, 100,
 		 100, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 	if (window == NULL)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
 	// Creates a renderer.
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1,
+		SDL_RENDERER_ACCELERATED);
 	if (renderer == NULL)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 

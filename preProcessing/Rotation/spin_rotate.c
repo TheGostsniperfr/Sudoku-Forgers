@@ -7,6 +7,7 @@
 void draw_rotated(SDL_Renderer* renderer, SDL_Texture* texture)
 {
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
+	SDL_DestroyTexture(texture);
 	SDL_RenderPresent(renderer);
 }
 
