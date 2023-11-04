@@ -8,8 +8,9 @@
 #include "preProcessing/contrast_Filter/contrastFilter.h"
 #include "preProcessing/Illuminatio_Filter/IlluminatioFilter.h"
 #include "preProcessing/median_Filter/medianFilter.h"
-
 #include "preProcessing/preProcessingAux/preProcessingHandle.h"
+#include "preProcessing/Rotate/spin_rotate.h"
+
 
 int handleAllSteps(
         int argc __attribute__((unused)),
@@ -184,7 +185,7 @@ int handleAllSteps(
         //dilate
         img = applyMorphology(img, 0);
         //erode
-        //img = applyMorphology(img, 1);
+        img = applyMorphology(img, 1);
 
         if(flags[1].value == 1){
             printf("✅ Success to apply morphology.\n");
@@ -238,15 +239,17 @@ int handleAllSteps(
 }
 
 int handleTurnNDegree(
-        int argc,
-        char* argv[],
-        char* inputImgPath  __attribute__((unused)), // <- remove the attibute
-        Flag* flags)
+        int argc __attribute__((unused)),
+        char* argv[] __attribute__((unused)),
+        char* inputImgPath,
+        Flag* flags __attribute__((unused)))
     {
     /*
         Usage :
             [-r] <number of degree> -> turn the image
     */
+
+    Spin_rotate(loadImg(inputImgPath));
 
     if(argc != 1){
         errx(EXIT_FAILURE, ERROR_NB_ARG);
@@ -275,10 +278,11 @@ int handlePrintHelp(
             [--help] -> print the help
     */
 
-   printf(
+   printf
+   (
         "Usage : preProcessing [IMAGE DIR] [OPTIONS]\n\n"
         "-all           ->      Do all the steps\n"
-        "-r <number>    ->      Rotate and save the image by n degrees\n"
+        "-r             ->      Rotate and save the image by n degrees\n"
         "-save          ->      Save all steps images\n"
         "-verbose       ->      Print verbose\n"
         "--help         ->      Show the help panel\n"
@@ -286,5 +290,3 @@ int handlePrintHelp(
 
     return EXIT_SUCCESS;
 }
-
-

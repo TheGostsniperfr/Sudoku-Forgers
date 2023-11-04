@@ -76,8 +76,11 @@ SDL_Surface* applyAdaptiveThreshold(SDL_Surface* inputImg) {
         threshold = 0.5;
     }
 
-    int count = 0;
-    int x1, x2, y1, y2;
+    int value = 0;
+    int x1 = 0;
+    int x2 = 0;
+    int y1 = 0;
+    int y2 = 0;
 
     Uint32 whitePx = SDL_MapRGB(outputImg->format, 255, 255, 255);
     Uint32 blackPx = SDL_MapRGB(outputImg->format, 0, 0, 0);
@@ -105,16 +108,16 @@ SDL_Surface* applyAdaptiveThreshold(SDL_Surface* inputImg) {
             y2 = (y2 > (inputImg->h - 1)) ?
                     (inputImg->h - 1) : y2;
 
-            count = (x2 - x1) * (y2 - y1);
+            value = (x2 - x1) * (y2 - y1);
 
-            sum =   integral[x2 * inputImg->h + y2] -
-                    integral[x2 * inputImg->h + (y1 - 1)] -
-                    integral[(x1 - 1) * inputImg->h + y2] +
-                    integral[(x1 - 1) * inputImg->h + (y1 - 1)];
+            sum =   integral[(x1 - 1) * inputImg->h + (y1 - 1)] -
+                    integral[(x1 - 1) * inputImg->h + y2] -
+                    integral[x2 * inputImg->h + (y1 - 1)] +
+                    integral[x2 * inputImg->h + y2];
 
             int pxVal = getPixelGrayScale(inPixels[y * inputImg->w + x]);
 
-            if (pxVal * count < sum * (1.0 - threshold)){
+            if (pxVal * value < sum * (1.0 - threshold)){
                 outPixels[y * outputImg->w + x] = blackPx;
             }
             else{

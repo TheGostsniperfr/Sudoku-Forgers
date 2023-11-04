@@ -34,7 +34,7 @@ Options :
 ```bash
 
 -all           ->      Do all the steps
--r <number>    ->      Rotate and save the image by n degrees
+-r             ->      Rotate and save the image by n degrees
 -save          ->      Save all steps images
 -verbose       ->      Print verbose
 --help         ->      Show the help panel
