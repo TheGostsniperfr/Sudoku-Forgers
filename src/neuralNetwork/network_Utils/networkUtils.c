@@ -17,8 +17,8 @@ void printTrainingPara(TrainingPara tP){
 
         "🧮 Number of epoch : %d\n"
         "📦 Batch size : %d\n"
-        "🎓 Learning rate : %f\n\n"
-        "💾 Save training : %s\n",
+        "🎓 Learning rate : %.2f\n\n"
+        "💾 Save training : %s\n\n",
 
         tP.nbEpoch,
         tP.batchSize,
@@ -29,6 +29,32 @@ void printTrainingPara(TrainingPara tP){
 
 
 void printNetworkPara(NetworkPara netPara){
+        printf
+    (
+        "################################################\n\n"
+
+        "       ⚙️  Neural network parameters :\n\n"
+
+        "################################################\n\n"
+
+        "⬅️ Input layer :\n"
+        "       🧠 Number of neurons : %d\n\n"
+
+        "↔️ Hidden layer :\n"
+        "       📊 Number of layers : %d\n"
+        "       🧠 Number of neurons per layer : %d\n\n"
+
+        "➡️ Output layer :\n"
+        "       🧠 Number of neurons : %d\n\n",
+
+        netPara.nbNeuronsFirstLayer,
+        netPara.nbHiddenLayers,
+        netPara.nbNeuronsHiddenLayer,
+        netPara.nbNeuronsOutputLayer
+    );
+}
+
+void printNetworkSpec(NeuralNetwork* net){
         printf
     (
         "################################################\n\n"
@@ -45,11 +71,11 @@ void printNetworkPara(NetworkPara netPara){
         "       🧠 Number of neurons per layer : %d\n\n"
 
         "➡️ Output layer :\n"
-        "       🧠 Number of neurons : %d\n",
+        "       🧠 Number of neurons : %d\n\n",
 
-        netPara.nbNeuronsFirstLayer,
-        netPara.nbHiddenLayers,
-        netPara.nbNeuronsHiddenLayer,
-        netPara.nbNeuronsOutputLayer
+        net->layers[0].nb_neurons,
+        net->nb_layers - 1,
+        net->nb_layers > 2 ? net->layers[1].nb_neurons : 0,
+        net->layers[net->nb_layers-1].nb_neurons
     );
 }

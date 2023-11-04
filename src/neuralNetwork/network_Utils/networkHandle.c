@@ -144,6 +144,9 @@ int handleTest(
 
         if(flags[0].value == 1){
             printf("✅ Success to load neural network.\n");
+
+
+            printNetworkSpec(net);
         }
 
         double inputA = atof(argv[1]);

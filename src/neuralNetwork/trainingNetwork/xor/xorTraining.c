@@ -7,11 +7,16 @@
 #include <stdlib.h>
 #include <err.h>
 
-
-
 void xorTraining(NeuralNetwork* net, TrainingPara tP, char* filename, Flag* flags){
     if(flags[0].value == 1){
-        printf("🚀 Starting xor training.\n");
+        printf
+        (
+        "################################################\n\n"
+
+        "       🚀 Starting xor training. :\n\n"
+
+        "################################################\n\n"
+        );
     }
 
     if(net->layers[0].nb_neurons != 2 ||
@@ -61,10 +66,38 @@ void xorTraining(NeuralNetwork* net, TrainingPara tP, char* filename, Flag* flag
         }
 
         if(flags[0].value == 1){
-            double accuracy = (double)correctPredictions / tP.batchSize * 100.0;
-            printf("Epoch %d, Correct answers : %.2f%%\n",
-                epoch_i + 1, accuracy);
+
+            const int bar_width = 50;
+
+            float progress = (float) (epoch_i+1) / tP.nbEpoch;
+            int bar_length = progress * bar_width;
+
+            printf("\rProgress: [");
+            for (int i = 0; i < bar_length-1; ++i) {
+                printf("=");
+            }
+            printf(">");
+            for (int i = bar_length; i < bar_width-1; ++i) {
+                printf(" ");
+            }
+            printf("] %.2f%% | Accuracy : %.2f%%", progress * 100,
+                (double)correctPredictions / tP.batchSize * 100.0);
+
+            fflush(stdout);
         }
+    }
+
+    printf("\n\n");
+
+    if(flags[0].value == 1){
+        printf
+        (
+        "################################################\n\n"
+
+        "       ✅ Success to train neural network :\n\n"
+
+        "################################################\n\n"
+        );
     }
 
     if(flags[1].value == 1){
@@ -75,7 +108,5 @@ void xorTraining(NeuralNetwork* net, TrainingPara tP, char* filename, Flag* flag
         }
     }
 
-    if(flags[0].value == 1){
-        printf("✅ Success of xor training.\n");
-    }
+
 }
