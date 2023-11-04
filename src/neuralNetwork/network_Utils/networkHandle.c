@@ -204,16 +204,16 @@ int handlePrintHelp(
     printf(
             "Usage : network [OPTIONS]\n\n"
             "-xorTrain  <number epoch> <batch size> <learning rate>\n"
-            "                   ->  Start xor training\n"
+            "                    ->  Start xor training\n"
             "-digitsTrain <number epoch> <batch size> <learning rate>\n"
-            "                   ->  Start digits training\n"
-            "-load <path>       ->      Load a neural network\n"
-            "-test <input>      ->      Test network with input\n"
-            "-verbose           ->      Print informations\n"
-            "-save              ->      Save neural network\n"
-            "-defaultNetSpec    ->      Load default network specification\n"
-            "-defaultTrainSpec  ->      Load default training specification\n"
-            "--help             ->      Show the help panel\n"
+            "                    ->  Start digits training\n"
+            "-load <dir>         ->      Load a neural network\n"
+            "-test <dir> <input> ->      Test network with input\n"
+            "-verbose            ->      Print informations\n"
+            "-save               ->      Save neural network\n"
+            "-defaultNetSpec     ->      Load default network specification\n"
+            "-defaultTrainSpec   ->      Load default training specification\n"
+            "--help              ->      Show the help panel\n"
         );
 
         return EXIT_SUCCESS;
