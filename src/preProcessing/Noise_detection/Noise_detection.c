@@ -13,6 +13,7 @@ GridCell* noise_detetcion(GridCell* images)
 	{
 		saveImg(images[i].image, ("Img_%s_PreClean", i));
 		clean_img[i].image = Blob(images[i].image, (int*)1);
+		saveImg(clean_img[i].image, ("Img_%s_PostClean", i));
 	}
 	return clean_img;
 }
