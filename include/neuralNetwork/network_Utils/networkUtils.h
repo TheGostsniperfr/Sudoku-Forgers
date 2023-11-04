@@ -11,5 +11,6 @@
 
 void printTrainingPara(TrainingPara tP);
 void printNetworkPara(NetworkPara netPara);
+void printNetworkSpec(NeuralNetwork* net);
 
 #endif

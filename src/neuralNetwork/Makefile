@@ -20,6 +20,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 clean:
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
 	rm -f $(TARGET)
+	rm -f xorTrain.txt
+	rm -f digitTrain.txt
+
 
 
 

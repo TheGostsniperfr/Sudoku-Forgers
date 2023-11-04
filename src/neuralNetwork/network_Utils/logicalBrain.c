@@ -25,6 +25,25 @@ double random_bias() {
     return (double)rand() / RAND_MAX - 0.5;
 }
 
+void softmax(double *x, int len) {
+    double max_val = x[0];
+    for (int i = 1; i < len; i++) {
+        if (x[i] > max_val) {
+            max_val = x[i];
+        }
+    }
+
+    double sum_exp = 0.0;
+    for (int i = 0; i < len; i++) {
+        x[i] = exp(x[i] - max_val);
+        sum_exp += x[i];
+    }
+
+    for (int i = 0; i < len; i++) {
+        x[i] /= sum_exp;
+    }
+}
+
 /***************************************************************
  *  Function initializeNetwork :
  *
@@ -88,68 +107,84 @@ void initializeNetwork(NeuralNetwork *net) {
     }
 }
 
-
 /***************************************************************
- *  Function forwardPropagation :
+ *  Function hiddenPropagation :
  *
- *  Takes the data from the input image,
- *  propagates it through all the net layers
- *  and recovers the processed data (the recognised number)
+ *  Propagation of hidden layer(s) neurons
  *
  *  @input :
  *      - *net (NeuralNetwork) : data outputs by neural networks
- *      - *image (uint8_t) : input image
+***************************************************************/
+
+void hiddenPropagation(NeuralNetwork *net){
+    for (int layer_i = 1; layer_i < net->nb_layers; layer_i++) {
+        for (int neuron_i = 0; neuron_i <
+                net->layers[layer_i].nb_neurons; neuron_i++) {
+            double weighted_sum = net->layers[layer_i].neurons[neuron_i].bias;
+
+            // Weighted sum
+            for (int prev_neuron_i = 0; prev_neuron_i <
+                    net->layers[layer_i - 1].nb_neurons; prev_neuron_i++) {
+                weighted_sum +=
+                    net->layers[layer_i]
+                        .neurons[neuron_i]
+                        .weights[prev_neuron_i]
+
+                    * net->layers[layer_i - 1]
+                        .neurons[prev_neuron_i]
+                        .output;
+        }
+
+            // Activation function (ReLu function)
+            net->layers[layer_i].neurons[neuron_i].output =
+                sigmoid(weighted_sum);
+        }
+    }
+}
+
+
+/***************************************************************
+ *  Function outputPropagation :
+ *
+ *  Propagation of output layer neurons
+ *
+ *  @input :
+ *      - *net (NeuralNetwork) : data outputs by neural networks
  *      - *output (double) : output data (the recognised number)
 ***************************************************************/
 
-void forwardPropagation(NeuralNetwork* net, double* input){
-    Layer* currentLayer = &net->layers[0];
+void outputPropagation(NeuralNetwork *net,  double *output){
+    int output_layer_index = net->nb_layers - 1;
+    int nb_output_neurons = net->layers[output_layer_index].nb_neurons;
+    double output_values[nb_output_neurons];
 
+    for (int neuron_i = 0; neuron_i < nb_output_neurons; neuron_i++) {
+        double weighted_sum = net->layers[output_layer_index]
+                                .neurons[neuron_i]
+                                .bias;
 
-    //First layer
-    for (int i = 0; i < currentLayer->nb_neurons; i++)
-    {
-        currentLayer->neurons[i].output = input[i];
-    }
+        // Weighted sum
+        for (int prev_neuron_i = 0; prev_neuron_i <
+                net->layers[output_layer_index - 1].nb_neurons;
+                prev_neuron_i++) {
+            weighted_sum +=
+                net->layers[output_layer_index]
+                    .neurons[neuron_i]
+                    .weights[prev_neuron_i]
 
-
-    //Hidden layers
-    for (int layer_i = 1; layer_i < net->nb_layers; layer_i++)
-    {
-        currentLayer = &net->layers[layer_i];
-        Layer* previousLayer = &net->layers[layer_i - 1];
-
-        for (int n_i = 0; n_i < currentLayer->nb_neurons; n_i++)
-        {
-            double sum = 0.0;
-
-            for (int nP_i = 0; nP_i < previousLayer->nb_neurons; nP_i++)
-            {
-                sum += currentLayer->neurons[n_i].weights[nP_i] *
-                    previousLayer->neurons[nP_i].output;
-            }
-
-            currentLayer->neurons[n_i].output = sigmoid(sum);
+                * net->layers[output_layer_index - 1]
+                    .neurons[prev_neuron_i]
+                    .output;
         }
+
+        output_values[neuron_i] = weighted_sum;
     }
 
+    // Activation function (SoftMax function)
+    softmax(output_values, nb_output_neurons);
 
-    //Output layer
-    double sum = 0.0;
-    currentLayer = &net->layers[net->nb_layers - 1];
-
-    for (int n_i = 0; n_i < currentLayer->nb_neurons; n_i++)
-    {
-        currentLayer->neurons[n_i].output =
-            exp(currentLayer->neurons[n_i].output);
-
-        sum += currentLayer->neurons[n_i].output;
-    }
-
-    for (int n_i = 0; n_i < currentLayer->nb_neurons; n_i++)
-    {
-        currentLayer->neurons[n_i].output =
-            currentLayer->neurons[n_i].output / sum;
+    for (int i = 0; i < nb_output_neurons; i++) {
+        output[i] = output_values[i];
     }
 }
 
@@ -168,66 +203,86 @@ void forwardPropagation(NeuralNetwork* net, double* input){
  *      - learningRate (double) : rate of the neural net learn
 ***************************************************************/
 
-double backPropagation(NeuralNetwork* net, double* true_probs){
-    double errorRate = 0.0;
-    double errorTmp = 0.0;
+void backPropagation(NeuralNetwork *net, double *predicted_probs,
+    double *trueProbs, double learningRate) {
 
-    Layer* outLayer = &net->layers[net->nb_layers-1];
+    int output_layer_index = net->nb_layers - 1;
+    int nb_output_neurons = net->layers[output_layer_index].nb_neurons;
 
-    for (int i = 0; i < outLayer->nb_neurons; i++)
-    {
-        errorTmp = true_probs[i] -
-                    outLayer->neurons[i].output;
+    for (int neuron_i = 0; neuron_i < nb_output_neurons; neuron_i++) {
+        double output_gradient = predicted_probs[neuron_i]
+                                - trueProbs[neuron_i];
 
-        outLayer->neurons[i].delta =
-            errorTmp * sigmoid_prime(outLayer->neurons[i].output);
+        double activation_derivative = sigmoid_prime(
+            net->layers[output_layer_index]
+                .neurons[neuron_i]
+                .output);
 
-        errorRate += (errorTmp * errorTmp);
-    }
+        // Updating the output layer bias
+        net->layers[output_layer_index].neurons[neuron_i].bias -=
+            learningRate * output_gradient;
 
-    for(int i = net->nb_layers - 1; i >= 2; i--){
-        Layer* currentLayer = &net->layers[i];
-        Layer* previousLayer = &net->layers[i-1];
+        // Updating output layer weights
+        for (int prev_neuron_i = 0; prev_neuron_i <
+                net->layers[output_layer_index - 1]
+                    .nb_neurons; prev_neuron_i++) {
 
-        for (int j = 0; j < previousLayer->nb_neurons; j++)
-        {
-            errorTmp = 0.0;
+            double weight_gradient = output_gradient * activation_derivative *
+                net->layers[output_layer_index - 1]
+                    .neurons[prev_neuron_i]
+                    .output;
 
-            for (int k = 0; k < currentLayer->nb_neurons; k++)
-            {
-                errorTmp +=
-                    currentLayer->neurons[k].delta *
-                    currentLayer->neurons[k].weights[j];
-            }
-
-            previousLayer->neurons[j].delta = errorTmp *
-                sigmoid_prime(previousLayer->neurons[j].output);
+            net->layers[output_layer_index]
+                .neurons[neuron_i]
+                .weights[prev_neuron_i]
+                -= learningRate * weight_gradient;
         }
     }
 
-    return errorRate;
-}
+    // Backpropagation into the hidden layers
+    for (int layer_i = output_layer_index - 1; layer_i > 0; layer_i--) {
+        int num_neurons = net->layers[layer_i].nb_neurons;
 
+        for (int neuron_i = 0; neuron_i < num_neurons; neuron_i++) {
+            double activation_derivative = sigmoid_prime(
+                net->layers[layer_i]
+                    .neurons[neuron_i]
+                    .output);
 
-void gradientDescent(NeuralNetwork* net, double learningRate){
-    for (int i = net->nb_layers - 1; i >= 1; i--)
-    {
-        Layer* currentLayer = &net->layers[i];
-        Layer* previousLayer = &net->layers[i-1];
+            double output_gradient = 0.0;
 
-        for (int j = 0; j < currentLayer->nb_neurons; j++)
-        {
-            for (int k = 0; k < previousLayer->nb_neurons; k++)
-            {
-                currentLayer->neurons[j].weights[k] +=
-                    currentLayer->neurons[j].delta *
-                    previousLayer->neurons[k].output *
-                    learningRate;
+            // weighted sum of the next layer
+            for (int next_neuron_i = 0; next_neuron_i <
+                    net->layers[layer_i + 1]
+                        .nb_neurons; next_neuron_i++) {
 
-                currentLayer->neurons[j].bias +=
-                    currentLayer->neurons[j].delta *
-                    previousLayer->neurons[k].output *
-                    learningRate;
+                output_gradient +=
+                    predicted_probs[next_neuron_i]
+                    - trueProbs[next_neuron_i];
+            }
+
+            // Calculating the gradient for the neuron
+            output_gradient *= activation_derivative;
+
+            // Updating the bias of the hidden layer
+            net->layers[layer_i].neurons[neuron_i].bias
+                -= learningRate * output_gradient;
+
+            // Mise à jour des poids de la couche cachée
+            for (int prev_neuron_i = 0; prev_neuron_i <
+                    net->layers[layer_i - 1]
+                        .nb_neurons; prev_neuron_i++) {
+
+                double weight_gradient =
+                    output_gradient *
+                    net->layers[layer_i - 1]
+                        .neurons[prev_neuron_i]
+                        .output;
+
+                net->layers[layer_i]
+                    .neurons[neuron_i]
+                    .weights[prev_neuron_i]
+                    -= learningRate * weight_gradient;
             }
         }
     }

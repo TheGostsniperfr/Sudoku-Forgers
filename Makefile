@@ -1,6 +1,6 @@
 SRC_DIR = ./src
 
-all: solver network
+all: solver network pre
 
 solver:
 	make -C $(SRC_DIR)/sudokuSolver
