@@ -43,14 +43,22 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int x2, int y2,
 		rgb = r + g + b;
 		if (rgb == rgb2){
 
-			res = res +Fill(src, pixels, x, y+1, x2, y2+1,R, G, B, blob, Func);
-			res = res +Fill(src, pixels, x, y-1, x2, y2-1,R, G, B, blob, Func);
-			res = res +Fill(src, pixels, x+1, y, x2+1, y2, R, G, B, blob, Func);
-			res = res +Fill(src, pixels, x-1, y, x2-1, y2, R, G, B, blob, Func);
-			res = res +Fill(src, pixels, x+1, y+1, x2+1, y2+1,R, G, B, blob, Func);
-			res = res +Fill(src, pixels, x-1, y+1, x2-1, y2+1, R, G, B, blob, Func);
-			res = res +Fill(src, pixels, x-1, y-1, x2-1, y2-1, R, G, B, blob, Func);
-			res = res +Fill(src, pixels, x+1, y-1, x2+1, y2-1, R, G, B, blob, Func);
+			res = res +Fill(src, pixels, x, y+1, x2, y2+1,R, G, B, blob,
+				Func);
+			res = res +Fill(src, pixels, x, y-1, x2, y2-1,R, G, B, blob,
+				Func);
+			res = res +Fill(src, pixels, x+1, y, x2+1, y2, R, G, B, blob,
+				Func);
+			res = res +Fill(src, pixels, x-1, y, x2-1, y2, R, G, B, blob,
+				Func);
+			res = res +Fill(src, pixels, x+1, y+1, x2+1, y2+1,R, G, B, blob,
+				Func);
+			res = res +Fill(src, pixels, x-1, y+1, x2-1, y2+1, R, G, B, blob,
+				Func);
+			res = res +Fill(src, pixels, x-1, y-1, x2-1, y2-1, R, G, B, blob,
+				Func);
+			res = res +Fill(src, pixels, x+1, y-1, x2+1, y2-1, R, G, B, blob,
+				Func);
 		}
 	}
 	return res;
@@ -78,9 +86,9 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 
 
 	/*for(int i = 0; i < src->h; i++){
-		//i = malloc(sizeof(char)*src->w);
+		i = malloc(sizeof(char)*src->w);
 		for(int *j = i;j<src->w;j++){
-			//*j = 0;
+			*j = 0;
 			if (i == j) {}
 		}
 	}*/
@@ -133,7 +141,8 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 		}
 	}*/
 	src = SDL_CreateRGBSurface(0, src->w, src->h, src->format->BitsPerPixel,
-     src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask);
+     src->format->Rmask, src->format->Gmask, src->format->Bmask,
+	 	src->format->Amask);
 	pixels = src->pixels;
 	for (int i = 0; i<src->h;i++){
 		for(int j = 0; j<src->w; j++){
