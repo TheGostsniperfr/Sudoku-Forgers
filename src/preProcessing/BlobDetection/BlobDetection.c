@@ -25,9 +25,8 @@ typedef struct Point{
  * 	@output :
  * 		- (int) : Size of the blob
 ******************************************************************************/
-
-int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int x2, int y2, Uint8 R, 
-Uint8 G, Uint8 B, char** blob, char Func) {
+int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int x2, int y2,
+	Uint8 R, Uint8 G, Uint8 B, char** blob, char Func) {
 	//Variables for color comparison and result
 	Uint8 r = 0;
 	Uint8 g = 0;
@@ -70,7 +69,6 @@ Uint8 G, Uint8 B, char** blob, char Func) {
  *      - src (SDL_Surface*) : Surface of the image to modify
  * 		- size_max (int*) : size of the max blob
 ***************************************************************/
-
 SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	//creates pixel array from the image
 	Uint32* pixels = src->pixels;
@@ -86,7 +84,7 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 		}
 	}
 
-	//error handling for array creation 
+	//error handling for array creation
 	if (pixels==NULL){
 		warn("Not enough storage for this operation");
 	}
@@ -159,7 +157,7 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	src->format->Bmask,
 	src->format->Amask);
 	IMG_SaveJPG(src, "BlobResult.jpg", 100);
-	
+
 	//modifies pointer size and returns the surface
 	*size_max = area_max;
 	return src;

@@ -22,6 +22,6 @@ SDL_Surface* Homography_Transform_Division
 	int* points
 );
 
-SDL_Surface** Division9(SDL_Surface* image);
+GridCell* CaseDetection(SDL_Surface* image);
 
 #endif

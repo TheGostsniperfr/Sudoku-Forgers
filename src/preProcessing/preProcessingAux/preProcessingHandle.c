@@ -8,8 +8,15 @@
 #include "preProcessing/contrast_Filter/contrastFilter.h"
 #include "preProcessing/Illuminatio_Filter/IlluminatioFilter.h"
 #include "preProcessing/median_Filter/medianFilter.h"
+
 #include "preProcessing/preProcessingAux/preProcessingHandle.h"
+
 #include "preProcessing/Rotate/spin_rotate.h"
+#include "preProcessing/Corner_Finder/find_corners.h"
+#include "preProcessing/Homography/homography.h"
+#include "preProcessing/BlobDetection/BlobDetection.h"
+#include "preProcessing/CaseDetection/case_detection.h"
+#include "preProcessing/Noise_detection/Noise_detection.h"
 
 
 int handleAllSteps(
@@ -198,15 +205,41 @@ int handleAllSteps(
             }
         }
 
+        saveImg(img, "Result.jpg");
+
+        if(flags[1].value == 1){
+            printf("💾 Success to save Result.jpg\n");
+        }
+
         if(flags[1].value == 1){
             printf("🚀 Starting the automatic rotation.\n");
         }
+
         //Save_RotatedImg(img, 45);
 
         if(flags[1].value == 1){
             printf("✅ Success of the automatic rotation.\n");
         }
 
+        /*
+        SDL_Surface* grid = Blob(img, (int*)0);
+        int* points = FindCoins(grid);
+
+        img = Homography_Transform(img, 1000, points);
+        if(flags[1].value == 1){
+            printf("✅ Success to apply homography.\n");
+        }
+
+        if(flags[0].value == 1){
+            saveImg(img, "Homography.jpg");
+            if(flags[1].value == 1){
+                printf("💾 Success to save Homogaphy.jpg\n");
+            }
+        }
+
+        GridCell* Cases = CaseDetection(img);
+        //Cases = noise_detetcion(Cases);
+        */
 
         /* SDL_Surface* homographic_img = Homography_Transform(img, 1000);
         saveImg(homographic_img, "Homographic_img.jpg");  */
@@ -217,11 +250,6 @@ int handleAllSteps(
         //save final image
 
 
-        saveImg(img, "Result.jpg");
-
-        if(flags[1].value == 1){
-            printf("💾 Success to save Result.jpg\n");
-        }
 
         if(flags[1].value == 1){
             printf(

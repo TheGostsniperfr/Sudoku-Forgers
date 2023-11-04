@@ -4,8 +4,6 @@
 #include "preProcessing/BlobDetection/BlobDetection.h"
 #include "preProcessing/CaseDetection/case_detection.h"
 
-
-
 GridCell* noise_detetcion(GridCell* images)
 {
 	GridCell* clean_img =  malloc(81 * sizeof(GridCell));
