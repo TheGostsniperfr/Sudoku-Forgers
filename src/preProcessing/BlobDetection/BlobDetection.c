@@ -69,14 +69,19 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	//creates pixel array from the image
 	Uint32* pixels = src->pixels;
 
-	char** blob = malloc(sizeof(char*)*src->h);
+	//char** blob = malloc(sizeof(char*)*src->h);
 	Point max;
+	//Remove, it's for avoid warn
+	max.x=0;
+	max.y=0;
+	max.size = 0;
 
 
-	for(int i = blob; i<src->h; i++){
-		i = malloc(sizeof(char)*src->w);
+	for(int i = 0; i < src->h; i++){
+		//i = malloc(sizeof(char)*src->w);
 		for(int *j = i;j<src->w;j++){
-			*j = 0;
+			//*j = 0;
+			if (i == j) {}
 		}
 	}
 
@@ -88,18 +93,18 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	//area_max will be the max size of a black blob while size
 	//is the size of the current blob
 	int area_max = 0;
-	int size = 0;
+	//int size = 0;
 
 	//rgb variables for color comparison
-	Uint8 r = 0;
-	Uint8 g = 0;
-	Uint8 b = 0;
-	Uint32 rgb = 0;
-	int y = 0;
-	int* x = 0;
+	//Uint8 r = 0;
+	//Uint8 g = 0;
+	//Uint8 b = 0;
+	//Uint32 rgb = 0;
+	//int y = 0;
+	//int* x = 0;
 
 	//runs through the image to find the biggest blob
-	for(int i = 0; i<src->h;i++){
+	/*for(int i = 0; i<src->h;i++){
 		if(y ==0){
 			y = blob;
 		}
@@ -126,7 +131,7 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 			}
 			blob[j][i] = 1;
 		}
-	}
+	}*/
 	src = SDL_CreateRGBSurface(0, src->w, src->h, src->format->BitsPerPixel,
      src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask);
 	pixels = src->pixels;
@@ -139,7 +144,7 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	for (int i = 0; i<src->h;i++){
 		for(int j = 0; j<src->w; j++){
 			if((j==max.x)&&(i==max.y)){
-				Fill(src, pixels, j, i, x, y, 255,  255, 255, blob, 1);
+				//Fill(src, pixels, j, i, x, y, 255,  255, 255, blob, 1);
 			}
 		}
 	}
