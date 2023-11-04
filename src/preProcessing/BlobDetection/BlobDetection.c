@@ -77,13 +77,13 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	max.size = 0;
 
 
-	for(int i = 0; i < src->h; i++){
+	/*for(int i = 0; i < src->h; i++){
 		//i = malloc(sizeof(char)*src->w);
 		for(int *j = i;j<src->w;j++){
 			//*j = 0;
 			if (i == j) {}
 		}
-	}
+	}*/
 
 	//error handling for array creation
 	if (pixels==NULL){

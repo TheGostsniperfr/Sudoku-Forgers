@@ -237,7 +237,7 @@ int handleAllSteps(
                 }
             }
 
-            GridCell* Cases = CaseDetection(img);
+            //GridCell* Cases = CaseDetection(img);
             //Cases = NoiseDetection(Cases);
 
         }
