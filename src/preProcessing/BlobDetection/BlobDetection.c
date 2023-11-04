@@ -3,11 +3,7 @@
 #include "preProcessing/SDL_Function/sdlFunction.h"
 #include <err.h>
 
-typedef struct Point{
-	int x;
-	int y;
-	int size;
-}Point;
+#include "preProcessing/BlobDetection/BlobDetection.h"
 
 /*****************************************************************************
  *  Function Fill:
@@ -158,7 +154,7 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	src->format->Amask);
 	IMG_SaveJPG(src, "BlobResult.jpg", 100);
 
-	//modifies pointer size and returns the surface
+	//Modifies pointer size and returns the surface
 	*size_max = area_max;
 	return src;
 }

@@ -6,6 +6,19 @@
 #include "../SDL_Function/sdlFunction.h"
 #include <err.h>
 
+typedef struct OneBlob {
+	int x;
+	int y;
+	int size;
+    SDL_Surface* image;
+}OneBlob;
+
+typedef struct Point {
+    int x;
+    int y;
+    int size;
+}Point;
+
 SDL_Surface* Blob(SDL_Surface* src, int* size_max);
 
 int Fill

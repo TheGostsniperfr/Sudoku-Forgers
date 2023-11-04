@@ -4,14 +4,14 @@
 #include "preProcessing/Matrix/mat.h"
 
 /***************************************************************
- *  Function detecterCoins:
+ *  Function FindCoins:
  *
  *  Fonction to find all the corner of the sudoku's grid
  *
  *  @input :
- *      -
+ *      - surface (SDL_Surface*) : image with the blob of the grid
  *  @output :
- *      -
+ *      - points (int*) : Coordonates of corners of the sudoku's grid
 ***************************************************************/
 int* FindCoins(SDL_Surface* surface) {
     int* points = (int*)malloc(8 * sizeof(int));
