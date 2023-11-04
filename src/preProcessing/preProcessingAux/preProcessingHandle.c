@@ -331,7 +331,7 @@ int handlePrintHelp(
    (
         "Usage : preProcessing [IMAGE DIR] [OPTIONS]\n\n"
         "-all           ->      Do all the steps\n"
-        "-r             ->      Rotate and save the image by n degrees\n"
+        "-r             ->      Rotate the image\n"
         "-save          ->      Save all steps images\n"
         "-verbose       ->      Print verbose\n"
         "--help         ->      Show the help panel\n"
