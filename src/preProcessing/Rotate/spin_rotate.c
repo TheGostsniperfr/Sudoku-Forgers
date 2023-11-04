@@ -36,33 +36,40 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* texture,
 					draw_rotated(renderer, texture);
 				}
 				break;
-			/*
 			case SDL_MOUSEWHEEL:
 				if(event.wheel.y > 0)
 				{
-					angle += 15;
+					angle += 1;
+					img = Rotated_image(image, angle);
+					texture = SDL_CreateTextureFromSurface(renderer, img);
+					draw_rotated(renderer, texture);
 				}
 				else
 				{
-					angle -= 15;
+					angle -= 1;
+					img = Rotated_image(image, angle);
+					texture = SDL_CreateTextureFromSurface(renderer, img);
+					draw_rotated(renderer, texture);
 				}
 				break;
-			*/
 			case SDL_KEYDOWN:
 				switch(event.key.keysym.sym)
 				{
 					case SDLK_UP:
 						angle += 10;
+						img = Rotated_image(image, angle);
+						texture = SDL_CreateTextureFromSurface(renderer, img);
+						draw_rotated(renderer, texture);
 						break;
 					case SDLK_DOWN:
 						angle -= 10;
+						img = Rotated_image(image, angle);
+						texture = SDL_CreateTextureFromSurface(renderer, img);
+						draw_rotated(renderer, texture);
 						break;
      			}
+				break;
 		}
-
-		img = Rotated_image(image, angle);
-		texture = SDL_CreateTextureFromSurface(renderer, img);
-		draw_rotated(renderer, texture);
 	}
 }
 
@@ -79,12 +86,7 @@ void Spin_rotate(SDL_Surface* image)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
 	// Creates a renderer.
-	SDL_Renderer* renderer = SDL_CreateRenderer
-								(
-									window,
-									-1,
-									SDL_RENDERER_ACCELERATED
-								);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if (renderer == NULL)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
