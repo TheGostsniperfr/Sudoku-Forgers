@@ -211,14 +211,35 @@ int handleAllSteps(
             printf("💾 Success to save Result.jpg\n");
         }
 
-        if(flags[1].value == 1){
-            printf("🚀 Starting the automatic rotation.\n");
-        }
+        if(flags[2].value == 1)
+        {
+            //Only for the fourth image
+            int p[] = {
+                413, //upper left corner -> x
+                164, //upper left corner -> y
+                424, // lower left corner -> x
+                1309, // lower left corner -> y
+                1539, // lower right corner -> x
+                1305, // lower right corner -> y
+                1546, // upper right corner -> x
+                182, // upper right corner -> y
+            };
 
-        //Save_RotatedImg(img, 45);
+            img = Homography_Transform(img, 1000, p);
+            if(flags[1].value == 1){
+                printf("✅ Success to apply homography.\n");
+            }
 
-        if(flags[1].value == 1){
-            printf("✅ Success of the automatic rotation.\n");
+            if(flags[0].value == 1){
+                saveImg(img, "Homography.jpg");
+                if(flags[1].value == 1){
+                    printf("💾 Success to save Homogaphy.jpg\n");
+                }
+            }
+
+            GridCell* Cases = CaseDetection(img);
+            //Cases = NoiseDetection(Cases);
+
         }
 
         /*

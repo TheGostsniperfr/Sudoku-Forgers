@@ -7,7 +7,7 @@
 #include "preProcessing/Matrix/mat.h"
 
 
-double* Fill_Matrix(SDL_Surface* image, int size, int* points);
+double* Fill_Matrix(int size, int* points);
 SDL_Surface* Homography_Transform(SDL_Surface* image, int size, int* points);
 
 #endif

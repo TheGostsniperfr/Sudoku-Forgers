@@ -19,18 +19,21 @@ typedef struct Point {
     int size;
 }Point;
 
-SDL_Surface* Blob(SDL_Surface* src, int* size_max);
-
 int Fill
 (
     SDL_Surface *src,
     Uint32* pixels,
     int x,
     int y,
+    int x2,
+    int y2,
     Uint8 R,
     Uint8 G,
     Uint8 B,
+    char** blob,
     char Func
 );
+
+SDL_Surface* Blob(SDL_Surface* src, int* size_max);
 
 #endif

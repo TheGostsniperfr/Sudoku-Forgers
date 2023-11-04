@@ -15,7 +15,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define NB_FLAGS 2
+#define NB_FLAGS 3
 
 Option options[] = {
     {"-all", handleAllSteps},
@@ -47,6 +47,7 @@ int main(int argc, char* argv[]){
 
     flags[0].flag = "-save";
     flags[1].flag = "-verbose";
+    flags[2].flag = "-bypass";
 
 
     //find flags

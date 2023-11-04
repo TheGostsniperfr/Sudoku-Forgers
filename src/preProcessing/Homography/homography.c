@@ -19,7 +19,7 @@
  *  @output :
  *      - matrix (double*) : homography transform matrix
 ***************************************************************/
-double* Fill_Matrix(SDL_Surface* image, int size, int* points)
+double* Fill_Matrix(int size, int* points)
 {
 	/*
 	Fill and initialize the matrix :
@@ -136,7 +136,7 @@ double* Fill_Matrix(SDL_Surface* image, int size, int* points)
 SDL_Surface* Homography_Transform(SDL_Surface* image, int size, int* points)
 {
 	//Get the homography transform matrix
-	double* mat = Fill_Matrix(image, size, points);
+	double* mat = Fill_Matrix(size, points);
 
 	//Create a new surface to draw the homographic transformation from image
 	SDL_Surface* new_img = SDL_CreateRGBSurface(0, size, size, 32, 0, 0, 0, 0);
