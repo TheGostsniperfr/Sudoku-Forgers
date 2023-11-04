@@ -4,6 +4,7 @@
 #include "neuralNetwork/network_Utils/saveLoadNetwork.h"
 #include "neuralNetwork/network_Utils/networkUtils.h"
 #include "neuralNetwork/network_Utils/createNetwork.h"
+#include "neuralNetwork/network_Utils/logicalBrain.h"
 
 
 
@@ -31,8 +32,8 @@ int handleXorTrain(
             //load default config
 
             tP.nbEpoch = 100;
-            tP.batchSize = 4;
-            tP.learningRate = 0.01;
+            tP.batchSize = 10000;
+            tP.learningRate = 1;
             tP.saveTraining = false;
         }else{
             if(argc != 3){
@@ -70,7 +71,7 @@ int handleXorTrain(
             netPara.nbNeuronsFirstLayer = 2;
             netPara.nbHiddenLayers = 1;
             netPara.nbNeuronsHiddenLayer = 5;
-            netPara.nbNeuronsOutputLayer = 1;
+            netPara.nbNeuronsOutputLayer = 2;
 
             net = createNetwork(netPara);
         }
@@ -81,6 +82,8 @@ int handleXorTrain(
         }
 
         xorTraining(net, tP, DEFAULT_XOR_FILENAME, flags);
+
+        destroyNetwork(net);
 
         return EXIT_SUCCESS;
     }
@@ -123,12 +126,67 @@ int handleLoad(
 
 
 int handleTest(
-        int argc __attribute__((unused)),
-        char* argv[] __attribute__((unused)),
-        NeuralNetwork* net __attribute__((unused)),
-        Flag* flags __attribute__((unused)))
+        int argc ,
+        char* argv[] ,
+        NeuralNetwork* net ,
+        Flag* flags )
     {
-        //TODO
+
+        if(argc != 3){
+            errx(EXIT_FAILURE, ERROR_NB_ARG);
+        }
+
+        if(flags[0].value == 1){
+            printf("🚀 Starting to load neural network.\n");
+        }
+
+        net = loadNetwork(argv[0]);
+
+        if(flags[0].value == 1){
+            printf("✅ Success to load neural network.\n");
+        }
+
+        double inputA = atof(argv[1]);
+        double inputB = atof(argv[2]);
+        int expected = inputA != inputB;
+
+        net->layers[0].neurons[0].output = inputA;
+        net->layers[0].neurons[1].output = inputB;
+
+        hiddenPropagation(net);
+
+        double output[2];
+        outputPropagation(net, output);
+
+        int digitRecognised = 0;
+        for (int i = 1; i < net->layers[0].nb_neurons; i++) {
+            if (output[i] > output[digitRecognised]) {
+                digitRecognised = i;
+            }
+        }
+
+
+
+
+        printf
+        (
+            "------------------------------------\n"
+            "                 |\n"
+            "  🅰️  Input 1 : %d |  🅱️  Input 2 : %d\n"
+            "                 |\n"
+            "------------------------------------\n\n"
+
+            "✅ Expected value : %d\n"
+            "⚡ value found : %d\n",
+
+            (int)inputA,
+            (int)inputB,
+            expected,
+            digitRecognised
+        );
+
+
+        destroyNetwork(net);
 
         return EXIT_SUCCESS;
     }

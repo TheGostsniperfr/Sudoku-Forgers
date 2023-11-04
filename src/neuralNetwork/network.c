@@ -98,9 +98,5 @@ int main(int argc, char* argv[]){
 
     free(flags);
 
-    if(net != NULL){
-        destroyNetwork(net);
-    }
-
     return EXIT_SUCCESS;
 }

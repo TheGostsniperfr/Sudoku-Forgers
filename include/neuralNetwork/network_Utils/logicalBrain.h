@@ -10,9 +10,12 @@
 
 
 void initializeNetwork(NeuralNetwork *net);
-void forwardPropagation(NeuralNetwork* net, double* input);
-double backPropagation(NeuralNetwork* net, double* true_probs);
-void gradientDescent(NeuralNetwork* net, double learningRate);
+void hiddenPropagation(NeuralNetwork *net);
+void outputPropagation(NeuralNetwork *net,  double *output);
+
+void backPropagation(NeuralNetwork *net, double *predicted_probs,
+    double *trueProbs, double learningRate);
+
 
 
 #endif

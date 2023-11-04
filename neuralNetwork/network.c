@@ -6,6 +6,7 @@
 #include <math.h>
 #include <string.h>
 #include "../imageReader/imageReader.h"
+#include "../include/neuralNetwork/network_Utils/struct.h"
 
 #define NET_SAVE_PATH "netSave.txt"
 #define NET_SAVE_XOR_PATH "netXorSave.txt"
@@ -600,12 +601,10 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP){
             backPropagation(net, output, trueProbs, tP.learningRate);
         }
 
-        if(tP.printDebug == true){
-            // Calculating the percentage of correct answers
-            double accuracy = (double)correctPredictions / tP.batchSize * 100.0;
-            printf("Epoch %d, Correct answers : %.2f%%\n",
-                epoch + 1, accuracy);
-        }
+        // Calculating the percentage of correct answers
+        double accuracy = (double)correctPredictions / tP.batchSize * 100.0;
+        printf("Epoch %d, Correct answers : %.2f%%\n",
+            epoch + 1, accuracy);
     }
 
     if(tP.saveTraining == 1){
@@ -672,12 +671,11 @@ void xorTraining(NeuralNetwork* net, TrainingPara tP){
             backPropagation(net, output, trueProbs, tP.learningRate);
         }
 
-        if(tP.printDebug == true){
-            // Calculating the percentage of correct answers
-            double accuracy = (double)correctPredictions / tP.batchSize * 100.0;
-            printf("Epoch %d, Correct answers : %.2f%%\n",
-                epoch + 1, accuracy);
-        }
+        // Calculating the percentage of correct answers
+        double accuracy = (double)correctPredictions / tP.batchSize * 100.0;
+        printf("Epoch %d, Correct answers : %.2f%%\n",
+            epoch + 1, accuracy);
+
     }
 
     if(tP.saveTraining == 1){
@@ -783,7 +781,6 @@ int main() {
         .batchSize = 1000,
         .learningRate = 10,
         .nbEpoch = 100,
-        .printDebug = true,
         .saveTraining = true,
     };
 

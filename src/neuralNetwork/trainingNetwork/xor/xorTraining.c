@@ -15,60 +15,57 @@ void xorTraining(NeuralNetwork* net, TrainingPara tP, char* filename, Flag* flag
     }
 
     if(net->layers[0].nb_neurons != 2 ||
-        net->layers[net->nb_layers-1].nb_neurons != 1)
+        net->layers[net->nb_layers-1].nb_neurons != 2)
     {
         errx(EXIT_FAILURE, "❌ Invalid network settings for xor training.\n");
     }
 
-    //Get Xor data set
-    double xorDataSet[] =
+
+    for (int epoch_i = 0; epoch_i < tP.nbEpoch; epoch_i++)
     {
-        0.0, 0.0,
-        0.0, 1.0,
-        1.0, 0.0,
-        1.0, 1.0
-    };
+        int correctPredictions = 0;
 
-    double xorDataSetExpected[] =
-    {
-        0.0,
-        1.0,
-        1.0,
-        0.0
-    };
+        for(int batch_i = 0; batch_i < tP.batchSize; batch_i++){
+            //generate random xor data input
 
-    int sizeDataSet = 4;
-    //think to compare to tP.batchSize
+           //generate a xor data
+            double inputA = rand() % 2;
+            double inputB = rand() % 2;
+            int result = inputA != inputB;
 
-    double errorRate = 0.0;
+            net->layers[0].neurons[0].output = inputA;
+            net->layers[0].neurons[1].output = inputB;
 
-    for (int epoch_i = 1; epoch_i <= tP.nbEpoch; epoch_i++)
-    {
-        if(flags[0].value == 1){
-            printf("Epoch = %d\n", epoch_i);
-        }
+            hiddenPropagation(net);
 
-        for (int i = 0; i < sizeDataSet; i++)
-        {
-            double input[] = { xorDataSet[2 * i], xorDataSet[2 * i + 1] };
-            double expected[] = { xorDataSetExpected[i] };
+            double output[2];
+            outputPropagation(net, output);
 
-            forwardPropagation(net, input);
-            errorRate = backPropagation(net, expected);
-            gradientDescent(net, tP.learningRate);
-
-            if(flags[0].value == 1){
-                printf("Input : %f, %f | Output : %f |Expected : %f\n", input[0], input[1],
-                    net->layers[net->nb_layers-1].neurons[0].output, expected[0]);
+            int digitRecognised = 0;
+            for (int i = 1; i < net->layers[0].nb_neurons; i++) {
+                if (output[i] > output[digitRecognised]) {
+                    digitRecognised = i;
+                }
             }
+
+            // check if the prediction is correct
+            if (digitRecognised == result) {
+                correctPredictions++;
+            }
+
+            double trueProbs[2] = {0.0};
+            trueProbs[result] = 1.0;
+
+            //back propagation
+            backPropagation(net, output, trueProbs, tP.learningRate);
+        }
+
+        if(flags[0].value == 1){
+            double accuracy = (double)correctPredictions / tP.batchSize * 100.0;
+            printf("Epoch %d, Correct answers : %.2f%%\n",
+                epoch_i + 1, accuracy);
         }
     }
-
-    if(flags[0].value == 1){
-        printf("Error rate : %f\n", errorRate);
-    }
-
-
 
     if(flags[1].value == 1){
 
