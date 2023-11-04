@@ -72,7 +72,8 @@ SDL_Surface* Bilinear_Interpolation(SDL_Surface* image, int output_width,
 			Uint32 newpixel = SDL_MapRGBA(output_image->format, newR, newG,
 			newB, newA);
 
-			putPixel(output_image, j, i, newpixel);
+			Uint32* output_pixels = (Uint32*)output_image->pixels;
+			output_pixels[i * output_image->w + j] = newpixel;
 		}
 	}
 

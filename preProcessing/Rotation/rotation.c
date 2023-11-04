@@ -15,6 +15,9 @@ SDL_Surface* Rotated_image(SDL_Surface* image, double angle)
 	int w = image->w;
 	int h = image->h;
 
+	//For better results
+	angle *=(-1);
+
 	//Get the center of the image
 	int center_x = w/2;
 	int center_y = h/2;
@@ -32,35 +35,46 @@ SDL_Surface* Rotated_image(SDL_Surface* image, double angle)
 
 	//Travel into the image to rotate it
 	for(int i = 0; i < w; i++)
-	{
-		for(int j = 0; j < h; j++)
 		{
-			int new_x;
-			int new_y;
-
-			int x = i - center_x;
-			int y = j - center_y;
-
-			//step 1
-			new_x = round(x - y*angle_tan);
-			new_y = y;
-
-			//step 2
-			new_y = round(new_x *angle_sin+new_y);
-
-			//step 3
-			new_x = round(new_x-new_y*angle_tan);
-
-			new_y += center_y;
-			new_x += center_x;
-
-			if(new_x >= 0 && new_x < w && new_y >= 0 && new_y < h)
+			for(int j = 0; j < h; j++)
 			{
-				Uint32 pixel = getPixel32_t(image, i, j);
-				putPixel(rotated_image, new_x, new_y, pixel);
+				int new_x;
+				int new_y;
+
+				int x = i - center_x;
+				int y = j - center_y;
+
+				//step 1
+				new_x = round(x - y*angle_tan);
+				new_y = y;
+
+				//step 2
+				new_y = round(new_x *angle_sin+new_y);
+
+				//step 3
+				new_x = round(new_x-new_y*angle_tan);
+
+				new_y += center_y;
+				new_x += center_x;
+
+				/*
+				if(new_x >= 0 && new_x < w && new_y >= 0 && new_y < h)
+				{
+					Uint32 pixel = pixels[i * image->w + j];
+					rotated_pixels[new_x * rotated_image->w + new_y] = pixel;
+				}
+				*/
+
+				Uint32* pixels = (Uint32*) image->pixels;
+				Uint32* rotated_pixels = (Uint32*) rotated_image->pixels;
+
+				if(new_x >= 0 && new_x < h && new_y >= 0 && new_y < w)
+				{
+					Uint32 pixel = pixels[i * image->w + j];
+					rotated_pixels[new_x * rotated_image->w + new_y] = pixel;
+				}
 			}
 		}
-	}
 
 	//SDL_FreeSurface(image);
 	return rotated_image;

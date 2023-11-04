@@ -96,7 +96,7 @@ SDL_Surface* Bilinear_Interpolation(SDL_Surface* image, int output_width,
 			newB, newA);
 
 			Uint32* output_pixels = (Uint32*)output_image->pixels;
-			output_pixels[i * output_image->w + i] = newpixel;
+			output_pixels[i * output_image->w + j] = newpixel;
 		}
 	}
 

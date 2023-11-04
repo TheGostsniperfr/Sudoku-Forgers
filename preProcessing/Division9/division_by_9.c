@@ -159,11 +159,20 @@ SDL_Surface* Homography_Transform_Division(SDL_Surface* image, int size,
 			double y = (mat[3]*i + mat[4]*j + mat[5])/(mat[6]*i + mat[7]*j +1);
 
             //Put the pixel from the image to the new if it is into it
-            if (x >= 0 && x < image->w && y >= 0 && y < image->h)
+            /*if (x >= 0 && x < image->w && y >= 0 && y < image->h)
             {
                 Uint32 pixel = getPixel32_t(image, x, y);
                 putPixel(new_img, i, j, pixel);
-            }
+            }*/
+
+            if (x >= 0 && x < image->w && y >= 0 && y < image->h)
+			{
+				Uint32* new_pixels = (Uint32*)new_img->pixels;
+				Uint32* pixels = (Uint32*)image->pixels;
+
+				Uint32 pixel = pixels[(int)y * image->w + (int)x];
+				new_pixels[j * new_img->w + i] = pixel;
+			}
         }
     }
 

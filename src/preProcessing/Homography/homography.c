@@ -160,8 +160,8 @@ SDL_Surface* Homography_Transform(SDL_Surface* image, int size)
 				Uint32* new_pixels = (Uint32*)new_img->pixels;
 				Uint32* pixels = (Uint32*)image->pixels;
 
-				Uint32 pixel = pixels[(int)y * image->w + (int)x];
-				new_pixels[(int)j + new_img->w + (int)i] = pixel;
+				Uint32 pixel = pixels[(int)y * size + (int)x];
+				new_pixels[(int)j * size + (int)i] = pixel;
 			}
 		}
 	}
