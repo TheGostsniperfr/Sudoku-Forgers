@@ -7,7 +7,8 @@
 #include <stdlib.h>
 #include <err.h>
 
-void xorTraining(NeuralNetwork* net, TrainingPara tP, char* filename, Flag* flags){
+void xorTraining(NeuralNetwork* net, TrainingPara tP,
+                    char* filename, Flag* flags){
     if(flags[0].value == 1){
         printf
         (
