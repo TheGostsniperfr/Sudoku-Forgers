@@ -5,6 +5,9 @@
 #include "neuralNetwork/network_Utils/networkUtils.h"
 #include "neuralNetwork/network_Utils/createNetwork.h"
 #include "neuralNetwork/network_Utils/logicalBrain.h"
+#include "neuralNetwork/network_Utils/mnistUtils.h"
+
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
 
 
@@ -13,6 +16,7 @@
 #include <stdlib.h>
 #include <err.h>
 #include <stdbool.h>
+#include <SDL2/SDL.h>
 
 #define DEFAULT_XOR_FILENAME "xorTrain.txt"
 #define DEFAULT_DIGITS_FILENAME "digitsTrain.txt"
@@ -213,8 +217,33 @@ int handlePrintHelp(
             "-save               ->      Save neural network\n"
             "-defaultNetSpec     ->      Load default network specification\n"
             "-defaultTrainSpec   ->      Load default training specification\n"
+            "-showImg <input>    ->      Show the image at the n index\n"
             "--help              ->      Show the help panel\n"
         );
 
         return EXIT_SUCCESS;
     }
+
+
+int handleGetImgFromMnist(
+    int argc,
+    char* argv[],
+    NeuralNetwork* net __attribute__((unused)),
+    Flag* flags)    
+    {
+        if(argc != 1){
+            errx(EXIT_FAILURE, ERROR_NB_ARG);
+        }
+
+        SDL_Surface* digitImg = getImageFromMnist(atoi(argv[0]), flags);
+
+
+        if(flags[1].value == 1) {
+            saveImg(digitImg, "OutDigit.jpg");
+            if(flags[0].value == 1){
+                printf("💾 Success to save OutDigit.jpg\n");
+            }
+        }
+
+        return EXIT_SUCCESS;
+    }    

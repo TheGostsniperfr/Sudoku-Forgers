@@ -25,6 +25,7 @@ clean:
 
 clean-obj:
 	make -C $(SRC_DIR)/sudokuSolver clean-obj
+	make -C $(SRC_DIR)/preProcessing clean-obj
 	make -C $(SRC_DIR)/neuralNetwork clean-obj
 
 	clear

@@ -76,6 +76,7 @@ Options :
 -save               ->      Save neural network
 -defaultNetSpec     ->      Load default network specification
 -defaultTrainSpec   ->      Load default training specification
+-showImg <input>    ->      Show the image at the n index
 --help              ->      Show the help panel
 ```
 

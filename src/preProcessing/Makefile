@@ -6,7 +6,6 @@ SRC_DIR = ./
 
 SRC = $(shell find $(SRC_DIR) -type f -name "*.c")
 
-
 OBJ = ${SRC:.c=.o}
 TARGET = preProcessing
 
@@ -20,7 +19,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
-	rm -f $(shell find $(SRC_DIR) -type f -name "*.jpg")
+	rm -f $(shell find $(SRC_DIR) -type f -name "*.jpg") 
 
 	rm -f $(TARGET)
 

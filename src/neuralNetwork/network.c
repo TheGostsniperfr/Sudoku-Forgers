@@ -15,7 +15,8 @@ Option options[] = {
     {"-digitsTrain", handleDigitsTrain},
     {"-load", handleLoad},
     {"-test", handleTest},
-    {"--help", handlePrintHelp}
+    {"--help", handlePrintHelp},
+    {"-showImg", handleGetImgFromMnist}
 };
 
 
@@ -30,6 +31,8 @@ int main(int argc, char* argv[]){
                                     in the same folder
     */
 
+
+   
 
     //Init flags
     Flag* flags = (Flag*)malloc(NB_FLAGS * sizeof(Flag));

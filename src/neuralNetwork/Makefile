@@ -1,10 +1,12 @@
 CC = gcc -I../../include
-CFLAGS = -Wall -Wextra
-LDLIBS = -lm
+CFLAGS = $(shell sdl2-config --cflags) -Wall -Wextra
+LDLIBS = $(shell sdl2-config --libs) -lSDL2_image -lSDL2_ttf -lm
 
 SRC_DIR = ./
 
 SRC = $(shell find $(SRC_DIR) -type f -name "*.c")
+
+SRC += ../preProcessing/SDL_Function/sdlFunction.c
 
 OBJ = ${SRC:.c=.o}
 TARGET = network
@@ -19,9 +21,12 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
+	rm -f $(shell find $(SRC_DIR) -type f -name "*.jpg")
 	rm -f $(TARGET)
 	rm -f xorTrain.txt
 	rm -f digitTrain.txt
+	rm -f ../preProcessing/SDL_Function/sdlFunction.o
+
 
 
 

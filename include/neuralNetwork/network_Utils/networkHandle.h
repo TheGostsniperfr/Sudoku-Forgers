@@ -50,4 +50,11 @@ int handlePrintHelp(
         NeuralNetwork* net,
         Flag* flags);
 
+int handleGetImgFromMnist(
+        int argc,
+        char* argv[],
+        NeuralNetwork* net,
+        Flag* flags);
+
+
 #endif
