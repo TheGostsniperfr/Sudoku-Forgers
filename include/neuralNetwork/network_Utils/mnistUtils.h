@@ -3,10 +3,13 @@
 
 #include "SDL2/SDL.h"
 
+
 #include "GUI/handleUtils.h"
+#include "neuralNetwork/network_Utils/struct.h"
 
 
 
-SDL_Surface* getImageFromMnist(int index, Flag* flags);
+ImgContainer* getImageFromMnist(int index, Flag* flags);
+void freeImgContainer(ImgContainer* imgContainer);
 
-#endif 
+#endif

@@ -229,21 +229,26 @@ int handleGetImgFromMnist(
     int argc,
     char* argv[],
     NeuralNetwork* net __attribute__((unused)),
-    Flag* flags)    
+    Flag* flags)
     {
         if(argc != 1){
             errx(EXIT_FAILURE, ERROR_NB_ARG);
         }
 
-        SDL_Surface* digitImg = getImageFromMnist(atoi(argv[0]), flags);
+        ImgContainer* imgContainer = getImageFromMnist(atoi(argv[0]), flags);
+
 
 
         if(flags[1].value == 1) {
-            saveImg(digitImg, "OutDigit.jpg");
+            printf("Image label : %d\n", imgContainer->label);
+            saveImg(imgContainer->img, "OutDigit.jpg");
             if(flags[0].value == 1){
                 printf("💾 Success to save OutDigit.jpg\n");
             }
         }
 
+
+        freeImgContainer(imgContainer);
+
         return EXIT_SUCCESS;
-    }    
+    }

@@ -1,6 +1,8 @@
 #ifndef BUILD_NETWORK_H
 #define BUILD_NETWORK_H
 
+#include "SDL2/SDL.h"
+
 typedef struct Neuron {
     double *weights;
     double bias;
@@ -34,5 +36,10 @@ typedef struct NetworkPara{
     int nbNeuronsOutputLayer;
     int nbHiddenLayers;
 } NetworkPara;
+
+typedef struct ImgContainer{
+    SDL_Surface* img;
+    int label;
+} ImgContainer;
 
 #endif
