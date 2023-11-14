@@ -11,5 +11,6 @@
 
 ImgContainer* getImageFromMnist(int index, Flag* flags);
 void freeImgContainer(ImgContainer* imgContainer);
+ImgContainer** getDataSet(int batchSize, Flag* flags);
 
 #endif

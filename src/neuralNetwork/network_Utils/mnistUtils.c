@@ -175,3 +175,82 @@ ImgContainer* getImageFromMnist(int index, Flag* flags) {
 
     return imgContainer;
 }
+
+
+ImgContainer** getDataSet(int batchSize, Flag* flags){
+    FILE* dataFile = fopen(DATASET_PATH, "rb");
+    FILE* labelFile = fopen(LABEL_PATH, "rb");
+    if((dataFile == NULL) | (labelFile == NULL)){
+        errx(EXIT_FAILURE, "Can't open dataset dataFile");
+    }
+
+    uint32_t nbImg, row, col, nbLabels;
+    getMnistDataHeader(dataFile, &nbImg, &row, &col);
+    getMnistLabelHeader(labelFile, &nbLabels);
+
+    if(nbImg != nbLabels){
+        errx
+        (
+            EXIT_FAILURE, 
+            "Number of img don't match with the number of labels"
+        );
+    }
+
+    if(batchSize > (int)nbImg){
+        if(flags[0].value == 1){
+            printf("Warning : Batch size too high, setted on %d\n", nbImg);
+        }
+    }
+
+    //Move the cursors
+    if ((fseek(dataFile, 16, SEEK_SET) != 0) |
+            (fseek(labelFile, 8, SEEK_SET) != 0)) {
+        fclose(dataFile);
+        fclose(labelFile);
+        errx(EXIT_FAILURE, "Error : impossible to move the cursor.");
+    }
+
+    ImgContainer** globalImgContainer = calloc(nbImg, sizeof(ImgContainer*));
+
+    for (int img_i = 0; img_i < (int)nbImg; img_i++)
+    {
+
+        ImgContainer* tmp = calloc(1, sizeof(ImgContainer));
+        
+        SDL_Surface* img = SDL_CreateRGBSurfaceWithFormat
+                        (
+                            0,
+                            row,
+                            col,
+                            32,
+                            SDL_PIXELFORMAT_ABGR8888
+                        );
+
+        Uint32* pixels = img->pixels;
+
+        uint8_t pxVal;
+        uint8_t labelVal = 0;
+        fread(&labelVal, sizeof(uint8_t), 1, labelFile);
+
+
+        for (uint32_t i = 0; i < row*col; i++)
+        {
+            fread(&pxVal, sizeof(uint8_t), 1, dataFile);
+
+            Uint32 newPx = SDL_MapRGBA(img->format, pxVal, pxVal, pxVal, 255);
+            pixels[i] = newPx;
+        }
+
+        
+
+        tmp->img = img;
+        tmp->label = labelVal;
+
+        globalImgContainer[img_i] = tmp;
+    }
+
+    fclose(dataFile);
+    fclose(labelFile);
+
+    return globalImgContainer;
+}

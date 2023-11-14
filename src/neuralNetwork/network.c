@@ -16,7 +16,7 @@ Option options[] = {
     {"-load", handleLoad},
     {"-test", handleTest},
     {"--help", handlePrintHelp},
-    {"-showImg", handleGetImgFromMnist}
+    {"-showImg", handleGetImgFromMnist},
 };
 
 

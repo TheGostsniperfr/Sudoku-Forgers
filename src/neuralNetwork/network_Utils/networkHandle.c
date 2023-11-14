@@ -20,6 +20,7 @@
 
 #define DEFAULT_XOR_FILENAME "xorTrain.txt"
 #define DEFAULT_DIGITS_FILENAME "digitsTrain.txt"
+#define NB_IMG_DATA_SET 40000
 
 int handleXorTrain(
         int argc,
@@ -29,7 +30,6 @@ int handleXorTrain(
     {
 
         //Training Parameters
-
         TrainingPara tP;
 
         if(flags[3].value == 1){
@@ -99,7 +99,46 @@ int handleDigitsTrain(
         NeuralNetwork* net __attribute__((unused)),
         Flag* flags __attribute__((unused)))
     {
+        //Training Parameters
+        TrainingPara tP;
+
+        if(flags[3].value == 1){
+            //load default config
+
+            tP.nbEpoch = 100;
+            tP.batchSize = 10000;
+            tP.learningRate = 1;
+            tP.saveTraining = false;
+        }else{
+            if(argc != 3){
+                errx(EXIT_FAILURE, ERROR_NB_ARG);
+            }
+
+            tP.nbEpoch = atoi(argv[0]);
+            tP.batchSize = atoi(argv[1]);
+            tP.learningRate = atof(argv[2]);
+            tP.saveTraining = false;
+        }
+
+        if(flags[1].value == 1){
+            tP.saveTraining = true;
+        }
+
+        if(flags[0].value == 1){
+            printTrainingPara(tP);
+        }
+
+        //get dataset
+        ImgContainer** globalContainer = getDataSet(NB_IMG_DATA_SET, flags);
+
         //TODO
+
+        //free dataset
+        for (int i = 0; i < NB_IMG_DATA_SET; i++)
+        {   
+            freeImgContainer(globalContainer[i]);   
+        }
+        
 
         return EXIT_SUCCESS;
     }
