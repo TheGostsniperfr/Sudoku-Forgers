@@ -37,15 +37,19 @@ void xorTraining(NeuralNetwork* net, TrainingPara tP,
            //generate a xor data
             double inputA = rand() % 2;
             double inputB = rand() % 2;
+
+            double input[2] = {inputA, inputB};
+
             int result = inputA != inputB;
 
-            net->layers[0].neurons[0].output = inputA;
-            net->layers[0].neurons[1].output = inputB;
-
-            hiddenPropagation(net);
-
             double output[2];
-            outputPropagation(net, output);
+
+            forwardPropagation(net, input);
+
+            Layer* lL = &net->layers[net->nb_layers-1];
+            output[0] = lL->neurons[0].output;
+            output[1] = lL->neurons[1].output;
+
 
             int digitRecognised = 0;
             for (int i = 1; i < net->layers[0].nb_neurons; i++) {

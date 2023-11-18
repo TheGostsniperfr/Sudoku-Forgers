@@ -107,85 +107,76 @@ void initializeNetwork(NeuralNetwork *net) {
     }
 }
 
-/***************************************************************
- *  Function hiddenPropagation :
- *
- *  Propagation of hidden layer(s) neurons
- *
- *  @input :
- *      - *net (NeuralNetwork) : data outputs by neural networks
-***************************************************************/
 
-void hiddenPropagation(NeuralNetwork *net){
-    for (int layer_i = 1; layer_i < net->nb_layers; layer_i++) {
-        for (int neuron_i = 0; neuron_i <
-                net->layers[layer_i].nb_neurons; neuron_i++) {
-            double weighted_sum = net->layers[layer_i].neurons[neuron_i].bias;
-
-            // Weighted sum
-            for (int prev_neuron_i = 0; prev_neuron_i <
-                    net->layers[layer_i - 1].nb_neurons; prev_neuron_i++) {
-                weighted_sum +=
-                    net->layers[layer_i]
-                        .neurons[neuron_i]
-                        .weights[prev_neuron_i]
-
-                    * net->layers[layer_i - 1]
-                        .neurons[prev_neuron_i]
-                        .output;
-        }
-
-            // Activation function (ReLu function)
-            net->layers[layer_i].neurons[neuron_i].output =
-                sigmoid(weighted_sum);
-        }
-    }
-}
-
-
-/***************************************************************
- *  Function outputPropagation :
- *
- *  Propagation of output layer neurons
- *
- *  @input :
- *      - *net (NeuralNetwork) : data outputs by neural networks
- *      - *output (double) : output data (the recognised number)
-***************************************************************/
-
-void outputPropagation(NeuralNetwork *net,  double *output){
-    int output_layer_index = net->nb_layers - 1;
-    int nb_output_neurons = net->layers[output_layer_index].nb_neurons;
-    double output_values[nb_output_neurons];
-
-    for (int neuron_i = 0; neuron_i < nb_output_neurons; neuron_i++) {
-        double weighted_sum = net->layers[output_layer_index]
-                                .neurons[neuron_i]
-                                .bias;
-
-        // Weighted sum
-        for (int prev_neuron_i = 0; prev_neuron_i <
-                net->layers[output_layer_index - 1].nb_neurons;
-                prev_neuron_i++) {
-            weighted_sum +=
-                net->layers[output_layer_index]
-                    .neurons[neuron_i]
-                    .weights[prev_neuron_i]
-
-                * net->layers[output_layer_index - 1]
-                    .neurons[prev_neuron_i]
-                    .output;
-        }
-
-        output_values[neuron_i] = weighted_sum;
+void forwardPropagation(NeuralNetwork* net, double* input){
+    //input value on the input layer
+    Layer* l1 = &net->layers[0];
+    for (int n_i = 0; n_i < l1->nb_neurons; n_i++)
+    {
+        l1->neurons[n_i].output = input[n_i];
     }
 
-    // Activation function (SoftMax function)
-    softmax(output_values, nb_output_neurons);
+    //Forward propagation calcul (from l_{1} to l_{n-1})
+    for (int l_i = 1; l_i < net->nb_layers-1; l_i++)
+    {
+        Layer* currentL = &net->layers[l_i];
+        Layer* prevL = &net->layers[l_i-1];
 
-    for (int i = 0; i < nb_output_neurons; i++) {
-        output[i] = output_values[i];
+        for (int n_i = 0; n_i < currentL->nb_neurons; n_i++)
+        {
+            Neuron* currentN = &currentL->neurons[n_i];
+            double sum = currentN->bias;
+
+            for (int nP_i = 0; nP_i < prevL->nb_neurons; nP_i++)
+            {
+                Neuron* prevN = &prevL->neurons[nP_i];
+                sum += prevN->output * currentN->weights[nP_i];
+            }
+
+            currentN->output = sigmoid(sum);
+        }
     }
+
+    //Output layer calcul
+    Layer* currentL = &net->layers[net->nb_layers-1];
+    Layer* prevL = &net->layers[net->nb_layers-2];
+    double expSum = 0;
+    double maxSum = -DBL_MAX;
+
+    for (int n_i = 0; n_i < currentL->nb_neurons; n_i++) {
+        Neuron* currentN = &currentL->neurons[n_i];
+        double sum = currentN->bias;
+
+        for (int nP_i = 0; nP_i < prevL->nb_neurons; nP_i++) {
+            Neuron* prevN = &prevL->neurons[nP_i];
+            sum += prevN->output * currentN->weights[nP_i];
+        }
+
+        if (sum > maxSum) {
+            maxSum = sum;
+        }
+    }
+
+    //Apply softmax with numerical stability
+    for (int n_i = 0; n_i < currentL->nb_neurons; n_i++) {
+        Neuron* currentN = &currentL->neurons[n_i];
+        double sum = currentN->bias;
+
+        for (int nP_i = 0; nP_i < prevL->nb_neurons; nP_i++) {
+            Neuron* prevN = &prevL->neurons[nP_i];
+            sum += prevN->output * currentN->weights[nP_i];
+        }
+
+        currentN->output = exp(sum - maxSum);
+        expSum += currentN->output;
+    }
+
+    //Apply the softmax function (with numerical stability)
+    for (int n_i = 0; n_i < currentL->nb_neurons; n_i++) {
+        Neuron* currentN = &currentL->neurons[n_i];
+        currentN->output /= expSum;
+    }
+
 }
 
 /***************************************************************

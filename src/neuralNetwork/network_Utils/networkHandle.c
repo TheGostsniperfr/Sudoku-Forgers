@@ -135,10 +135,10 @@ int handleDigitsTrain(
 
         //free dataset
         for (int i = 0; i < NB_IMG_DATA_SET; i++)
-        {   
-            freeImgContainer(globalContainer[i]);   
+        {
+            freeImgContainer(globalContainer[i]);
         }
-        
+
 
         return EXIT_SUCCESS;
     }
@@ -196,13 +196,16 @@ int handleTest(
         double inputB = atof(argv[2]);
         int expected = inputA != inputB;
 
-        net->layers[0].neurons[0].output = inputA;
-        net->layers[0].neurons[1].output = inputB;
+        double input[2] = {inputA, inputB};
 
-        hiddenPropagation(net);
 
         double output[2];
-        outputPropagation(net, output);
+
+        forwardPropagation(net, input);
+
+        Layer* lL = &net->layers[net->nb_layers-1];
+        output[0] = lL->neurons[0].output;
+        output[1] = lL->neurons[1].output;
 
         int digitRecognised = 0;
         for (int i = 1; i < net->layers[0].nb_neurons; i++) {
