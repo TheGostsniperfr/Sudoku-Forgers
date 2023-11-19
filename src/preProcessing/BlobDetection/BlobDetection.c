@@ -1,9 +1,9 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "preProcessing/BlobDetection/BlobDetection.h"
+#include "../../../include/preProcessing/BlobDetection/BlobDetection.h"
 #include <err.h>
 
-#include "preProcessing/SDL_Function/sdlFunction.h"
+#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
 
 /*****************************************************************************
  *  Function Fill:
@@ -23,17 +23,12 @@
 ******************************************************************************/
 int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, char* blob, char lim){
 	//Variables for color comparison and result
-	Uint8 r = 0;
-	Uint8 g = 0;
-	Uint8 b = 0;
-	Uint32 rgb;
 	int res = 1;
 
 	//Iterates through the blob's neighbours to find neighbours and colors them
-	//in blue
-	SDL_GetRGB(pixels[y*src->w +  x], src->format, &r, &g, &b);
-	rgb = r + g + b;
-	if (rgb == 0 && *((blob+y*src->w)+x)==lim){
+	int pxVal = getPixelGrayScale(pixels[y*src->w +  x]);
+
+	if (pxVal == 0 && *((blob+y*src->w)+x)==lim){
 		*((blob+y*src->w)+x)+=1;
 		if (y<src->w-1){
 			res = res + Fill(src, pixels, x, y+1, blob, lim);
@@ -78,18 +73,14 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	int area_max = 0;
 	int size = 0;
 
-	//rgb variables for color comparison
-	Uint8 r = 0;
-	Uint8 g = 0;
-	Uint8 b = 0;
-	Uint32 rgb = 0;
+	//Basic colors
+	Uint32 whitePx = SDL_MapRGB(src->format, 255, 255, 255);
 
 	//runs through the image to find the biggest blob
 	for(int i = 0; i<src->h;i++){
 		for(int j =0;j<src->w;j++){
-			SDL_GetRGB(pixels[i*src->w +  j], src->format, &r, &g, &b);
-			rgb = (r+g+b)/3;
-			if (rgb==0){
+			int pxVal = getPixelGrayScale(pixels[i*src->w +  j]);
+			if (pxVal==0){
 				size = Fill(src, pixels, j, i, blob, 0);
 				Point temp = {j, i, size};
 				if (size>area_max){
@@ -104,29 +95,19 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	Fill(src, pixels, max.x, max.y, blob, 1);
 
 	//Runs through the image again and repaint the smaller blobs
-	for(int i = 0; i<src->h; i++){
-		for(int j = 0; i<src->w; j++){
+	for(int i = 0; i < src -> h; i++){
+		for(int j = 0; j < src -> w; j++){
+			int pxVal = getPixelGrayScale(pixels[i*src->w +  j]);
 			if (*((blob+i*src->w)+j)<2){
-				SDL_GetRGB(pixels[i*src->w +  j], src->format, &r, &g, &b);
-				rgb = (r+g+b)/3;
-				if(rgb!=255){
-					pixels[i*src->w +  j] = SDL_MapRGB(src->format, 255, 
-					255, 255);
+				if(pxVal != 255){
+					pixels[i*src->w + j] = whitePx;
 				}
 			}
 		}
 	}
 
-	src = SDL_CreateRGBSurfaceFrom(pixels,
-	src->w,
-	src->h,
-	src->format->BitsPerPixel,
-	src->pitch,
-	src->format->Rmask,
-	src->format->Gmask,
-	src->format->Bmask,
-	src->format->Amask);
-	IMG_SaveJPG(src, "BlobResult.jpg", 100);
+
+	saveImg(src, "BlobResult.jpg");
 
 	//Modifies pointer size, free the allocated and returns the surface
 	*size_max = area_max;
@@ -139,7 +120,7 @@ int main(int argc, char* argv[]){
 		warn("Pas assez d'arguments");
 		return 0;
 	}
-	SDL_Surface *src = IMG_Load(argv[1]);
+	SDL_Surface *src = loadImg(argv[1]);
 	if (src==NULL){
 		warn("Pas assez d'espace");
 		return 0;
