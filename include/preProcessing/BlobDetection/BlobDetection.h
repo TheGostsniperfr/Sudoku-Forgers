@@ -18,7 +18,7 @@ int Fill
     Uint32* pixels,
     int x,
     int y,
-    char* blob,
+    int* blob,
     char lim
 );
 

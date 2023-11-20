@@ -1,46 +1,44 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../../../include/preProcessing/BlobDetection/BlobDetection.h"
+#include "preProcessing/BlobDetection/BlobDetection.h"
 #include <err.h>
-
-#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
 /*****************************************************************************
  *  Function Fill:
  *
- *  Fills all pixels connected by the same color and counts size
- *  of the current blob
+ *  Search neighbiurs of the same colours (blobs) and counts size
+ *  of it
  *
  *  @input :
  *      - src (SDL_Surface*) : Image to modify
  * 		- pixels (Uint32*) : Array of pixels from src
- * 		- x,y (int) : coordinates of the pixel to start filling from
+ * 		- x,y (int) : coordinates of the pixel to start iterating from
  * 		- blob (char*) : array of boolean
  * 		- lim (char) : number of iteration of the function
  *
  * 	@output :
  * 		- (int) : Size of the blob
 ******************************************************************************/
-int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, char* blob, char lim){
-	//Variables for color comparison and result
+int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, char lim){
+	//Size of the blob and colour value of the current pixel
 	int res = 1;
-
-	//Iterates through the blob's neighbours to find neighbours and colors them
 	int pxVal = getPixelGrayScale(pixels[y*src->w +  x]);
 
-	if (pxVal == 0 && *((blob+y*src->w)+x)==lim){
+	//Iterates through the blob's neighbours to find neighbour
+	if (pxVal < 255 && *((blob+y*src->w)+x)==lim){
 		*((blob+y*src->w)+x)+=1;
-		if (y<src->w-1){
-			res = res + Fill(src, pixels, x, y+1, blob, lim);
+		if (y<src->h){
+			res += Fill(src, pixels, x, y+1, blob, lim);
 		}
 		if (y>0){
-			res = res + Fill(src, pixels, x, y-1, blob, lim);
+			res += Fill(src, pixels, x, y-1, blob, lim);
 		}
-		if (x<src->h-1){
-			res = res + Fill(src, pixels, x+1, y, blob, lim);
+		if (x<src->w){
+			res += Fill(src, pixels, x+1, y, blob, lim);
 		}
 		if (x>0){
-			res = res + Fill(src, pixels, x-1, y, blob, lim);
+			res += Fill(src, pixels, x-1, y, blob, lim);
 		}
 	}
 	return res;
@@ -60,31 +58,29 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	Uint32* pixels = src->pixels;
 
 	//initialises the array of bool and the max point
-	char* blob = calloc(src->w * src->h, sizeof(char));
+	int* blob = calloc(src->w * src->h, sizeof(int));
 	Point max = {0, 0, 0};
 
 	//error handling for array creation
-	if (pixels==NULL){
+	if (pixels==NULL||blob ==NULL){
 		warn("Not enough storage for this operation");
 	}
 
 	//area_max will be the max size of a black blob while size
 	//is the size of the current blob
-	int area_max = 0;
 	int size = 0;
 
 	//Basic colors
 	Uint32 whitePx = SDL_MapRGB(src->format, 255, 255, 255);
 
-	//runs through the image to find the biggest blob
-	for(int i = 0; i<src->h;i++){
+	//Runs through the image to find the biggest blob
+	for(int i = 0; i <src->h;i++){
 		for(int j =0;j<src->w;j++){
 			int pxVal = getPixelGrayScale(pixels[i*src->w +  j]);
-			if (pxVal==0){
+			if (pxVal<255){
 				size = Fill(src, pixels, j, i, blob, 0);
 				Point temp = {j, i, size};
-				if (size>area_max){
-					area_max = size;
+				if (size>max.size){
 					max = temp;
 				}
 			}
@@ -99,33 +95,15 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 		for(int j = 0; j < src -> w; j++){
 			int pxVal = getPixelGrayScale(pixels[i*src->w +  j]);
 			if (*((blob+i*src->w)+j)<2){
-				if(pxVal != 255){
+				if(pxVal < 255){
 					pixels[i*src->w + j] = whitePx;
 				}
 			}
 		}
 	}
 
-
-	saveImg(src, "BlobResult.jpg");
-
 	//Modifies pointer size, free the allocated and returns the surface
-	*size_max = area_max;
+	*size_max = max.size;
 	free(blob);
 	return src;
-}
-
-int main(int argc, char* argv[]){
-	if(argc != 2){
-		warn("Pas assez d'arguments");
-		return 0;
-	}
-	SDL_Surface *src = loadImg(argv[1]);
-	if (src==NULL){
-		warn("Pas assez d'espace");
-		return 0;
-	}
-	int size = 0;
-	Blob(src, &size);
-	printf("Taille max : %d\n", size);
 }
