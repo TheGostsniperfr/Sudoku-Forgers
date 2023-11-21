@@ -211,6 +211,20 @@ int handleAllSteps(
             printf("💾 Success to save Result.jpg\n");
         }
 
+        int size_blob = 0;
+        SDL_Surface *blob = img;
+        blob = Blob(blob, &size_blob);
+        if(flags[1].value == 1){
+            printf("✅ Success to apply blob detection.\n");
+        }
+
+        if (flags[0].value == 1){
+            saveImg(blob, "Blob.jpg");
+        }
+        if (flags[1].value == 1){
+            printf("💾 Success to save Blob.jpg\n");
+        }
+
         if(flags[2].value == 1)
         {
             //Only for the fourth image
