@@ -7,6 +7,7 @@ typedef struct Neuron {
     double *weights;
     double bias;
     double output;
+    double z;
     double delta;
 } Neuron;
 
@@ -37,9 +38,28 @@ typedef struct NetworkPara{
     int nbHiddenLayers;
 } NetworkPara;
 
+
+//---------------------------
+//
+//      DATA SET STRUCT :
+//
+//---------------------------
+
 typedef struct ImgContainer{
     SDL_Surface* img;
     int label;
 } ImgContainer;
+
+typedef struct MiniBatch{
+    int startIndex;
+    int length;
+} MiniBatch;
+
+typedef struct Batch{
+    ImgContainer* imgContainer; // list of image (dataset)
+    MiniBatch* miniBatchs; //list of mini batch
+    int nbMiniBatch;
+} Batch;
+
 
 #endif

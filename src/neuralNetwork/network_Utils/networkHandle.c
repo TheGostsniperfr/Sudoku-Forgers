@@ -36,7 +36,7 @@ int handleXorTrain(
             //load default config
 
             tP.nbEpoch = 100;
-            tP.batchSize = 10000;
+            tP.batchSize = 1000;
             tP.learningRate = 1;
             tP.saveTraining = false;
         }else{
@@ -74,7 +74,7 @@ int handleXorTrain(
 
             netPara.nbNeuronsFirstLayer = 2;
             netPara.nbHiddenLayers = 1;
-            netPara.nbNeuronsHiddenLayer = 5;
+            netPara.nbNeuronsHiddenLayer = 3;
             netPara.nbNeuronsOutputLayer = 2;
 
             net = createNetwork(netPara);
@@ -105,8 +105,8 @@ int handleDigitsTrain(
         if(flags[3].value == 1){
             //load default config
 
-            tP.nbEpoch = 100;
-            tP.batchSize = 10000;
+            tP.nbEpoch = 10;
+            tP.batchSize = 100;
             tP.learningRate = 1;
             tP.saveTraining = false;
         }else{
@@ -128,17 +128,33 @@ int handleDigitsTrain(
             printTrainingPara(tP);
         }
 
-        //get dataset
-        ImgContainer** globalContainer = getDataSet(NB_IMG_DATA_SET, flags);
+        NetworkPara netPara;
 
-        //TODO
+        if(net == NULL){
+            if(flags[0].value == 1){
+                printf
+                (
+                    "⚠️ No neural network specification ⚠️\n"
+                    "✅ Load default neural network specification.\n"
+                );
+            }
 
-        //free dataset
-        for (int i = 0; i < NB_IMG_DATA_SET; i++)
-        {
-            freeImgContainer(globalContainer[i]);
+            netPara.nbNeuronsFirstLayer = 784;
+            netPara.nbHiddenLayers = 1;
+            netPara.nbNeuronsHiddenLayer = 128;
+            netPara.nbNeuronsOutputLayer = 10;
+
+            net = createNetwork(netPara);
         }
 
+
+        if(flags[0].value == 1){
+            printNetworkPara(netPara);
+        }
+
+        digitTraining(net, tP, DEFAULT_DIGITS_FILENAME, flags);
+
+        destroyNetwork(net);
 
         return EXIT_SUCCESS;
     }

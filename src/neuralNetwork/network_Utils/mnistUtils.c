@@ -177,7 +177,7 @@ ImgContainer* getImageFromMnist(int index, Flag* flags) {
 }
 
 
-ImgContainer** getDataSet(int batchSize, Flag* flags){
+ImgContainer* getDataSet(int batchSize){
     FILE* dataFile = fopen(DATASET_PATH, "rb");
     FILE* labelFile = fopen(LABEL_PATH, "rb");
     if((dataFile == NULL) | (labelFile == NULL)){
@@ -191,15 +191,16 @@ ImgContainer** getDataSet(int batchSize, Flag* flags){
     if(nbImg != nbLabels){
         errx
         (
-            EXIT_FAILURE, 
+            EXIT_FAILURE,
             "Number of img don't match with the number of labels"
         );
     }
 
+
     if(batchSize > (int)nbImg){
-        if(flags[0].value == 1){
-            printf("Warning : Batch size too high, setted on %d\n", nbImg);
-        }
+        printf("Warning : Batch size too high, setted on %d\n", nbImg);
+    }else{
+        nbImg = batchSize;
     }
 
     //Move the cursors
@@ -210,13 +211,13 @@ ImgContainer** getDataSet(int batchSize, Flag* flags){
         errx(EXIT_FAILURE, "Error : impossible to move the cursor.");
     }
 
-    ImgContainer** globalImgContainer = calloc(nbImg, sizeof(ImgContainer*));
+    ImgContainer* globalImgContainer = calloc((int)nbImg, sizeof(ImgContainer));
 
     for (int img_i = 0; img_i < (int)nbImg; img_i++)
     {
 
-        ImgContainer* tmp = calloc(1, sizeof(ImgContainer));
-        
+        ImgContainer tmp;
+
         SDL_Surface* img = SDL_CreateRGBSurfaceWithFormat
                         (
                             0,
@@ -241,10 +242,10 @@ ImgContainer** getDataSet(int batchSize, Flag* flags){
             pixels[i] = newPx;
         }
 
-        
 
-        tmp->img = img;
-        tmp->label = labelVal;
+
+        tmp.img = img;
+        tmp.label = labelVal;
 
         globalImgContainer[img_i] = tmp;
     }

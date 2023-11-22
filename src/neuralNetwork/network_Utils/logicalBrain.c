@@ -117,7 +117,7 @@ void forwardPropagation(NeuralNetwork* net, double* input){
     }
 
     //Forward propagation calcul (from l_{1} to l_{n-1})
-    for (int l_i = 1; l_i < net->nb_layers-1; l_i++)
+    for (int l_i = 1; l_i < net->nb_layers; l_i++)
     {
         Layer* currentL = &net->layers[l_i];
         Layer* prevL = &net->layers[l_i-1];
@@ -134,6 +134,7 @@ void forwardPropagation(NeuralNetwork* net, double* input){
             }
 
             currentN->output = sigmoid(sum);
+            currentN->z = sum;
         }
     }
 
@@ -179,102 +180,70 @@ void forwardPropagation(NeuralNetwork* net, double* input){
 
 }
 
-/***************************************************************
- *  Function backPropagation :
- *
- *  Takes the data from the input image,
- *  propagates it through all the net layers
- *  and recovers the processed data (the recognised number)
- *
- *  @input :
- *      - *net (NeuralNetwork) : data outputs by neural networks
- *      - **predicted_probs (double) : input images digit
- *      - **trueProbs (double) : output data (the recognised number)
- *      - num_examples (int) : number of pixel for a image
- *      - learningRate (double) : rate of the neural net learn
-***************************************************************/
+void gradientDescent(NeuralNetwork* net, double* expectedVal){
+    // Calculate the error of the last layer
+    Layer* lL = &net->layers[net->nb_layers - 1];
+    for (int n_i = 0; n_i < lL->nb_neurons; n_i++)
+    {
+        Neuron* cN = &lL->neurons[n_i];
 
-void backPropagation(NeuralNetwork *net, double *predicted_probs,
-    double *trueProbs, double learningRate) {
-
-    int output_layer_index = net->nb_layers - 1;
-    int nb_output_neurons = net->layers[output_layer_index].nb_neurons;
-
-    for (int neuron_i = 0; neuron_i < nb_output_neurons; neuron_i++) {
-        double output_gradient = predicted_probs[neuron_i]
-                                - trueProbs[neuron_i];
-
-        double activation_derivative = sigmoid_prime(
-            net->layers[output_layer_index]
-                .neurons[neuron_i]
-                .output);
-
-        // Updating the output layer bias
-        net->layers[output_layer_index].neurons[neuron_i].bias -=
-            learningRate * output_gradient;
-
-        // Updating output layer weights
-        for (int prev_neuron_i = 0; prev_neuron_i <
-                net->layers[output_layer_index - 1]
-                    .nb_neurons; prev_neuron_i++) {
-
-            double weight_gradient = output_gradient * activation_derivative *
-                net->layers[output_layer_index - 1]
-                    .neurons[prev_neuron_i]
-                    .output;
-
-            net->layers[output_layer_index]
-                .neurons[neuron_i]
-                .weights[prev_neuron_i]
-                -= learningRate * weight_gradient;
-        }
+        // delta = (a_{j}^L - y_{j}) * sigmoidPrime(Z_{j}^L)
+        cN->delta = (cN->output - expectedVal[n_i]) * sigmoid_prime(cN->z);
     }
 
-    // Backpropagation into the hidden layers
-    for (int layer_i = output_layer_index - 1; layer_i > 0; layer_i--) {
-        int num_neurons = net->layers[layer_i].nb_neurons;
+    // Compute all the delta of the previous layer
+    for (int l_i = net->nb_layers - 2; l_i >= 0; l_i--)
+    {
+        Layer* currentL = &net->layers[l_i];
+        Layer* nextL = &net->layers[l_i + 1];
 
-        for (int neuron_i = 0; neuron_i < num_neurons; neuron_i++) {
-            double activation_derivative = sigmoid_prime(
-                net->layers[layer_i]
-                    .neurons[neuron_i]
-                    .output);
+        // delta_{k} = (Sum(W_{jk}^{l+1} * delta_{j}_ {l+1}) *
+        //               sigmoidPrime(Z_{k}^L)
+        for (int nC_i = 0; nC_i < currentL->nb_neurons; nC_i++)
+        {
+            Neuron* currentN = &currentL->neurons[nC_i];
+            double sum = 0;
 
-            double output_gradient = 0.0;
-
-            // weighted sum of the next layer
-            for (int next_neuron_i = 0; next_neuron_i <
-                    net->layers[layer_i + 1]
-                        .nb_neurons; next_neuron_i++) {
-
-                output_gradient +=
-                    predicted_probs[next_neuron_i]
-                    - trueProbs[next_neuron_i];
+            for (int nN_i = 0; nN_i < nextL->nb_neurons; nN_i++)
+            {
+                Neuron* nextN = &nextL->neurons[nN_i];
+                sum += nextN->weights[nC_i] * nextN->delta;
             }
 
-            // Calculating the gradient for the neuron
-            output_gradient *= activation_derivative;
+            currentN->delta = sum * sigmoid_prime(currentN->z);
+        }
+    }
+}
 
-            // Updating the bias of the hidden layer
-            net->layers[layer_i].neurons[neuron_i].bias
-                -= learningRate * output_gradient;
+// Function to compute new weights and bias
+void updateWB(NeuralNetwork* net, double learningRate){
+    for (int l_i = 1; l_i < net->nb_layers; l_i++)
+    {
+        Layer* currentL = &net->layers[l_i];
+        Layer* prevL = &net->layers[l_i - 1];
 
-            // Mise à jour des poids de la couche cachée
-            for (int prev_neuron_i = 0; prev_neuron_i <
-                    net->layers[layer_i - 1]
-                        .nb_neurons; prev_neuron_i++) {
+        for (int n_i = 0; n_i < currentL->nb_neurons; n_i++)
+        {
+            Neuron* cN = &currentL->neurons[n_i];
 
-                double weight_gradient =
-                    output_gradient *
-                    net->layers[layer_i - 1]
-                        .neurons[prev_neuron_i]
-                        .output;
+            cN->bias -= learningRate * cN->delta;
 
-                net->layers[layer_i]
-                    .neurons[neuron_i]
-                    .weights[prev_neuron_i]
-                    -= learningRate * weight_gradient;
+            for (int pN_i = 0; pN_i < prevL->nb_neurons; pN_i++)
+            {
+                Neuron* prevN = &prevL->neurons[pN_i];
+                cN->weights[pN_i] -= learningRate * cN->delta * prevN->output;
             }
         }
     }
+}
+
+
+void backPropagation(
+    NeuralNetwork* net,
+    double* expectedVal,
+    double learningRate)
+{
+
+    gradientDescent(net, expectedVal);
+    updateWB(net, learningRate);
 }

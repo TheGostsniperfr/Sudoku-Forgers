@@ -52,7 +52,7 @@ void xorTraining(NeuralNetwork* net, TrainingPara tP,
 
 
             int digitRecognised = 0;
-            for (int i = 1; i < net->layers[0].nb_neurons; i++) {
+            for (int i = 1; i < lL->nb_neurons; i++) {
                 if (output[i] > output[digitRecognised]) {
                     digitRecognised = i;
                 }
@@ -67,7 +67,9 @@ void xorTraining(NeuralNetwork* net, TrainingPara tP,
             trueProbs[result] = 1.0;
 
             //back propagation
-            backPropagation(net, output, trueProbs, tP.learningRate);
+            //backPropagation(net, output, trueProbs, tP.learningRate);
+            backPropagation(net, trueProbs, tP.learningRate);
+
         }
 
         if(flags[0].value == 1){
