@@ -212,8 +212,7 @@ int handleAllSteps(
 		}
 
 		int size_blob = 0;
-		SDL_Surface *blob = img;
-		blob = Blob(blob, &size_blob);
+		SDL_Surface* blob = Blob(img, &size_blob);
 		if(flags[1].value == 1){
 			printf("✅ Success to apply blob detection.\n");
 		}

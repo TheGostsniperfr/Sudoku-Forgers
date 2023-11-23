@@ -53,7 +53,14 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, char lim){
  *      - src (SDL_Surface*) : Surface of the image to modify
  * 		- size_max (int*) : address of the size of the max blob
 ***************************************************************/
-SDL_Surface* Blob(SDL_Surface* src, int* size_max){
+SDL_Surface* Blob(SDL_Surface* img, int* size_max){
+	SDL_Surface* src = SDL_ConvertSurfaceFormat
+						(
+							img, 
+							SDL_PIXELFORMAT_ARGB8888, 
+							0
+						);
+
 	//creates pixel array from the image
 	Uint32* pixels = src->pixels;
 
@@ -105,5 +112,6 @@ SDL_Surface* Blob(SDL_Surface* src, int* size_max){
 	//Modifies pointer size, free the allocated and returns the surface
 	*size_max = max.size;
 	free(blob);
+
 	return src;
 }

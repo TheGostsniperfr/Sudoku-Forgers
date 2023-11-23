@@ -36,36 +36,36 @@ double* Fill_Matrix_Division(int size, int* points)
 	double* mat = calloc(8*8, sizeof(double));
 
 	//Row 1 / Point 1 -- upper left
-	FILL( mat, 0, 2) = 1;
-	FILL( mat, 1, 5) = 1;
+	FILL(mat, 0, 2) = 1;
+	FILL(mat, 1, 5) = 1;
 
 	//Row 2 / Point 2 -- upper right
-	FILL( mat, 2, 0) = size;
-	FILL( mat, 2, 2) = 1;
-	FILL( mat, 2, 6) = -points[6]*size;
-	FILL( mat, 3, 3) = size;
-	FILL( mat, 3, 5) = 1;
-	FILL( mat, 3, 6) = -points[7]*size;
+	FILL(mat, 2, 0) = size;
+	FILL(mat, 2, 2) = 1;
+	FILL(mat, 2, 6) = -points[6]*size;
+	FILL(mat, 3, 3) = size;
+	FILL(mat, 3, 5) = 1;
+	FILL(mat, 3, 6) = -points[7]*size;
 
 	//Row 3 / Point 3 -- lower left
-	FILL( mat, 4,1) = size;
-	FILL( mat, 4,2) = 1;
-	FILL( mat, 4,7) = -points[2]*size;
-	FILL( mat, 5,4) = size;
-	FILL( mat, 5,5) = 1;
-	FILL( mat, 5,7) = -points[3]*size;
+	FILL(mat, 4,1) = size;
+	FILL(mat, 4,2) = 1;
+	FILL(mat, 4,7) = -points[2]*size;
+	FILL(mat, 5,4) = size;
+	FILL(mat, 5,5) = 1;
+	FILL(mat, 5,7) = -points[3]*size;
 
 	//Row 4 / Point 4 -- lower right
-	FILL( mat, 6,0) = size;
-	FILL( mat, 6,1) = size;
-	FILL( mat, 6,2) = 1;
-	FILL( mat, 6,6) = -points[4]*size;
-	FILL( mat, 6,7) = -points[5]*size;
-	FILL( mat, 7,3) = size;
-	FILL( mat, 7,4) = size;
-	FILL( mat, 7,5) = 1;
-	FILL( mat, 7,6) = -points[4]*size;
-	FILL( mat, 7,7) = -points[5]*size;
+	FILL(mat, 6,0) = size;
+	FILL(mat, 6,1) = size;
+	FILL(mat, 6,2) = 1;
+	FILL(mat, 6,6) = -points[4]*size;
+	FILL(mat, 6,7) = -points[5]*size;
+	FILL(mat, 7,3) = size;
+	FILL(mat, 7,4) = size;
+	FILL(mat, 7,5) = 1;
+	FILL(mat, 7,6) = -points[4]*size;
+	FILL(mat, 7,7) = -points[5]*size;
 
    //Make the matrix with each corner of the grid
 	double corner_matrix[] = {
@@ -239,7 +239,7 @@ GridCell* CaseDetection(SDL_Surface* image)
 			result[ref].image = img;
 			result[ref].positionX = j;
 			result[ref].positionY = i;
-			result[ref].size = 28;
+
 			ref++;
 		}
 	}
