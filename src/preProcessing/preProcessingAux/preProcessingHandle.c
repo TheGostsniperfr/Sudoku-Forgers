@@ -211,6 +211,9 @@ int handleAllSteps(
 			printf("💾 Success to save Result.jpg\n");
 		}
 
+		if(flags[1].value == 1){
+			printf("🚀 Starting to apply Blob.\n");
+		}
 		int size_blob = 0;
 		SDL_Surface* blob = Blob(img, &size_blob);
 		if(flags[1].value == 1){
@@ -226,7 +229,11 @@ int handleAllSteps(
 
 		int* points = FindCoins(blob);
 
-		img = Homography_Transform(img, 2000, points);
+		
+		if(flags[1].value == 1){
+			printf("🚀 Starting to apply Homography_Transform.\n");
+		}
+		img = Homography_Transform(img, 1000, points);
 		if(flags[1].value == 1){
 			printf("✅ Success to apply homography.\n");
 		}
@@ -238,7 +245,8 @@ int handleAllSteps(
 			}
 		}
 
-		//GridCell* Cases = CaseDetection(img);
+		/* GridCell* Cases = CaseDetection(img);
+		saveImg(Cases[0].image, "Case1.jpg"); */
 		//Cases = noise_detetcion(Cases);
 
 

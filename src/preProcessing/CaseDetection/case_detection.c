@@ -225,15 +225,6 @@ GridCell* CaseDetection(SDL_Surface* image)
 			points[4] = (j+1) * update_width-7;
 			points[6] = (j+1) * update_width-7;
 
-			/*
-			printf("-----------------\n");
-			for(int k = 0; k < 8; k++)
-			{
-				printf("%d\n", points[k]);
-			}
-			printf("-----------------\n");
-			*/
-
 			SDL_Surface* img= Homography_Transform_Division(image, 28, points);
 
 			result[ref].image = img;
