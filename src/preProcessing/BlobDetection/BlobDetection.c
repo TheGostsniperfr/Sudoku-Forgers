@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "preProcessing/BlobDetection/BlobDetection.h"
+#include "../../../include/preProcessing/BlobDetection/BlobDetection.h"
 #include <err.h>
-#include "preProcessing/SDL_Function/sdlFunction.h"
+#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
 
 /*****************************************************************************
  *  Function Fill:
@@ -28,13 +28,13 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, char lim){
 	//Iterates through the blob's neighbours to find neighbour
 	if (pxVal < 255 && *((blob+y*src->w)+x)==lim){
 		*((blob+y*src->w)+x)+=1;
-		if (y<src->h){
+		if (y<src->h-1){
 			res += Fill(src, pixels, x, y+1, blob, lim);
 		}
 		if (y>0){
 			res += Fill(src, pixels, x, y-1, blob, lim);
 		}
-		if (x<src->w){
+		if (x<src->w-1){
 			res += Fill(src, pixels, x+1, y, blob, lim);
 		}
 		if (x>0){
@@ -54,7 +54,7 @@ int Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, char lim){
  * 		- size_max (int*) : address of the size of the max blob
 ***************************************************************/
 SDL_Surface* Blob(SDL_Surface* img, int* size_max){
-	SDL_Surface* src = SDL_ConvertSurfaceFormat
+	SDL_Surface *src = SDL_ConvertSurfaceFormat
 						(
 							img, 
 							SDL_PIXELFORMAT_ARGB8888, 
@@ -108,7 +108,6 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 			}
 		}
 	}
-
 	//Modifies pointer size, free the allocated and returns the surface
 	*size_max = max.size;
 	free(blob);
