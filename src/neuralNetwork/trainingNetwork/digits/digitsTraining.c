@@ -30,21 +30,6 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
     //load data set :
     Batch* batch = createBatch(tP.batchSize, 100);
 
-    printf("batch->length : %d\n", batch->nbMiniBatch);
-    for (int i = 0; i < batch->nbMiniBatch; i++)
-    {
-        printf("batch->miniBatchs[i].length : %d\n", batch->miniBatchs[i].length);
-
-        for (int j = 0; j < batch->miniBatchs[i].length; j++)
-        {
-            printf("Label : %d\n",  batch->imgContainer[batch->miniBatchs[i].startIndex].label);
-
-        }
-
-    }
-
-
-
     for (int epoch_i = 0; epoch_i < tP.nbEpoch; epoch_i++)
     {
         shuffleMiniBatch(batch);
@@ -58,13 +43,14 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
                 ImgContainer* currentC = &batch->imgContainer[miniBatch->startIndex + img_i];
 
                 double input[784];
+
                 for (int px_i = 0; px_i < 784; px_i++)
                 {
                     Uint32* pixels = currentC->img->pixels;
 
                     input[px_i] = (double)getPixelGrayScale(pixels[px_i])/255.0;
                 }
-
+                
                 forwardPropagation(net, input);
 
                 Layer* lL = &net->layers[net->nb_layers-1];
@@ -85,8 +71,6 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
                 double trueProbs[2] = {0.0};
                 trueProbs[currentC->label] = 1.0;
 
-                printf("Label = %d | digit reco = %d\n", currentC->label, digitRecognised);
-
                 backPropagation(net, trueProbs, tP.learningRate);
             }
         }
@@ -99,7 +83,7 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
             float progress = (float) (epoch_i+1) / tP.nbEpoch;
             int bar_length = progress * bar_width;
 
-            printf("\rEpoch; %d | Progress: [", epoch_i);
+            printf("\rEpoch: %d | Progress: [", epoch_i);
             for (int i = 0; i < bar_length-1; ++i) {
                 printf("=");
             }

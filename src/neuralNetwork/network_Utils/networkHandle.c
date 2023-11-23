@@ -20,7 +20,6 @@
 
 #define DEFAULT_XOR_FILENAME "xorTrain.txt"
 #define DEFAULT_DIGITS_FILENAME "digitsTrain.txt"
-#define NB_IMG_DATA_SET 40000
 
 int handleXorTrain(
         int argc,
@@ -105,8 +104,8 @@ int handleDigitsTrain(
         if(flags[3].value == 1){
             //load default config
 
-            tP.nbEpoch = 10;
-            tP.batchSize = 100;
+            tP.nbEpoch = 30;
+            tP.batchSize = 20000;
             tP.learningRate = 1;
             tP.saveTraining = false;
         }else{
@@ -141,7 +140,7 @@ int handleDigitsTrain(
 
             netPara.nbNeuronsFirstLayer = 784;
             netPara.nbHiddenLayers = 1;
-            netPara.nbNeuronsHiddenLayer = 128;
+            netPara.nbNeuronsHiddenLayer = 80;
             netPara.nbNeuronsOutputLayer = 10;
 
             net = createNetwork(netPara);
@@ -184,7 +183,7 @@ int handleLoad(
     }
 
 
-int handleTest(
+int handleTestXor(
         int argc ,
         char* argv[] ,
         NeuralNetwork* net ,
@@ -230,9 +229,6 @@ int handleTest(
             }
         }
 
-
-
-
         printf
         (
             "------------------------------------\n"
@@ -256,6 +252,83 @@ int handleTest(
         return EXIT_SUCCESS;
     }
 
+int handleTestDigit(
+        int argc ,
+        char* argv[] ,
+        NeuralNetwork* net ,
+        Flag* flags )
+    {
+
+        if(argc != 2){
+            errx(EXIT_FAILURE, ERROR_NB_ARG);
+        }
+
+        if(flags[0].value == 1){
+            printf("🚀 Starting to load neural network.\n");
+        }
+
+        net = loadNetwork(argv[0]);
+
+        if(flags[0].value == 1){
+            printf("✅ Success to load neural network.\n");
+            printNetworkSpec(net);
+        }
+
+        int imgIndex = atoi(argv[1]);
+
+        ImgContainer* imgContainer = getImageFromMnist(imgIndex, flags);
+
+        if(flags[1].value == 1){
+            saveImg(imgContainer->img, "associateImage.jpg");
+            if(flags[0].value == 1){
+                printf("💾 Success to save %dth image.\n", imgIndex);
+            }
+        }
+        
+        double input[784];
+
+        for (int px_i = 0; px_i < 784; px_i++)
+        {
+            Uint32* pixels = imgContainer->img->pixels;
+
+            input[px_i] = (double)getPixelGrayScale(pixels[px_i])/255.0;
+        }
+
+        forwardPropagation(net, input);
+
+
+        Layer* lL = &net->layers[net->nb_layers-1];        
+
+        int digitRecognised = 0;
+        for (int i = 1; i < lL->nb_neurons; i++) {
+            if (lL->neurons[i].output >
+                    lL->neurons[digitRecognised].output) {
+                digitRecognised = i;
+            }
+        }
+        
+        printf
+        (
+            "------------------------------------\n\n"
+
+            "        📷 Image index : %d\n\n"
+            
+            "------------------------------------\n\n"
+
+            "✅ Expected value : %d\n"
+            "⚡ value found : %d\n",
+
+            imgIndex,
+            imgContainer->label,
+            digitRecognised
+        );
+
+
+        destroyNetwork(net);
+
+        return EXIT_SUCCESS;
+    }
+
 
 int handlePrintHelp(
         int argc __attribute__((unused)),
@@ -266,17 +339,17 @@ int handlePrintHelp(
     printf(
             "Usage : network [OPTIONS]\n\n"
             "-xorTrain  <number epoch> <batch size> <learning rate>\n"
-            "                    ->  Start xor training\n"
+            "                         ->  Start xor training\n"
             "-digitsTrain <number epoch> <batch size> <learning rate>\n"
-            "                    ->  Start digits training\n"
-            "-load <dir>         ->      Load a neural network\n"
-            "-test <dir> <input> ->      Test network with input\n"
-            "-verbose            ->      Print informations\n"
-            "-save               ->      Save neural network\n"
-            "-defaultNetSpec     ->      Load default network specification\n"
-            "-defaultTrainSpec   ->      Load default training specification\n"
-            "-showImg <input>    ->      Show the image at the n index\n"
-            "--help              ->      Show the help panel\n"
+            "                         ->  Start digits training\n"
+            "-testXor <dir> <index>   ->      Test xor network\n"
+            "-testDigit <dir> <index> ->      Test digit network\n"
+            "-verbose                 ->      Print informations\n"
+            "-save                    ->      Save neural network\n"
+            "-defaultNetSpec          ->      Load default network specification\n"
+            "-defaultTrainSpec        ->      Load default training specification\n"
+            "-showImg <index>         ->      Show the image at the n index\n"
+            "--help                   ->      Show the help panel\n"
         );
 
         return EXIT_SUCCESS;

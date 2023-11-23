@@ -67,17 +67,18 @@ $ ./network [OPTIONS]
 Options :
 ```bash
 -xorTrain  <number epoch> <batch size> <learning rate>
-                    ->  Start xor training
+                         ->  Start xor training
 -digitsTrain <number epoch> <batch size> <learning rate>
-                    ->  Start digits training
--load <dir>         ->      Load a neural network
--test <dir> <input> ->      Test network with input
--verbose            ->      Print informations
--save               ->      Save neural network
--defaultNetSpec     ->      Load default network specification
--defaultTrainSpec   ->      Load default training specification
--showImg <input>    ->      Show the image at the n index
---help              ->      Show the help panel
+                         ->  Start digits training
+-load <dir>              ->      Load a neural network
+-testXor <dir> <index>   ->      Test network with input
+-testDigit <dir> <index> ->      Test network with input
+-verbose                 ->      Print informations
+-save                    ->      Save neural network
+-defaultNetSpec          ->      Load default network specification
+-defaultTrainSpec        ->      Load default training specification
+-getImg <index>          ->      Get the image at the n index
+--help                   ->      Show the help panel
 ```
 
 ## Clean

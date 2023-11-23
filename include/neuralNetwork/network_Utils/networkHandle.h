@@ -37,12 +37,17 @@ int handleLoad(
         NeuralNetwork* net,
         Flag* flags);
 
-int handleTest(
+int handleTestXor(
         int argc,
         char* argv[],
         NeuralNetwork* net,
         Flag* flags  );
 
+int handleTestDigit(
+        int argc,
+        char* argv[],
+        NeuralNetwork* net,
+        Flag* flags  );
 
 int handlePrintHelp(
         int argc,

@@ -13,10 +13,10 @@
 Option options[] = {
     {"-xorTrain", handleXorTrain},
     {"-digitsTrain", handleDigitsTrain},
-    {"-load", handleLoad},
-    {"-test", handleTest},
+    {"-testXor", handleTestXor},
+    {"-testDigit", handleTestDigit},
     {"--help", handlePrintHelp},
-    {"-showImg", handleGetImgFromMnist},
+    {"-getImg", handleGetImgFromMnist},
 };
 
 
@@ -29,10 +29,7 @@ int main(int argc, char* argv[]){
             ./solver <inputGrid> -> solve the grid and create
                                     outputGrid.result
                                     in the same folder
-    */
-
-
-   
+    */   
 
     //Init flags
     Flag* flags = (Flag*)malloc(NB_FLAGS * sizeof(Flag));

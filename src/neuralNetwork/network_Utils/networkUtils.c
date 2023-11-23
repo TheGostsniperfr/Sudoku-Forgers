@@ -2,6 +2,7 @@
 #include "neuralNetwork/network_Utils/mnistUtils.h"
 #include "neuralNetwork/network_Utils/struct.h"
 #include "GUI/handleUtils.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -105,7 +106,8 @@ Batch* createBatch(int sizeOfDataSet, int nbMiniBatch){
     for (int i = 0; i < nbMiniBatch; i++)
     {
         batch->miniBatchs[i].length = sizeOfDataSet / batch->nbMiniBatch;
-        batch->miniBatchs[i].startIndex = i * batch->nbMiniBatch;
+        batch->miniBatchs[i].startIndex = batch->miniBatchs[i].length
+                                          * i;
     }
 
     return batch;
@@ -122,4 +124,22 @@ void shuffleMiniBatch(Batch* batch){
         batch->miniBatchs[i] = batch->miniBatchs[indexToReverse];
         batch->miniBatchs[indexToReverse] = tmp;
     }
+}
+
+
+double* SdlToMatrix(SDL_Surface* img){
+    if(img->w * img->h != 784){
+        errx(EXIT_FAILURE, "Size of img not valid.");
+    }
+
+    double* imgMat = calloc(784, sizeof(double));
+
+    for (int px_i = 0; px_i < 784; px_i++)
+    {
+        Uint32* pixels = img->pixels;
+
+        imgMat[px_i] = (double)getPixelGrayScale(pixels[px_i])/255.0;
+    }
+
+    return imgMat;
 }

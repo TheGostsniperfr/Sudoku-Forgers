@@ -10,7 +10,8 @@ typedef struct GridCell {
 	int positionX;
 	int positionY;
 	SDL_Surface* image;
-	int size;
+	int isDigit; //1 for digit, 0 for empty cell
+	int label; //Digit associate of the image
 }GridCell;
 
 double* Fill_Matrix_Division(int size, int* points);
