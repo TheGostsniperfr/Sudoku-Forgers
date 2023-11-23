@@ -24,7 +24,11 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
     if(net->layers[0].nb_neurons != 784 ||
         net->layers[net->nb_layers-1].nb_neurons != 10)
     {
-        errx(EXIT_FAILURE, "❌ Invalid network settings for digit training.\n");
+        errx
+        (
+            EXIT_FAILURE, 
+            "❌ Invalid network settings for digit training.\n"
+        );
     }
 
     //load data set :
@@ -40,7 +44,8 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
             MiniBatch* miniBatch = &batch->miniBatchs[batch_i];
             for (int img_i = 0; img_i < miniBatch->length; img_i++)
             {
-                ImgContainer* currentC = &batch->imgContainer[miniBatch->startIndex + img_i];
+                ImgContainer* currentC = 
+                    &batch->imgContainer[miniBatch->startIndex + img_i];
 
                 double input[784];
 
@@ -48,7 +53,8 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
                 {
                     Uint32* pixels = currentC->img->pixels;
 
-                    input[px_i] = (double)getPixelGrayScale(pixels[px_i])/255.0;
+                    input[px_i] = 
+                        (double)getPixelGrayScale(pixels[px_i])/255.0;
                 }
                 
                 forwardPropagation(net, input);
@@ -120,5 +126,5 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
         }
     }
 
-    //freeBatch(batch);
+    freeBatch(batch);
 }

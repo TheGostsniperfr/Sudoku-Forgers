@@ -255,7 +255,7 @@ int handleTestXor(
 int handleTestDigit(
         int argc ,
         char* argv[] ,
-        NeuralNetwork* net ,
+        NeuralNetwork* net,
         Flag* flags )
     {
 
@@ -325,6 +325,7 @@ int handleTestDigit(
 
 
         destroyNetwork(net);
+        free(imgContainer);
 
         return EXIT_SUCCESS;
     }
@@ -346,8 +347,8 @@ int handlePrintHelp(
             "-testDigit <dir> <index> ->      Test digit network\n"
             "-verbose                 ->      Print informations\n"
             "-save                    ->      Save neural network\n"
-            "-defaultNetSpec          ->      Load default network specification\n"
-            "-defaultTrainSpec        ->      Load default training specification\n"
+            "-defaultNetSpec          ->      Load default network spec\n"
+            "-defaultTrainSpec        ->      Load default training spec\n"
             "-showImg <index>         ->      Show the image at the n index\n"
             "--help                   ->      Show the help panel\n"
         );

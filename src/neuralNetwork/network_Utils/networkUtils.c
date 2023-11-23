@@ -87,11 +87,6 @@ void printNetworkSpec(NeuralNetwork* net){
 
 void freeBatch(Batch* batch){
     free(batch->miniBatchs);
-    for (int i = 0; i < batch->nbMiniBatch; i++)
-    {
-        free(batch->imgContainer);
-    }
-
     free(batch);
 }
 

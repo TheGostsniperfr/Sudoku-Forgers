@@ -114,6 +114,4 @@ void xorTraining(NeuralNetwork* net, TrainingPara tP,
                 printf("💾 Success to save network.\n");
         }
     }
-
-
 }

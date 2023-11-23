@@ -24,7 +24,14 @@ void freeImgContainer(ImgContainer* imgContainer){
 }
 
 
-void getMnistDataHeader(FILE* dataFile, uint32_t* nbImg, uint32_t* row, uint32_t* col){
+void getMnistDataHeader
+    (
+        FILE* dataFile, 
+        uint32_t* nbImg, 
+        uint32_t* row, 
+        uint32_t* col
+    )
+{
     uint32_t magicNumber;
 
     // Read magic number
@@ -211,7 +218,8 @@ ImgContainer* getDataSet(int batchSize){
         errx(EXIT_FAILURE, "Error : impossible to move the cursor.");
     }
 
-    ImgContainer* globalImgContainer = calloc((int)nbImg, sizeof(ImgContainer));
+    ImgContainer* globalImgContainer = 
+        calloc((int)nbImg, sizeof(ImgContainer));
 
     for (int img_i = 0; img_i < (int)nbImg; img_i++)
     {
