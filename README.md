@@ -70,7 +70,6 @@ Options :
                          ->  Start xor training
 -digitsTrain <number epoch> <batch size> <learning rate>
                          ->  Start digits training
--load <dir>              ->      Load a neural network
 -testXor <dir> <index>   ->      Test network with input
 -testDigit <dir> <index> ->      Test network with input
 -verbose                 ->      Print informations
