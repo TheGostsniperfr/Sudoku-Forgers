@@ -8,6 +8,8 @@
 #include "preProcessing/BlobDetection/BlobDetection.h"
 #include "preProcessing/CaseDetection/case_detection.h"
 
+void reversedBW(SDL_Surface* image);
+
 GridCell* NoiseDetection(GridCell* images);
 
 #endif
