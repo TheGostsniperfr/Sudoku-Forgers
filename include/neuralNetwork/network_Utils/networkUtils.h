@@ -7,6 +7,7 @@
 
 #include "neuralNetwork/network_Utils/struct.h"
 #include "preProcessing/Image_Clean/Image_Clean.h"
+#include "GUI/handleUtils.h"
 
 
 
