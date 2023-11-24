@@ -16,7 +16,7 @@
 #include "preProcessing/Homography/homography.h"
 #include "preProcessing/BlobDetection/BlobDetection.h"
 #include "preProcessing/CaseDetection/case_detection.h"
-#include "preProcessing/Noise_detection/Noise_detection.h"
+#include "preProcessing/Image_Clean/Image_Clean.h"
 
 
 int handleAllSteps(
@@ -221,7 +221,7 @@ int handleAllSteps(
 		}
 
 		if (flags[0].value == 1){
-			saveImg(blob, "Blob.jpg");	
+			saveImg(blob, "Blob.jpg");
 			if (flags[1].value == 1){
 				printf("💾 Success to save Blob.jpg\n");
 			}
@@ -229,7 +229,7 @@ int handleAllSteps(
 
 		int* points = FindCoins(blob);
 
-		
+
 		if(flags[1].value == 1){
 			printf("🚀 Starting to apply Homography_Transform.\n");
 		}

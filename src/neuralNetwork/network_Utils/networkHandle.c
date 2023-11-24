@@ -284,7 +284,7 @@ int handleTestDigit(
                 printf("💾 Success to save %dth image.\n", imgIndex);
             }
         }
-        
+
         double input[784];
 
         for (int px_i = 0; px_i < 784; px_i++)
@@ -297,7 +297,7 @@ int handleTestDigit(
         forwardPropagation(net, input);
 
 
-        Layer* lL = &net->layers[net->nb_layers-1];        
+        Layer* lL = &net->layers[net->nb_layers-1];
 
         int digitRecognised = 0;
         for (int i = 1; i < lL->nb_neurons; i++) {
@@ -306,13 +306,13 @@ int handleTestDigit(
                 digitRecognised = i;
             }
         }
-        
+
         printf
         (
             "------------------------------------\n\n"
 
             "        📷 Image index : %d\n\n"
-            
+
             "------------------------------------\n\n"
 
             "✅ Expected value : %d\n"

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "neuralNetwork/network_Utils/struct.h"
+#include "preProcessing/Image_Clean/Image_Clean.h"
 
 
 
@@ -16,5 +17,8 @@ void printNetworkSpec(NeuralNetwork* net);
 Batch* createBatch(int sizeOfDataSet, int nbMiniBatch);
 void shuffleMiniBatch(Batch* batch);
 void freeBatch(Batch* batch);
+
+void findAllDigits(GridCell** gridCells, int count, Flag* flags);
+
 
 #endif

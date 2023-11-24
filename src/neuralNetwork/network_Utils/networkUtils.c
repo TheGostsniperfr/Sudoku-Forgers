@@ -3,6 +3,9 @@
 #include "neuralNetwork/network_Utils/struct.h"
 #include "GUI/handleUtils.h"
 #include "preProcessing/SDL_Function/sdlFunction.h"
+#include "preProcessing/Image_Clean/Image_Clean.h"
+#include "neuralNetwork/network_Utils/createNetwork.h"
+#include "neuralNetwork/network_Utils/saveLoadNetwork.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,6 +13,7 @@
 #include <time.h>
 #include <stdlib.h>
 
+#define NETWORK_PATH "../digitsTrain.txt"
 
 void printTrainingPara(TrainingPara tP){
     printf
@@ -137,4 +141,54 @@ double* SdlToMatrix(SDL_Surface* img){
     }
 
     return imgMat;
+}
+
+void findAllDigits(GridCell** gridCells, int count, Flag* flags){
+
+
+    if(flags[0].value == 1){
+        printf("🚀 Starting to load neural network.\n");
+    }
+
+    NeuralNetwork* net = loadNetwork(NETWORK_PATH);
+
+    if(flags[0].value == 1){
+        printf("✅ Success to load neural network.\n");
+        printNetworkSpec(net);
+    }
+
+    double input[784];
+
+    for (int img_i = 0; img_i < count; img_i++)
+    {
+        GridCell* currentGridCell = gridCells[img_i];
+
+        if(currentGridCell->isDigit != 1){
+            continue;
+        }
+
+        for (int px_i = 0; px_i < 784; px_i++)
+        {
+            Uint32* pixels = currentGridCell->image->pixels;
+
+            input[px_i] = (double)getPixelGrayScale(pixels[px_i])/255.0;
+        }
+
+        forwardPropagation(net, input);
+
+
+        Layer* lL = &net->layers[net->nb_layers-1];
+
+        int digitRecognised = 0;
+        for (int i = 1; i < lL->nb_neurons; i++) {
+            if (lL->neurons[i].output >
+                    lL->neurons[digitRecognised].output) {
+                digitRecognised = i;
+            }
+        }
+
+        currentGridCell->label = digitRecognised;
+    }
+
+    destroyNetwork(net);
 }
