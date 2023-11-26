@@ -9,11 +9,36 @@
 
 #define KERNEL_SIZE 3
 
+/***************************************************************
+ *  Function swap :
+ *
+ *  A simple swap function to swap a and b value  
+ *
+ *  @input :
+ *      - a (int*) : value of a
+ *      - b (int*) : value of b
+***************************************************************/
+
 void swap(int *a, int *b) {
     int temp = *a;
     *a = *b;
     *b = temp;
 }
+
+
+/***************************************************************
+ *  Function partition :
+ *
+ *  Sub function of quick sort
+ *
+ *  @input :
+ *      - tab (int[]) : table a value
+ *      - min (int) : min value of partition
+ *      - max (int) : max value of the partition
+ *
+ *  @output :
+ *      - (int) : index of the pivot
+***************************************************************/
 
 int partition(int tab[], int min, int max) {
     int pivot = tab[max];
@@ -30,6 +55,18 @@ int partition(int tab[], int min, int max) {
     return (i + 1);
 }
 
+
+/***************************************************************
+ *  Function quickSort :
+ *
+ *  A simple quick sort implementation
+ *
+ *  @input :
+ *      - tab (int[]) : table a value
+ *      - min (int) : min value of partition
+ *      - max (int) : max value of the partition
+***************************************************************/
+
 void quickSort(int tab[], int min, int max) {
     if (min < max) {
         int pivotI = partition(tab, min, max);
@@ -37,6 +74,19 @@ void quickSort(int tab[], int min, int max) {
         quickSort(tab, pivotI + 1, max);
     }
 }
+
+
+/***************************************************************
+ *  Function applyMedianFilter :
+ *
+ *  Apply the median filter to the input image
+ *
+ *  @input :
+ *      - img (SDL_Surface*) : input image
+ *
+ *  @output :
+ *      - (SDL_Surface*) : output image
+***************************************************************/
 
 SDL_Surface* applyMedianFilter(SDL_Surface* img){
     int size = KERNEL_SIZE * KERNEL_SIZE;

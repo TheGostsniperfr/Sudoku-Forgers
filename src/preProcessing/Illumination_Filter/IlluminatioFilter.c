@@ -8,6 +8,18 @@
 #include "preProcessing/SDL_Function/sdlFunction.h"
 
 
+/***************************************************************
+ *  Function applyIlluminationFilter :
+ *
+ *  Apply a illumination filter to the input image
+ *
+ *  @input :
+ *      - img (SDL_Surface*) : input image
+ *
+ *  @output :
+ *      - (SDL_Surface*) : output image
+***************************************************************/
+
 SDL_Surface* applyIlluminationFilter(SDL_Surface* img){
 
     SDL_Surface *outImg = SDL_ConvertSurfaceFormat

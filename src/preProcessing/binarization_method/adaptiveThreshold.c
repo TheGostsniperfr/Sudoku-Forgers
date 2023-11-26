@@ -9,7 +9,17 @@
 #define NB_IMAGE_PART 32
 
 
-
+/***************************************************************
+ *  Function applyAdaptiveThreshold :
+ *
+ *  Apply a adaptive threshold to the input image
+ *
+ *  @input :
+ *      - inputImg (SDL_Surface*) : input image
+ *
+ *  @output :
+ *      - (SDL_Surface*) : output image
+***************************************************************/
 
 SDL_Surface* applyAdaptiveThreshold(SDL_Surface* inputImg) {
     SDL_Surface* outputImg = SDL_ConvertSurfaceFormat

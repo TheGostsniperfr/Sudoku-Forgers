@@ -6,43 +6,72 @@
 #include <time.h>
 
 
+/***************************************************************
+ *  Function sigmoid :
+ *
+ *  Apply sigmoid function to x
+ *
+ *  @input :
+ *      - x (int) : input value
+ *
+ *  @output :
+ *      - (double) : output value
+***************************************************************/
+
 double sigmoid(double x){
     return 1.0/(1.0+exp(-x));
 }
+
+
+/***************************************************************
+ *  Function sigmoid_prime :
+ *
+ *  Apply sigmoid prime function to x
+ *
+ *  @input :
+ *      - x (int) : input value
+ *
+ *  @output :
+ *      - (double) : output value
+***************************************************************/
 
 double sigmoid_prime(double x){
     return sigmoid(x)*(1-sigmoid(x));
 }
 
 
+/***************************************************************
+ *  Function random_weight :
+ *
+ *  Return a random number between -interval and interval
+ *
+ *  @input :
+ *      - interval (double) : interval
+ *
+ *  @output :
+ *      - (double) : random number
+***************************************************************/
+
 double random_weight(double interval) {
     double normalizedRd = (double)rand() / RAND_MAX * 2.0 - 1.0;
     return normalizedRd * interval;
 }
+
+
+/***************************************************************
+ *  Function random_bias :
+ *
+ *  Return a random number between -0.5 and 0.5
+ *
+ *  @output :
+ *      - (double) : random number
+***************************************************************/
 
 double random_bias() {
     // Random between -0.5 & 0.5
     return (double)rand() / RAND_MAX - 0.5;
 }
 
-void softmax(double *x, int len) {
-    double max_val = x[0];
-    for (int i = 1; i < len; i++) {
-        if (x[i] > max_val) {
-            max_val = x[i];
-        }
-    }
-
-    double sum_exp = 0.0;
-    for (int i = 0; i < len; i++) {
-        x[i] = exp(x[i] - max_val);
-        sum_exp += x[i];
-    }
-
-    for (int i = 0; i < len; i++) {
-        x[i] /= sum_exp;
-    }
-}
 
 /***************************************************************
  *  Function initializeNetwork :
@@ -107,6 +136,16 @@ void initializeNetwork(NeuralNetwork *net) {
     }
 }
 
+
+/***************************************************************
+ *  Function forwardPropagation :
+ *
+ *  Network forward propagation
+ *
+ *  @input :
+ *      - net (NeuralNetwork*) : network
+ *      - input (double*) : input values
+***************************************************************/
 
 void forwardPropagation(NeuralNetwork* net, double* input){
     //input value on the input layer
@@ -180,6 +219,17 @@ void forwardPropagation(NeuralNetwork* net, double* input){
 
 }
 
+
+/***************************************************************
+ *  Function gradientDescent :
+ *
+ *  Compute all the delta of each layers
+ *
+ *  @input :
+ *      - net (NeuralNetwork*) : network
+ *      - expectedVal (double*) : expected output value
+***************************************************************/
+
 void gradientDescent(NeuralNetwork* net, double* expectedVal){
     // Calculate the error of the last layer
     Layer* lL = &net->layers[net->nb_layers - 1];
@@ -215,7 +265,15 @@ void gradientDescent(NeuralNetwork* net, double* expectedVal){
     }
 }
 
-// Function to compute new weights and bias
+/***************************************************************
+ *  Function updateWB :
+ *
+ *  Function to compute new weights and bias
+ *
+ *  @input :
+ *      - net (NeuralNetwork*) : network
+ *      - learningRate (double) : learning rate of the training
+***************************************************************/
 void updateWB(NeuralNetwork* net, double learningRate){
     for (int l_i = 1; l_i < net->nb_layers; l_i++)
     {
@@ -237,6 +295,17 @@ void updateWB(NeuralNetwork* net, double learningRate){
     }
 }
 
+
+/***************************************************************
+ *  Function backPropagation :
+ *
+ *  Apply the backpropagation
+ *
+ *  @input :
+ *      - net (NeuralNetwork*) : network
+ *      - expectedVal (double*) : expected output value
+ *      - learningRate (double) : learning rate of the training
+***************************************************************/
 
 void backPropagation(
     NeuralNetwork* net,

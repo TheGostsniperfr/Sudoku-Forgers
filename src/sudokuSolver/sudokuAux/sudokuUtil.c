@@ -27,6 +27,7 @@ typedef struct SudokuGrid
  *  @output :
  *      - (int) : int hexa representation
 ***************************************************************/
+
 int charToInt(char str){
     if(str >= '0' && str <= '9'){
         return str - '0';
@@ -56,6 +57,7 @@ int charToInt(char str){
  *  @output :
  *      - (char) : Character hexa representation
 ***************************************************************/
+
 char intToChar(int nb){
     if(nb >= 0 && nb <= 9){
         return ('0' + nb);
@@ -80,6 +82,7 @@ char intToChar(int nb){
  *  @output :
  *      - (int) : Character hexa representation
 ***************************************************************/
+
 int gridSize(const char* filename){
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -120,6 +123,7 @@ int gridSize(const char* filename){
  *  @output :
  *      - grid (int**) : empty grid
 ***************************************************************/
+
 int** allocGrid(int gS){
     int** grid = (int**)calloc(gS, sizeof(int*));
     for(int i = 0; i < gS; i++){
@@ -128,6 +132,7 @@ int** allocGrid(int gS){
 
     return grid;
 }
+
 
 /***************************************************************
  *  Function freeGrid:
@@ -138,6 +143,7 @@ int** allocGrid(int gS){
  *      - grid (int**) : grid to free
  *      - gs (int) : size of the grid
 ***************************************************************/
+
 void freeGrid(SudokuGrid sG){
     for (int i = 0; i < sG.gS; i++)
     {
@@ -157,6 +163,7 @@ void freeGrid(SudokuGrid sG){
  *      - filename (char) : name of the file to create
  *      - grid (int array) : grid of sudoku
 ***************************************************************/
+
 int saveGrid(const char *filename, SudokuGrid sG) {
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
@@ -208,6 +215,7 @@ int saveGrid(const char *filename, SudokuGrid sG) {
  * @output :
  *      - grid (int**) : the grid loaded
 ***************************************************************/
+
 SudokuGrid loadGrid(const char *filename) {
     FILE *file = fopen(filename, "r");
 
@@ -275,6 +283,7 @@ SudokuGrid loadGrid(const char *filename) {
  *      - grid (int **) : the grid to print
  *      - gS (int) : size of the grid
 ***************************************************************/
+
 void printGrid(SudokuGrid sG) {
     int size = sqrt(sG.gS);
 
@@ -315,6 +324,7 @@ void printGrid(SudokuGrid sG) {
  *      - destination (int**) : the destination grid
  *      - gS (int) : size of the grid
 ***************************************************************/
+
 void copyGrid(SudokuGrid sG1, SudokuGrid sG2) {
     for (int i = 0; i < sG1.gS; i++) {
         for (int j = 0; j < sG1.gS; j++) {
@@ -386,6 +396,20 @@ void printSection(char* sectionName){
     }
     printf("\n\n");
 }
+
+
+/***************************************************************
+ *  Function gridCellToSudokuGrid:
+ *
+ *  Create a sudokuGrid struct from gridCell list
+ *
+ *  @input :
+ *      - gridCells (GridCell*) : list of grid cells
+ *      - gS (int) : size of the grid
+ *
+ *  @output :
+ *      - (SudokuGrid) : A grid of sudoku
+***************************************************************/
 
 SudokuGrid gridCellToSudokuGrid(GridCell* gridCells, int gS){
     SudokuGrid sG = {

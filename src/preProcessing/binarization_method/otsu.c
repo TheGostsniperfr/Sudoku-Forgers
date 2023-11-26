@@ -16,6 +16,7 @@
  *  @output :
  *      - threshold (double) : the optimal threshold
 ***************************************************************/
+
 double findOtsuThreshold(double* histogram, int numPixels) {
 
     double sigma_max = -1;
@@ -72,6 +73,7 @@ double findOtsuThreshold(double* histogram, int numPixels) {
  *  @output :
  *      - output image (SDL_Surface*) : the binarised image (with otsu method)
 ***************************************************************/
+
 SDL_Surface* otsuBinarization(SDL_Surface* img, double threshold){
     Uint32* pixels = img->pixels;
 

@@ -19,6 +19,21 @@
 #include "preProcessing/Image_Clean/Image_Clean.h"
 
 
+/***************************************************************
+ *  Function handleAllSteps :
+ *
+ *  Handle function to process all the step of image treatment
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - inputImgPath (char*) : path of the input image
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
+
 int handleAllSteps(
 		int argc __attribute__((unused)),
 		char* argv[] __attribute__((unused)),
@@ -128,45 +143,7 @@ int handleAllSteps(
 				printf("💾 Success to save GaussianOutput.jpg\n");
 			}
 
-		}/*
-		//Otsu method (old global method)
-		if(flags[1].value == 1){
-			printf("🚀 Starting to calcul histogram.\n");
 		}
-		double* histo;
-		histo = findHistogram(img);
-
-		SDL_Surface* histoImg = createHistogramImg(histo);
-		if(flags[0].value == 1){
-			saveImg(histoImg, "HistoGram.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save HistoGram.jpg\n");
-			}
-		}
-		free(histoImg);
-
-		if(flags[1].value == 1){
-			printf("✅ Success to calcul histogram.\n");
-		}
-
-		if(flags[1].value == 1){
-			printf("🚀 Starting image binarization.\n");
-		}
-		double threshold = findOtsuThreshold(histo, img->w*img->h);
-
-		img = otsuBinarization(img, threshold);
-
-		if(flags[1].value == 1){
-			printf("✅ Success of image binarization.\n");
-		}
-
-		if(flags[0].value == 1){
-			saveImg(img, "Binarized.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save Binarized.jpg\n");
-			}
-		}
-		*/
 
 		if(flags[1].value == 1){
 			printf("🚀 Starting to apply adaptive threshold.\n");
@@ -271,6 +248,22 @@ int handleAllSteps(
 	return EXIT_SUCCESS;
 }
 
+
+/***************************************************************
+ *  Function handleTurnNDegree :
+ *
+ *  Handle function to show the manual rotating interface
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - inputImgPath (char*) : path of the input image
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
+
 int handleTurnNDegree(
 		int argc __attribute__((unused)),
 		char* argv[] __attribute__((unused)),
@@ -299,6 +292,22 @@ int handleTurnNDegree(
 
 	return EXIT_SUCCESS;
 }
+
+
+/***************************************************************
+ *  Function handlePrintHelp :
+ *
+ *  Handle function to print the help menu
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - inputImgPath (char*) : path of the input image
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
 
 int handlePrintHelp(
 		int argc __attribute__((unused)),

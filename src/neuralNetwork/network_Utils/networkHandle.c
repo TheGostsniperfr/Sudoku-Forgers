@@ -21,6 +21,22 @@
 #define DEFAULT_XOR_FILENAME "xorTrain.txt"
 #define DEFAULT_DIGITS_FILENAME "digitsTrain.txt"
 
+
+/***************************************************************
+ *  Function handleXorTrain :
+ *
+ *  Handle function of xor training
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - net (NeuralNetwork*) : neural network
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
+
 int handleXorTrain(
         int argc,
         char* argv[],
@@ -92,6 +108,21 @@ int handleXorTrain(
     }
 
 
+/***************************************************************
+ *  Function handleDigitsTrain :
+ *
+ *  Handle function of digit training
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - net (NeuralNetwork*) : neural network
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
+
 int handleDigitsTrain(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
@@ -159,6 +190,21 @@ int handleDigitsTrain(
     }
 
 
+/***************************************************************
+ *  Function handleLoad :
+ *
+ *  Handle function of load neural network
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - net (NeuralNetwork*) : neural network
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
+
 int handleLoad(
         int argc,
         char* argv[],
@@ -182,6 +228,21 @@ int handleLoad(
         return EXIT_SUCCESS;
     }
 
+
+/***************************************************************
+ *  Function handleTestXor :
+ *
+ *  Handle function of xor network testing
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - net (NeuralNetwork*) : neural network
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
 
 int handleTestXor(
         int argc ,
@@ -251,6 +312,22 @@ int handleTestXor(
 
         return EXIT_SUCCESS;
     }
+
+
+/***************************************************************
+ *  Function handleTestDigit :
+ *
+ *  Handle function of digit network testing
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - net (NeuralNetwork*) : neural network
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
 
 int handleTestDigit(
         int argc ,
@@ -331,6 +408,21 @@ int handleTestDigit(
     }
 
 
+/***************************************************************
+ *  Function handlePrintHelp :
+ *
+ *  Handle function to print help menu
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - net (NeuralNetwork*) : neural network
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
+
 int handlePrintHelp(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
@@ -356,6 +448,22 @@ int handlePrintHelp(
         return EXIT_SUCCESS;
     }
 
+
+
+/***************************************************************
+ *  Function handleGetImgFromMnist :
+ *
+ *  Handle function to get an image from dataset with his index
+ *
+ *  @input :
+ *      - argc (int) : number of args
+ *      - argv[] (char*) : list of arg
+ *      - net (NeuralNetwork*) : neural network
+ *      - flags (Flag*) : flag of the program
+ *
+ *  @output :
+ *      - (int) : state of the program
+***************************************************************/
 
 int handleGetImgFromMnist(
     int argc,

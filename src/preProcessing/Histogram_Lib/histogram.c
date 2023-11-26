@@ -18,6 +18,7 @@
  *  @output :
  *      - (double*) : histogram of the image
 ***************************************************************/
+
 double* findHistogram(SDL_Surface* img){
 
     //init histogram
@@ -70,6 +71,7 @@ double* findHistogram(SDL_Surface* img){
  *      - histogram image (SDL_Surface*) : the graphic representation
  *                                          of the image histogram
 ***************************************************************/
+
 SDL_Surface* createHistogramImg(double* histogram) {
     double maxVal = histogram[0];
 

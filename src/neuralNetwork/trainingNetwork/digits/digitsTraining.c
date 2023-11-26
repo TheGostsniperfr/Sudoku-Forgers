@@ -8,6 +8,18 @@
 #include <stdlib.h>
 #include <err.h>
 
+/***************************************************************
+ *  Function digitTraining :
+ *
+ *  Train the neural network for digit recognition problem
+ *
+ *  @input :
+ *      - net (NeuralNetwork*) : network
+ *      - tP (Trainingara) : training parameters
+ *      - filename (char*) : path to save network
+ *      - flags (Flag*) : flag of the program
+***************************************************************/
+
 void digitTraining(NeuralNetwork* net, TrainingPara tP,
                     char* filename, Flag* flags){
     if(flags[0].value == 1){

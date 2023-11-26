@@ -23,6 +23,7 @@
  *  @output :
  *      - (double**) : matrix of the lernel
 ***************************************************************/
+
 double** createGaussianKernel(){
     //sum of all number in the kernel is equal to 1
 
@@ -53,6 +54,7 @@ double** createGaussianKernel(){
     return kernel;
 }
 
+
 /***************************************************************
  *  Function categorical_cross_entropy_loss:
  *
@@ -61,6 +63,7 @@ double** createGaussianKernel(){
  *  @input :
  *      - kernel (double**) : Gaussian kernel
 ***************************************************************/
+
 void printKernel(double** kernel){
     for (int y = 0; y < KERNEL_SIZE; y++)
     {
@@ -84,6 +87,7 @@ void printKernel(double** kernel){
  *      - outputSurface (SDL_Surface*) : output image with
  *                                          the gaussian filter applied
 ***************************************************************/
+
 SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
 
     double** kernel = createGaussianKernel();
@@ -156,8 +160,4 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
     free(kernel);
 
     return outputSurface;
-
-
 }
-
-

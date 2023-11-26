@@ -15,6 +15,15 @@
 
 #define NETWORK_PATH "../digitsTrain.txt"
 
+/***************************************************************
+ *  Function printTrainingPara :
+ *
+ *  Print the training parameters
+ *
+ *  @input :
+ *      - tP (TrainingPara) : training parameters
+***************************************************************/
+
 void printTrainingPara(TrainingPara tP){
     printf
     (
@@ -36,6 +45,15 @@ void printTrainingPara(TrainingPara tP){
     );
 }
 
+
+/***************************************************************
+ *  Function printNetworkPara :
+ *
+ *  Print the network parameters
+ *
+ *  @input :
+ *      - netPara (NetworkPara) : netowrk parameters
+***************************************************************/
 
 void printNetworkPara(NetworkPara netPara){
         printf
@@ -63,6 +81,15 @@ void printNetworkPara(NetworkPara netPara){
     );
 }
 
+/***************************************************************
+ *  Function printNetworkSpec :
+ *
+ *  Print the network parameters
+ *
+ *  @input :
+ *      - net (NetworkPara) : netowrk
+***************************************************************/
+
 void printNetworkSpec(NeuralNetwork* net){
         printf
     (
@@ -89,10 +116,34 @@ void printNetworkSpec(NeuralNetwork* net){
     );
 }
 
+
+/***************************************************************
+ *  Function freeBatch :
+ *
+ *  Free the input batch
+ *
+ *  @input :
+ *      - batch (Batch*) : input batch
+***************************************************************/
+
 void freeBatch(Batch* batch){
     free(batch->miniBatchs);
     free(batch);
 }
+
+
+/***************************************************************
+ *  Function createBatch :
+ *
+ *  Create a batch of image from dataset
+ *
+ *  @input :
+ *      - sizeOfDataSet (int) : size of the dataset
+ *      - nbMiniBatch (int) : number of mini batchs
+ *
+ *  @output :
+ *      - (Batch*) : Batch created
+***************************************************************/
 
 Batch* createBatch(int sizeOfDataSet, int nbMiniBatch){
     Batch* batch = calloc(1, sizeof(Batch));
@@ -112,6 +163,16 @@ Batch* createBatch(int sizeOfDataSet, int nbMiniBatch){
     return batch;
 }
 
+
+/***************************************************************
+ *  Function shuffleMiniBatch :
+ *
+ *  Shuffle all mini batch in the input batch  
+ *
+ *  @input :
+ *      - batch (Batch*) : input batch
+***************************************************************/
+
 void shuffleMiniBatch(Batch* batch){
     srand(time(NULL));
 
@@ -125,6 +186,18 @@ void shuffleMiniBatch(Batch* batch){
     }
 }
 
+
+/***************************************************************
+ *  Function SdlToMatrix :
+ *
+ *  A simple finction to convert a sdl image to a matrix
+ *
+ *  @input :
+ *      - img (SDL_Surface*) : input sdl image
+ *
+ *  @output :
+ *      - (double*) : output image matrix
+***************************************************************/
 
 double* SdlToMatrix(SDL_Surface* img){
     if(img->w * img->h != 784){
@@ -142,6 +215,18 @@ double* SdlToMatrix(SDL_Surface* img){
 
     return imgMat;
 }
+
+
+/***************************************************************
+ *  Function findAllDigits :
+ *
+ *  Find all the digit inside the grid cell list
+ *
+ *  @input :
+ *      - gridCells (GridCell**) : list of gridCells
+ *      - count (int) : number of gridCells
+ *      - flags (Flag*) : flags of the program
+***************************************************************/
 
 void findAllDigits(GridCell** gridCells, int count, Flag* flags){
 

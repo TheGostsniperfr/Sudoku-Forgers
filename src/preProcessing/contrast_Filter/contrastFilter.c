@@ -9,6 +9,19 @@
 
 #define FACTOR 10
 
+
+/***************************************************************
+ *  Function applyContrastFilter :
+ *
+ *  Apply a contract filter to the input image
+ *
+ *  @input :
+ *      - img (SDL_Surface*) : input image
+ *
+ *  @output :
+ *      - (SDL_Surface*) : output image
+***************************************************************/
+
 SDL_Surface* applyContrastFilter(SDL_Surface* img){
 
     SDL_Surface *outImg = SDL_ConvertSurfaceFormat

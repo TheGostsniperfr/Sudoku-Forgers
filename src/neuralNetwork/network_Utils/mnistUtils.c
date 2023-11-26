@@ -18,11 +18,32 @@
 #define LABEL_MAGIC_NUMBER 2049
 
 
+/***************************************************************
+ *  Function freeImgContainer :
+ *
+ *  Free image container struct
+ *
+ *  @input :
+ *      - imgContainer (ImgContainer*) : input image container
+***************************************************************/
+
 void freeImgContainer(ImgContainer* imgContainer){
     SDL_FreeSurface(imgContainer->img);
     free(imgContainer);
 }
 
+
+/***************************************************************
+ *  Function getMnistDataHeader :
+ *
+ *  Get the Mnist dataset data header
+ *
+ *  @input :
+ *      - dataFile (FILE*) : File stream of the dataset
+ *      - nbImg (uint32_t*) : number of dataset images
+ *      - row (uint32_t*) : row of an image
+ *      - col (uint32_t*) : column of an image 
+***************************************************************/
 
 void getMnistDataHeader
     (
@@ -62,6 +83,18 @@ void getMnistDataHeader
     *col = ntohl(*col);
 }
 
+
+/***************************************************************
+ *  Function getMnistLabelHeader :
+ *
+ *  Get the Mnist dataset label header
+ *
+ *  @input :
+ *      - labelFile (FILE*) : File stream of the dataset
+ *      - nbLabel (uint32_t*) : number of dataset labels
+ *      - row (uint32_t*) : row of an image
+***************************************************************/
+
 void getMnistLabelHeader(FILE* labelFile, uint32_t* nbLabel){
     uint32_t magicNumber;
 
@@ -87,6 +120,20 @@ void getMnistLabelHeader(FILE* labelFile, uint32_t* nbLabel){
     // Convert from big-endian to host byte order
     *nbLabel = ntohl(*nbLabel);
 }
+
+
+/***************************************************************
+ *  Function getImageFromMnist :
+ *
+ *  Get an image from the dataset with his index
+ *
+ *  @input :
+ *      - index (int) : index of the image to extract
+ *      - flags (Flag*) : flags of the program
+ *
+ *  @output :
+ *      - (ImgContainer*) : extracted image
+***************************************************************/
 
 ImgContainer* getImageFromMnist(int index, Flag* flags) {
 
@@ -183,6 +230,18 @@ ImgContainer* getImageFromMnist(int index, Flag* flags) {
     return imgContainer;
 }
 
+
+/***************************************************************
+ *  Function getDataSet :
+ *
+ *  Load all the dataset into a list of image
+ *
+ *  @input :
+ *      - batchSize (int) : size of the dataset
+ *
+ *  @output :
+ *      - (ImageContainer*) : list of the extracted dataset images
+***************************************************************/
 
 ImgContainer* getDataSet(int batchSize){
     FILE* dataFile = fopen(DATASET_PATH, "rb");

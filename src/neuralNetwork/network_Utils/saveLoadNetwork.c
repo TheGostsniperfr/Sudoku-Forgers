@@ -14,6 +14,7 @@
  *      - net (NeuralNetwork*) : (init) neural net
  *
 ***************************************************************/
+
 void saveNetwork(char* filename, NeuralNetwork* net){
     //Create file
     FILE *file = fopen(filename, "w");
@@ -56,6 +57,7 @@ void saveNetwork(char* filename, NeuralNetwork* net){
     fclose(file);
 }
 
+
 /***************************************************************
  *  Function loadNetwork :
  *
@@ -66,6 +68,7 @@ void saveNetwork(char* filename, NeuralNetwork* net){
  *  @output :
  *      - net (NeuralNetwork*) : neural net
 ***************************************************************/
+
 NeuralNetwork* loadNetwork(char* filename){
     FILE* file = fopen(filename, "r");
 

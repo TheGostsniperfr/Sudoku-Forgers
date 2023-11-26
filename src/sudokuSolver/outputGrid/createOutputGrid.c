@@ -11,10 +11,6 @@
 #include "sudokuSolver/sudokuAux/sudokuUtil.h"
 
 
-//path to file :
-
-//path to grid (input and solved)
-
 //path to digit font
 #define PATH_FONT "../../data/font/MontserratMedium.ttf"
 
@@ -51,14 +47,10 @@ typedef struct GridPara {
  *  Recursif function to create all square with digit of the grid
  *
  *  @intput :
- *      - img (SDL_Surface*) : input image (only background)
- *      - x_0 (int) : x coordonate to start to draw
- *      - y_0 (int) : y coordonate to start to draw
- *      - w (int) : width of the square to draw
- *      - widthBorder (double) : witdh of sqare's borders to draw
- *      - depthLevel (int) : level of the recursion (nb of recursion inside)
- *      - digitColor (Uint32) : color of the digit
- *      - id (int) : id of the current case (use to calculate x,y in the grid)
+ *      - sGP (SubGridPara) : Recursif parameter
+ *      - gP (GridPara) : global parameter of the grid
+ *      - defaultSG (SudokuGrid) : input sudoku grid 
+ *      - solvedSG (SudokuGrid) : solved sudoku grid
 ***************************************************************/
 
 void createGrid(SubGridPara sGP, GridPara gP, SudokuGrid defaultSG,
@@ -223,6 +215,10 @@ void createGrid(SubGridPara sGP, GridPara gP, SudokuGrid defaultSG,
  *
  *  @input :
  *      - img (SDL_Surface*) : input surface to build grid
+ *      - font (TTF_Font*) : font use for the grid digits
+ *      - gP (GridPara) : global parameter of the grid
+ *      - defaultSG (SudokuGrid) : input sudoku grid
+ *      - solvedSG (SudokuGrid) : solved sudoku grid
 ***************************************************************/
 
 void gridBuilder(SDL_Surface* img, TTF_Font* font, GridPara gP,
@@ -272,7 +268,9 @@ void gridBuilder(SDL_Surface* img, TTF_Font* font, GridPara gP,
  *  main function to create all the final grid
  *
  *  @output :
- *      - img (SDL_Surface*) : final img of the final grid
+ *      - defaultSG (SudokuGrid) : input sudoku grid
+ *      - solvedSG (SudokuGrid) : solved sudoku grid
+ *      - gP (GridPara) : global parameter of the grid
 ***************************************************************/
 SDL_Surface* createOutputGrid(SudokuGrid defaultSG,
                                 SudokuGrid solvedSG, GridPara gP){

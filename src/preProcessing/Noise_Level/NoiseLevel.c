@@ -8,6 +8,19 @@
 #define NOISE_WINDOW_SIZE 3
 #define NOISE_THRESHOLD 0.5
 
+
+/***************************************************************
+ *  Function calculNoiseLevel :
+ *
+ *  Get the noise level of the image
+ *
+ *  @input :
+ *      - img (SDL_Surface*) : image to compute the noise level
+ *
+ *  @output :
+ *      - (int) : value of noise level
+***************************************************************/
+
 int calculNoiseLevel(SDL_Surface* img){
 	Uint32* pixels = (Uint32*) img->pixels;
 	int k = NOISE_WINDOW_SIZE / 2;

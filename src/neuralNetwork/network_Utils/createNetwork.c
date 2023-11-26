@@ -26,7 +26,6 @@ void destroyNetwork(NeuralNetwork* net) {
 }
 
 
-
 /***************************************************************
  *  Function createNetwork :
  *
@@ -37,6 +36,7 @@ void destroyNetwork(NeuralNetwork* net) {
  *  @output :
  *      - (NeuralNetwork*) : neural network ready to be used
 ***************************************************************/
+
 NeuralNetwork* createNetwork(NetworkPara netPara){
     // Alloc memory for neural network
     NeuralNetwork *net = (NeuralNetwork *)malloc(sizeof(NeuralNetwork));

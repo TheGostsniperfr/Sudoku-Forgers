@@ -7,6 +7,18 @@
 #include <stdlib.h>
 #include <err.h>
 
+/***************************************************************
+ *  Function xorTraining :
+ *
+ *  Train the neural network for xor problem
+ *
+ *  @input :
+ *      - net (NeuralNetwork*) : network
+ *      - tP (Trainingara) : training parameters
+ *      - filename (char*) : path to save network
+ *      - flags (Flag*) : flag of the program
+***************************************************************/
+
 void xorTraining(NeuralNetwork* net, TrainingPara tP,
                     char* filename, Flag* flags){
     if(flags[0].value == 1){

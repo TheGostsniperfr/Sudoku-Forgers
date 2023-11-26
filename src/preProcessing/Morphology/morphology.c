@@ -8,7 +8,20 @@
 static int mode;
 
 
-//return 1 if the pixel coordonate is valid, else 0
+/***************************************************************
+ *  Function isPixelValid :
+ *
+ *  Check if the input coordinate if valid in the matrix dim
+ *
+ *  @input :
+ *      - x (int) : x value
+ *      - y (int) : y value
+ *      - w (int) : width of the matrix
+ *      - h (int) : heigth of the matrix
+ *
+ *  @output :
+ *      - (int) : isValid -> 1, else -> 0
+***************************************************************/
 int isPixelValid(int x, int y, int w, int h){
     if(x>= 0 && x <= w){
         if(y>= 0 && y <= h){
@@ -18,7 +31,24 @@ int isPixelValid(int x, int y, int w, int h){
     return 0;
 }
 
-//return 1 if the motif is respected for the current pixel
+
+/***************************************************************
+ *  Function isPixelValidMotif :
+ *
+ *  Check if the motif is respected with the right mode
+ *
+ *  @input :
+ *      - pixels (Uint32*) : matrix of pixels
+ *      - x (int) : x value
+ *      - y (int) : y value
+ *      - w (int) : width of the matrix
+ *      - h (int) : height of the matrix
+ *
+ *  @output :
+ *      - (int) : if the motif is respected for the current pixel -> 1
+ *                else 6> 0
+***************************************************************/
+
 int isPixelValidMotif(Uint32* pixels, int x, int y, int w, int h){
     //check pixel with motif
     for (int tempX = x-MOTIF_R; tempX <= x + MOTIF_R; tempX++)
@@ -53,9 +83,22 @@ int isPixelValidMotif(Uint32* pixels, int x, int y, int w, int h){
     return 1;
 }
 
-//mode 1 -> eraser = turn off pixel
-//mode 0 -> dilatation = turn on pixel
 
+
+/***************************************************************
+ *  Function applyMorphology :
+ *
+ *  Apply the morphology mode to the image  
+ *
+ *  @input :
+ *      - img (SDL_Surface*) : input image
+ *      - _mode (int) : mode of the morphology 
+ *                      - mode 1 -> eraser = turn off pixel
+ *                      - mode 0 -> dilatation = turn on pixel  
+ *
+ *  @output :
+ *      - (SDL_Surface*) : output image
+***************************************************************/
 
 SDL_Surface* applyMorphology(SDL_Surface* img, int _mode){
     SDL_Surface* outImg = SDL_ConvertSurfaceFormat

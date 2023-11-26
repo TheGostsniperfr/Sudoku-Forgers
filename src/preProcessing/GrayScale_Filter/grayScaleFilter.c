@@ -14,6 +14,7 @@
  *      - outputSurface (SDL_Surface*) : output image with the
  *                                          grayscale filter applied
 ***************************************************************/
+
 SDL_Surface* applyGrayScaleFilter(SDL_Surface* inputSurface){
 
     SDL_Surface *outputSurface = SDL_ConvertSurfaceFormat
