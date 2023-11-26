@@ -3,6 +3,7 @@
 
 
 #include <stdlib.h>
+#include "preProcessing/Image_Clean/Image_Clean.h"
 
 
 typedef struct SudokuGrid
@@ -22,5 +23,7 @@ void freeGrid(SudokuGrid sG);
 int** allocGrid(int gS);
 char* concateStr(char* a1, char* a2);
 void printSection(char* sectionName);
+
+SudokuGrid gridCellToSudokuGrid(GridCell* gridCells, int gS);
 
 #endif

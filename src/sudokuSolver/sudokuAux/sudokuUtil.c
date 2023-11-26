@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "preProcessing/Image_Clean/Image_Clean.h"
 
 #include "GUI/handleUtils.h"
 
@@ -384,4 +385,32 @@ void printSection(char* sectionName){
         printf("#");
     }
     printf("\n\n");
+}
+
+SudokuGrid gridCellToSudokuGrid(GridCell* gridCells, int gS){
+    SudokuGrid sG = {
+        .grid = allocGrid(gS),
+        .gS = gS,
+    };
+
+    //init grid to -1
+    for (int i = 0; i < gS; i++)
+    {
+        for (int j = 0; j < gS; j++)
+        {
+            sG.grid[i][j] = -1;
+        }
+    }
+
+    //init grid value to GridCell value
+    for (int i = 0; i < gS*gS; i++)
+    {
+        GridCell* gridCell = &gridCells[i];
+        if(gridCell->isDigit == 1){
+            sG.grid[gridCell->positionX][gridCell->positionY] =
+                gridCell->label;
+        }
+    }
+
+    return sG;
 }
