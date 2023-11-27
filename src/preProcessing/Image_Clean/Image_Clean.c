@@ -93,7 +93,7 @@ void clean_all(SDL_Surface* image)
 void Image_Clean(GridCell* images)
 {
 	int size = 0;
-    for (size_t i = 0; i < 2; i++)
+    for (size_t i = 0; i < 81; i++)
     {
         clean_edge(images[i].image);
         images[i].image = Blob(images[i].image, &size);
