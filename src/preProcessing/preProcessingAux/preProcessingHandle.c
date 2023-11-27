@@ -18,7 +18,6 @@
 #include "preProcessing/CaseDetection/case_detection.h"
 #include "preProcessing/Image_Clean/Image_Clean.h"
 
-
 /***************************************************************
  *  Function handleAllSteps :
  *
@@ -222,14 +221,26 @@ int handleAllSteps(
 			}
 		}
 
+		
+
 		GridCell* Cases = CaseDetection(img);
-		saveImg(Cases[0].image, "Case1.jpg"); 
+		for (int i = 0; i < 81; i++)
+		{
+			char buffer[1024];
+			snprintf(buffer, sizeof(buffer), "post_%d.jpg", i);	
+			saveImg(Cases[i].image, buffer);
+		}
 		Image_Clean(Cases);
+
 
 		for (int i = 0; i < 81; i++)
 		{
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer), "%d.jpg", i);	
+			if(Cases[i].isDigit == 0){
+				snprintf(buffer, sizeof(buffer), "%d.jpg", i);	
+			}else{
+				snprintf(buffer, sizeof(buffer), "%d_%d.jpg", i, Cases[i].label);	
+			}
 			saveImg(Cases[i].image, buffer);
 		}
 		
