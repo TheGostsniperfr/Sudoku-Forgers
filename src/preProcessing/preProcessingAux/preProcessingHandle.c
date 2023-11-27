@@ -222,12 +222,18 @@ int handleAllSteps(
 			}
 		}
 
-		/* GridCell* Cases = CaseDetection(img);
-		saveImg(Cases[0].image, "Case1.jpg"); */
-		//Cases = noise_detetcion(Cases);
+		GridCell* Cases = CaseDetection(img);
+		saveImg(Cases[0].image, "Case1.jpg"); 
+		Image_Clean(Cases);
 
+		for (int i = 0; i < 81; i++)
+		{
+			char buffer[1024];
+			snprintf(buffer, sizeof(buffer), "%d.jpg", i);	
+			saveImg(Cases[i].image, buffer);
+		}
+		
 
-		//free(histo);
 
 		//save final image
 
