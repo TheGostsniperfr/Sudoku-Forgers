@@ -23,7 +23,6 @@
  *  @output :
  *      - (double**) : matrix of the lernel
 ***************************************************************/
-
 double** createGaussianKernel(){
     //sum of all number in the kernel is equal to 1
 
@@ -54,7 +53,6 @@ double** createGaussianKernel(){
     return kernel;
 }
 
-
 /***************************************************************
  *  Function categorical_cross_entropy_loss:
  *
@@ -63,7 +61,6 @@ double** createGaussianKernel(){
  *  @input :
  *      - kernel (double**) : Gaussian kernel
 ***************************************************************/
-
 void printKernel(double** kernel){
     for (int y = 0; y < KERNEL_SIZE; y++)
     {
@@ -87,7 +84,6 @@ void printKernel(double** kernel){
  *      - outputSurface (SDL_Surface*) : output image with
  *                                          the gaussian filter applied
 ***************************************************************/
-
 SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
 
     double** kernel = createGaussianKernel();
@@ -103,13 +99,7 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
 
     for (int y = 0; y < outputSurface->h; ++y) {
         for (int x = 0; x < outputSurface->w; ++x) {
-            //get pixel
-            Uint32 pixel = pixels[y * outputSurface->w + x];
-
-            Uint8 r, g, b, a;
-            SDL_GetRGBA(pixel, inputSurface->format, &r, &g, &b, &a);
-
-            double newR = 0.0, newG = 0.0, newB = 0.0;
+            double newPxVal = 0.0;
             for (int i = 0; i < KERNEL_SIZE; i++) {
                 for (int j = 0; j < KERNEL_SIZE; j++) {
                     int newX = x + i ;
@@ -118,39 +108,25 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
                             newY < outputSurface->h) {
 
 
-                        Uint32 newPixel = pixels
+                        Uint32 newPixel = getPixelGrayScale(pixels
                                             [
                                                 newY *
                                                 outputSurface->w +
                                                 newX
-                                            ];
+                                            ]);
 
 
-                        Uint8 nr, ng, nb, na;
-                        SDL_GetRGBA
-                        (
-                            newPixel,
-                            outputSurface->format,
-                            &nr,
-                            &ng,
-                            &nb,
-                            &na
-                        );
-
-                        newR += kernel[i][j] * nr;
-                        newG += kernel[i][j] * ng;
-                        newB += kernel[i][j] * nb;
+                        newPxVal += kernel[i][j] * newPixel;
                     }
                 }
             }
 
-            Uint32 newPixel = SDL_MapRGBA
+            Uint32 newPixel = SDL_MapRGB
                                 (
                                     outputSurface->format,
-                                    (Uint8)newR,
-                                    (Uint8)newG,
-                                    (Uint8)newB,
-                                    a
+                                    (Uint8)newPxVal,
+                                    (Uint8)newPxVal,
+                                    (Uint8)newPxVal
                                 );
 
             //set new pixel
@@ -160,4 +136,6 @@ SDL_Surface* applyGaussianFilter(SDL_Surface* inputSurface){
     free(kernel);
 
     return outputSurface;
+
+
 }
