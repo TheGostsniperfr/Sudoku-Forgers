@@ -423,7 +423,7 @@ int handleTestDigit(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handlePrintHelp(
+int handlePrintNetHelp(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
         NeuralNetwork* net __attribute__((unused)),

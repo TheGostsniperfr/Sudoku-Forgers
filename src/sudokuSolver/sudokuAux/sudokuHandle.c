@@ -19,7 +19,7 @@
  *      - argv[] (char*) : list of arg
  *      - gridPath (char*) : path of the input grid
  *      - flags (Flag*) : flag of the program
- * 
+ *
  * @output :
  *      - (int) : state of the program
 ***************************************************************/
@@ -85,7 +85,7 @@ int handleSolver(int argc,
  *      - argv[] (char*) : list of arg
  *      - gridPath (char*) : path of the input grid
  *      - flags (Flag*) : flag of the program
- * 
+ *
  *  @output :
 *       (int) : state of the program
 ***************************************************************/
@@ -154,7 +154,7 @@ int handleGenerateGridImg(int argc __attribute__((unused)),
  *      - (int) : state of the program
 ***************************************************************/
 
-int handlePrintHelp(
+int handlePrintSolverHelp(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
         char* inputImgPath __attribute__((unused)),

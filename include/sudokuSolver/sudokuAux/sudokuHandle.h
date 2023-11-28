@@ -32,7 +32,7 @@ int handleGenerateGridImg(
         Flag* flags
     );
 
-int handlePrintHelp(
+int handlePrintSolverHelp(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
         char* inputImgPath __attribute__((unused)),

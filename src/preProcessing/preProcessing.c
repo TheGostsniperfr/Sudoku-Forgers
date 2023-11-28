@@ -20,7 +20,7 @@
 Option options[] = {
     {"-all", handleAllSteps},
     {"-r", handleTurnNDegree},
-    {"--help", handlePrintHelp}
+    {"--help", handlePrintPreProHelp}
 };
 
 
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]){
         argc--;
         argv++;
     }else{
-        handlePrintHelp(0, argv, "", flags);
+        handlePrintPreProHelp(0, argv, "", flags);
         return EXIT_SUCCESS;
     }
 
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]){
     }
 
     if(optionFound == 0){
-        handlePrintHelp(0, argv, "", flags);
+        handlePrintPreProHelp(0, argv, "", flags);
     }
 
     if(optionFound == 1 && InputImgPath != 0){

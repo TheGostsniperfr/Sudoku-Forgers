@@ -49,7 +49,7 @@ int handleTestDigit(
         NeuralNetwork* net,
         Flag* flags  );
 
-int handlePrintHelp(
+int handlePrintNetHelp(
         int argc,
         char* argv[],
         NeuralNetwork* net,

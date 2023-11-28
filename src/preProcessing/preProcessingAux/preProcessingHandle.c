@@ -221,13 +221,13 @@ int handleAllSteps(
 			}
 		}
 
-		
+
 
 		GridCell* Cases = CaseDetection(img);
 		for (int i = 0; i < 81; i++)
 		{
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer), "post_%d.jpg", i);	
+			snprintf(buffer, sizeof(buffer), "post_%d.jpg", i);
 			saveImg(Cases[i].image, buffer);
 		}
 		Image_Clean(Cases);
@@ -237,13 +237,13 @@ int handleAllSteps(
 		{
 			char buffer[1024];
 			if(Cases[i].isDigit == 0){
-				snprintf(buffer, sizeof(buffer), "%d.jpg", i);	
+				snprintf(buffer, sizeof(buffer), "%d.jpg", i);
 			}else{
-				snprintf(buffer, sizeof(buffer), "%d_%d.jpg", i, Cases[i].label);	
+				snprintf(buffer, sizeof(buffer), "%d_%d.jpg", i, Cases[i].label);
 			}
 			saveImg(Cases[i].image, buffer);
 		}
-		
+
 
 
 		//save final image
@@ -326,7 +326,7 @@ int handleTurnNDegree(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handlePrintHelp(
+int handlePrintPreProHelp(
 		int argc __attribute__((unused)),
 		char* argv[] __attribute__((unused)),
 		char* inputImgPath __attribute__((unused)),

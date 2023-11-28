@@ -7,7 +7,7 @@
 typedef struct Option
 {
     char* flag;
-    int(*action)
+    void(*action)
         (
             int argc,
             char* argv[],
@@ -17,21 +17,21 @@ typedef struct Option
 
 } Option;
 
-int handleAllSteps(
+void* handleAllSteps(
         int argc,
         char* argv[],
         char* inputImgPath,
         Flag* flags
     );
 
-int handleTurnNDegree(
+void* handleTurnNDegree(
         int argc,
         char* argv[],
         char* inputImgPath,
         Flag* flags
     );
 
-int handlePrintHelp(
+void* handlePrintPreProHelp(
         int argc ,
         char* argv[] ,
         char* inputImgPath ,

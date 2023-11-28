@@ -15,7 +15,7 @@ Option options[] = {
     {"-digitsTrain", handleDigitsTrain},
     {"-testXor", handleTestXor},
     {"-testDigit", handleTestDigit},
-    {"--help", handlePrintHelp},
+    {"--help", handlePrintNetHelp},
     {"-getImg", handleGetImgFromMnist},
 };
 
@@ -29,7 +29,7 @@ int main(int argc, char* argv[]){
             ./solver <inputGrid> -> solve the grid and create
                                     outputGrid.result
                                     in the same folder
-    */   
+    */
 
     //Init flags
     Flag* flags = (Flag*)malloc(NB_FLAGS * sizeof(Flag));
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]){
     }
 
     if(optionFound == 0){
-        handlePrintHelp(0, argv, net, flags);
+        handlePrintNetHelp(0, argv, net, flags);
     }
 
 

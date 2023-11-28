@@ -98,7 +98,7 @@ int main(int argc, char* argv[]){
     }
 
     if(optionFound == 0){
-        handlePrintHelp(0, argv, "", flags);
+        handlePrintSolverHelp(0, argv, "", flags);
     }
 
 
