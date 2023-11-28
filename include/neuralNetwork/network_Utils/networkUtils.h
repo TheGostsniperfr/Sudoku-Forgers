@@ -19,7 +19,7 @@ Batch* createBatch(int sizeOfDataSet, int nbMiniBatch);
 void shuffleMiniBatch(Batch* batch);
 void freeBatch(Batch* batch);
 
-void findAllDigits(GridCell** gridCells, int count, Flag* flags);
+GridCell* findAllDigits(GridCell* gridCells, int count, Flag* flags);
 
 
 #endif

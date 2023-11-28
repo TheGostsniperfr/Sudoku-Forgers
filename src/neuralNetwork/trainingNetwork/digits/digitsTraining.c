@@ -65,8 +65,13 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
                 {
                     Uint32* pixels = currentC->img->pixels;
 
-                    input[px_i] = 
-                        (double)getPixelGrayScale(pixels[px_i])/255.0;
+                    if(getPixelGrayScale(pixels[px_i]) > 0){
+                        input[px_i] = 1.0;
+                    }else{
+                        input[px_i] = 0.0;
+                    }
+
+                     
                 }
                 
                 forwardPropagation(net, input);

@@ -24,7 +24,7 @@
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleSolver(int argc,
+void* handleSolver(int argc,
         char* argv[] __attribute__((unused)),
         char* gridPath,
         Flag* flags)
@@ -45,7 +45,7 @@ int handleSolver(int argc,
 
     SudokuGrid sG = loadGrid(gridPath);
 
-    if(flags[1].value == 1){
+    if(flags[2].value == 1){
         printSection(gridPath);
         printGrid(sG);
     }
@@ -58,7 +58,7 @@ int handleSolver(int argc,
 
     saveGrid(concateStr(gridPath, ".result"), sG);
 
-    if(flags[2].value == 1){
+    if(flags[3].value == 1){
         printSection(concateStr(gridPath, ".result"));
 
         printGrid(sG);
@@ -90,7 +90,7 @@ int handleSolver(int argc,
 *       (int) : state of the program
 ***************************************************************/
 
-int handleGenerateGridImg(int argc __attribute__((unused)),
+void* handleGenerateGridImg(int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
         char* gridPath,
         Flag* flags)
@@ -154,7 +154,7 @@ int handleGenerateGridImg(int argc __attribute__((unused)),
  *      - (int) : state of the program
 ***************************************************************/
 
-int handlePrintSolverHelp(
+void* handlePrintSolverHelp(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
         char* inputImgPath __attribute__((unused)),

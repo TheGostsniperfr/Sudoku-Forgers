@@ -17,7 +17,7 @@
 
 #define NB_FLAGS 2
 
-Option options[] = {
+OptionPrePro options[] = {
     {"-all", handleAllSteps},
     {"-r", handleTurnNDegree},
     {"--help", handlePrintPreProHelp}
@@ -44,9 +44,9 @@ int main(int argc, char* argv[]){
         flags->flag = NULL;
         flags->value = 0;
     }
-
-    flags[0].flag = "-save";
-    flags[1].flag = "-verbose";
+    
+    flags[0].flag = "-verbose";
+    flags[1].flag = "-save";
 
 
     //find flags

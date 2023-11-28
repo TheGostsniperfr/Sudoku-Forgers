@@ -13,7 +13,9 @@
 #include <time.h>
 #include <stdlib.h>
 
-#define NETWORK_PATH "../digitsTrain.txt"
+#define NETWORK_PATH "src/neuralNetwork/digitsTrain.txt"
+
+
 
 /***************************************************************
  *  Function printTrainingPara :
@@ -228,7 +230,7 @@ double* SdlToMatrix(SDL_Surface* img){
  *      - flags (Flag*) : flags of the program
 ***************************************************************/
 
-void findAllDigits(GridCell** gridCells, int count, Flag* flags){
+GridCell* findAllDigits(GridCell* gridCells, int count, Flag* flags){
 
 
     if(flags[0].value == 1){
@@ -246,7 +248,8 @@ void findAllDigits(GridCell** gridCells, int count, Flag* flags){
 
     for (int img_i = 0; img_i < count; img_i++)
     {
-        GridCell* currentGridCell = gridCells[img_i];
+        printf("test nb : %d\n",img_i);
+        GridCell* currentGridCell = &gridCells[img_i];
 
         if(currentGridCell->isDigit != 1){
             continue;
@@ -255,9 +258,9 @@ void findAllDigits(GridCell** gridCells, int count, Flag* flags){
         for (int px_i = 0; px_i < 784; px_i++)
         {
             Uint32* pixels = currentGridCell->image->pixels;
-
             input[px_i] = (double)getPixelGrayScale(pixels[px_i])/255.0;
         }
+
 
         forwardPropagation(net, input);
 
@@ -274,6 +277,9 @@ void findAllDigits(GridCell** gridCells, int count, Flag* flags){
 
         currentGridCell->label = digitRecognised;
     }
+    printf("end test\n");
 
-    destroyNetwork(net);
+    //destroyNetwork(net);
+
+    return gridCells;
 }

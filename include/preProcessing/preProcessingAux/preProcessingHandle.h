@@ -4,10 +4,10 @@
 #include <string.h>
 #include "GUI/handleUtils.h"
 
-typedef struct Option
+typedef struct OptionPrePro
 {
     char* flag;
-    void(*action)
+    void* (*action)
         (
             int argc,
             char* argv[],
@@ -15,7 +15,7 @@ typedef struct Option
             Flag* flag
         );
 
-} Option;
+} OptionPrePro;
 
 void* handleAllSteps(
         int argc,

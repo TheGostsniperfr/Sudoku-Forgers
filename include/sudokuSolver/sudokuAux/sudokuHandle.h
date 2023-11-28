@@ -5,10 +5,10 @@
 #include <string.h>
 #include "GUI/handleUtils.h"
 
-typedef struct Option
+typedef struct OptionSolver
 {
     char* flag;
-    int(*action)
+    void* (*action)
         (
             int argc,
             char* argv[],
@@ -16,23 +16,23 @@ typedef struct Option
             Flag* flag
         );
 
-} Option;
+} OptionSolver;
 
-int handleSolver(
+void* handleSolver(
         int argc,
         char* argv[],
         char* gridPath,
         Flag* flags
     );
 
-int handleGenerateGridImg(
+void* handleGenerateGridImg(
         int argc,
         char* argv[],
         char* gridPath,
         Flag* flags
     );
 
-int handlePrintSolverHelp(
+void* handlePrintSolverHelp(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
         char* inputImgPath __attribute__((unused)),

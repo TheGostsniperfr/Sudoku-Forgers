@@ -6,11 +6,12 @@
 #include "sudokuSolver/sudokuAux/sudokuHandle.h"
 #include "GUI/handleUtils.h"
 
-#define NB_FLAGS 4
+#define NB_FLAGS 5
 
 
-Option options[] = {
+OptionSolver options[] = {
     {"-g", handleGenerateGridImg},
+    {"--help", handlePrintSolverHelp},
 };
 
 
@@ -32,9 +33,10 @@ int main(int argc, char* argv[]){
     }
 
     flags[0].flag = "-verbose";
-    flags[1].flag = "-p";
-    flags[2].flag = "-po";
-    flags[3].flag = "-g";
+    flags[1].flag = "-save";
+    flags[2].flag = "-p";
+    flags[3].flag = "-po";
+    flags[4].flag = "-g";
 
 
     //find flags

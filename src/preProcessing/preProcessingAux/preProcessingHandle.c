@@ -33,18 +33,18 @@
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleAllSteps(
+void* handleAllSteps(
 		int argc __attribute__((unused)),
 		char* argv[] __attribute__((unused)),
 		char* inputImgPath,
 		Flag* flags)
-	{
+{
 	/*
 		Usage :
 			[-all] -> do all the steps of preProcessing
 	*/
 
-	if(flags[1].value == 1){
+	if(flags[0].value == 1){
 		printf(
 			"################################################\n\n"
 			"       🚀 Starting pre-processing.\n\n"
@@ -55,215 +55,210 @@ int handleAllSteps(
 
 	SDL_Surface* img = loadImg(inputImgPath);
 
+
 	if(img == NULL){
 		errx(EXIT_FAILURE, "Error to load img !");
-	}else{
+	}
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply gray-scale filter.\n");
-		}
 
-		img = applyGrayScaleFilter(img);
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply gray-scale filter.\n");
+	}
 
-		if(flags[1].value == 1){
-			printf("✅ Success to apply gray-scale filter.\n");
-		}
+	img = applyGrayScaleFilter(img);
 
+	if(flags[0].value == 1){
+		printf("✅ Success to apply gray-scale filter.\n");
+	}
+
+	if(flags[1].value == 1){
+		saveImg(img, "GrayScaleOutput.jpg");
 		if(flags[0].value == 1){
-			saveImg(img, "GrayScaleOutput.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save GrayScaleOutput.jpg\n");
-			}
+			printf("💾 Success to save GrayScaleOutput.jpg\n");
 		}
+	}
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply contrast filter.\n");
-		}
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply contrast filter.\n");
+	}
 
-		img = applyContrastFilter(img);
+	img = applyContrastFilter(img);
 
-		if(flags[1].value == 1){
-			printf("✅ Success to apply contrast filter.\n");
-		}
+	if(flags[0].value == 1){
+		printf("✅ Success to apply contrast filter.\n");
+	}
 
+	if(flags[1].value == 1){
+		saveImg(img, "ContrastOutput.jpg");
 		if(flags[0].value == 1){
-			saveImg(img, "ContrastOutput.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save ContrastOutput.jpg\n");
-			}
+			printf("💾 Success to save ContrastOutput.jpg\n");
 		}
+	}
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply illumination filter.\n");
-		}
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply illumination filter.\n");
+	}
 
-		img = applyIlluminationFilter(img);
+	img = applyIlluminationFilter(img);
 
-		if(flags[1].value == 1){
-			printf("✅ Success to apply illumination filter.\n");
-		}
+	if(flags[0].value == 1){
+		printf("✅ Success to apply illumination filter.\n");
+	}
 
+	if(flags[1].value == 1){
+		saveImg(img, "IlluminationOutput.jpg");
 		if(flags[0].value == 1){
-			saveImg(img, "IlluminationOutput.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save IlluminationOutput.jpg\n");
-			}
+			printf("💾 Success to save IlluminationOutput.jpg\n");
 		}
+	}
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply median filter.\n");
-		}
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply median filter.\n");
+	}
 
-		img = applyMedianFilter(img);
+	img = applyMedianFilter(img);
 
-		if(flags[1].value == 1){
-			printf("✅ Success to apply median filter.\n");
-		}
+	if(flags[0].value == 1){
+		printf("✅ Success to apply median filter.\n");
+	}
 
+	if(flags[1].value == 1){
+		saveImg(img, "MedianOutput.jpg");
 		if(flags[0].value == 1){
-			saveImg(img, "MedianOutput.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save MedianOutput.jpg\n");
-			}
+			printf("💾 Success to save MedianOutput.jpg\n");
 		}
+	}
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply gaussian filter.\n");
-		}
-		img = applyGaussianFilter(img);
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply gaussian filter.\n");
+	}
+	img = applyGaussianFilter(img);
 
-		if(flags[1].value == 1){
-			printf("✅ Success to apply gaussian filter.\n");
-		}
+	if(flags[0].value == 1){
+		printf("✅ Success to apply gaussian filter.\n");
+	}
 
+	if(flags[1].value == 1){
+		saveImg(img, "GaussianOutput.jpg");
 		if(flags[0].value == 1){
-			saveImg(img, "GaussianOutput.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save GaussianOutput.jpg\n");
-			}
-
+			printf("💾 Success to save GaussianOutput.jpg\n");
 		}
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply adaptive threshold.\n");
-		}
-		img = applyAdaptiveThreshold(img);
+	}
 
-		if(flags[1].value == 1){
-			printf("✅ Success to apply adaptive threshold.\n");
-		}
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply adaptive threshold.\n");
+	}
+	img = applyAdaptiveThreshold(img);
 
+	if(flags[0].value == 1){
+		printf("✅ Success to apply adaptive threshold.\n");
+	}
+
+	if(flags[1].value == 1){
+		saveImg(img, "Binarized.jpg");
 		if(flags[0].value == 1){
-			saveImg(img, "Binarized.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save Binarized.jpg\n");
-			}
-
+			printf("💾 Success to save Binarized.jpg\n");
 		}
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply morphology filter.\n");
-		}
+	}
 
-		//dilate
-		img = applyMorphology(img, 0);
-		//erode
-		img = applyMorphology(img, 1);
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply morphology filter.\n");
+	}
 
-		if(flags[1].value == 1){
-			printf("✅ Success to apply morphology.\n");
-		}
+	//dilate
+	img = applyMorphology(img, 0);
+	//erode
+	img = applyMorphology(img, 1);
 
+	if(flags[0].value == 1){
+		printf("✅ Success to apply morphology.\n");
+	}
+
+	if(flags[1].value == 1){
+		saveImg(img, "Morphology.jpg");
 		if(flags[0].value == 1){
-			saveImg(img, "Morphology.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save Morphology.jpg\n");
-			}
+			printf("💾 Success to save Morphology.jpg\n");
 		}
+	}
 
-		saveImg(img, "Result.jpg");
+	saveImg(img, "Result.jpg");
 
-		if(flags[1].value == 1){
-			printf("💾 Success to save Result.jpg\n");
-		}
+	if(flags[0].value == 1){
+		printf("💾 Success to save Result.jpg\n");
+	}
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply Blob.\n");
-		}
-		int size_blob = 0;
-		SDL_Surface* blob = Blob(img, &size_blob);
-		if(flags[1].value == 1){
-			printf("✅ Success to apply blob detection.\n");
-		}
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply Blob.\n");
+	}
+	int size_blob = 0;
+	SDL_Surface* blob = Blob(img, &size_blob);
+	if(flags[0].value == 1){
+		printf("✅ Success to apply blob detection.\n");
+	}
 
+	if (flags[1].value == 1){
+		saveImg(blob, "Blob.jpg");
 		if (flags[0].value == 1){
-			saveImg(blob, "Blob.jpg");
-			if (flags[1].value == 1){
-				printf("💾 Success to save Blob.jpg\n");
-			}
+			printf("💾 Success to save Blob.jpg\n");
 		}
+	}
 
-		int* points = FindCoins(blob);
+	int* points = FindCoins(blob);
 
 
-		if(flags[1].value == 1){
-			printf("🚀 Starting to apply Homography_Transform.\n");
-		}
-		img = Homography_Transform(img, 1000, points);
-		if(flags[1].value == 1){
-			printf("✅ Success to apply homography.\n");
-		}
+	if(flags[0].value == 1){
+		printf("🚀 Starting to apply Homography_Transform.\n");
+	}
+	img = Homography_Transform(img, 1000, points);
+	if(flags[0].value == 1){
+		printf("✅ Success to apply homography.\n");
+	}
 
+	if(flags[1].value == 1){
+		saveImg(img, "Homography.jpg");
 		if(flags[0].value == 1){
-			saveImg(img, "Homography.jpg");
-			if(flags[1].value == 1){
-				printf("💾 Success to save Homogaphy.jpg\n");
-			}
-		}
-
-
-
-		GridCell* Cases = CaseDetection(img);
-		for (int i = 0; i < 81; i++)
-		{
-			char buffer[1024];
-			snprintf(buffer, sizeof(buffer), "post_%d.jpg", i);
-			saveImg(Cases[i].image, buffer);
-		}
-		Image_Clean(Cases);
-
-
-		for (int i = 0; i < 81; i++)
-		{
-			char buffer[1024];
-			if(Cases[i].isDigit == 0){
-				snprintf(buffer, sizeof(buffer), "%d.jpg", i);
-			}else{
-				snprintf(buffer, sizeof(buffer), "%d_%d.jpg", i, Cases[i].label);
-			}
-			saveImg(Cases[i].image, buffer);
-		}
-
-
-
-		//save final image
-
-
-
-		if(flags[1].value == 1){
-			printf(
-				"\n################################################\n\n"
-				"       ✅ Success to pre-processing image.\n\n"
-				"################################################\n"
-			);
+			printf("💾 Success to save Homogaphy.jpg\n");
 		}
 	}
 
 
+
+	GridCell* Cases = CaseDetection(img);
+	for (int i = 0; i < 81; i++)
+	{
+		char buffer[1024];
+		snprintf(buffer, sizeof(buffer), "post_%d.jpg", i);
+		saveImg(Cases[i].image, buffer);
+	}
+	Image_Clean(Cases);
+
+	for (int i = 0; i < 81; i++)
+	{
+		char buffer[1024];
+		snprintf(buffer, sizeof(buffer), "after_%d.jpg", i);
+		saveImg(Cases[i].image, buffer);
+	}
+
+
+	//save final image
+
+
+
+	if(flags[0].value == 1){
+		printf(
+			"\n################################################\n\n"
+			"       ✅ Success to pre-processing image.\n\n"
+			"################################################\n"
+		);
+	}
+
 	SDL_FreeSurface(img);
 
-	return EXIT_SUCCESS;
-}
+	return (void*)Cases;
+} 
+
 
 
 /***************************************************************
@@ -281,12 +276,12 @@ int handleAllSteps(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleTurnNDegree(
+void* handleTurnNDegree(
 		int argc __attribute__((unused)),
 		char* argv[] __attribute__((unused)),
 		char* inputImgPath,
 		Flag* flags __attribute__((unused)))
-	{
+{
 	/*
 		Usage :
 			[-r] <number of degree> -> turn the image
@@ -303,7 +298,7 @@ int handleTurnNDegree(
 	//Rotate Img
 	//Save img
 
-	if(flags[1].value == 1){
+	if(flags[0].value == 1){
 		printf("✅ Success to rotate the image by %d°\n", degree);
 	}
 
@@ -326,7 +321,7 @@ int handleTurnNDegree(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handlePrintPreProHelp(
+void* handlePrintPreProHelp(
 		int argc __attribute__((unused)),
 		char* argv[] __attribute__((unused)),
 		char* inputImgPath __attribute__((unused)),

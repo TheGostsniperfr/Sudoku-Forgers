@@ -6,10 +6,10 @@
 #include "neuralNetwork/network_Utils/struct.h"
 
 
-typedef struct Option
+typedef struct OptionNet
 {
     char* flag;
-    int(*action)
+    void* (*action)
         (
             int argc,
             char* argv[],
@@ -17,45 +17,45 @@ typedef struct Option
             Flag* flag
         );
 
-} Option;
+} OptionNet;
 
-int handleXorTrain(
+void* handleXorTrain(
         int argc,
         char* argv[],
         NeuralNetwork* net,
         Flag* flags);
 
-int handleDigitsTrain(
+void* handleDigitsTrain(
         int argc,
         char* argv[],
         NeuralNetwork* net,
         Flag* flags);
 
-int handleLoad(
+void* handleLoad(
         int argc,
         char* argv[],
         NeuralNetwork* net,
         Flag* flags);
 
-int handleTestXor(
+void* handleTestXor(
         int argc,
         char* argv[],
         NeuralNetwork* net,
         Flag* flags  );
 
-int handleTestDigit(
+void* handleTestDigit(
         int argc,
         char* argv[],
         NeuralNetwork* net,
         Flag* flags  );
 
-int handlePrintNetHelp(
+void* handlePrintNetHelp(
         int argc,
         char* argv[],
         NeuralNetwork* net,
         Flag* flags);
 
-int handleGetImgFromMnist(
+void* handleGetImgFromMnist(
         int argc,
         char* argv[],
         NeuralNetwork* net,

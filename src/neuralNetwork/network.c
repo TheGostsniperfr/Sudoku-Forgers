@@ -10,7 +10,7 @@
 
 #define NB_FLAGS 4
 
-Option options[] = {
+OptionNet options[] = {
     {"-xorTrain", handleXorTrain},
     {"-digitsTrain", handleDigitsTrain},
     {"-testXor", handleTestXor},

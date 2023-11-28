@@ -37,7 +37,7 @@
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleXorTrain(
+void* handleXorTrain(
         int argc,
         char* argv[],
         NeuralNetwork* net,
@@ -123,7 +123,7 @@ int handleXorTrain(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleDigitsTrain(
+void* handleDigitsTrain(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
         NeuralNetwork* net __attribute__((unused)),
@@ -135,7 +135,7 @@ int handleDigitsTrain(
         if(flags[3].value == 1){
             //load default config
 
-            tP.nbEpoch = 30;
+            tP.nbEpoch = 5;
             tP.batchSize = 50000;
             tP.learningRate = 0.1;
             tP.saveTraining = false;
@@ -171,7 +171,7 @@ int handleDigitsTrain(
 
             netPara.nbNeuronsFirstLayer = 784;
             netPara.nbHiddenLayers = 1;
-            netPara.nbNeuronsHiddenLayer = 128;
+            netPara.nbNeuronsHiddenLayer = 50;
             netPara.nbNeuronsOutputLayer = 10;
 
             net = createNetwork(netPara);
@@ -205,7 +205,7 @@ int handleDigitsTrain(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleLoad(
+void* handleLoad(
         int argc,
         char* argv[],
         NeuralNetwork* net __attribute__((unused)),
@@ -244,7 +244,7 @@ int handleLoad(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleTestXor(
+void* handleTestXor(
         int argc ,
         char* argv[] ,
         NeuralNetwork* net ,
@@ -329,7 +329,7 @@ int handleTestXor(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleTestDigit(
+void* handleTestDigit(
         int argc ,
         char* argv[] ,
         NeuralNetwork* net,
@@ -423,7 +423,7 @@ int handleTestDigit(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handlePrintNetHelp(
+void* handlePrintNetHelp(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
         NeuralNetwork* net __attribute__((unused)),
@@ -465,7 +465,7 @@ int handlePrintNetHelp(
  *      - (int) : state of the program
 ***************************************************************/
 
-int handleGetImgFromMnist(
+void* handleGetImgFromMnist(
     int argc,
     char* argv[],
     NeuralNetwork* net __attribute__((unused)),
