@@ -431,7 +431,7 @@ SudokuGrid gridCellToSudokuGrid(GridCell* gridCells, int gS){
     {
         GridCell* gridCell = &gridCells[i];
         if(gridCell->isDigit == 1){
-            sG.grid[gridCell->positionX][gridCell->positionY] =
+            sG.grid[gridCell->positionY][gridCell->positionX] =
                 gridCell->label;
         }
     }

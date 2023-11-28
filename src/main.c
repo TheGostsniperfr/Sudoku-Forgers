@@ -36,7 +36,7 @@ void printHelpPanel(){
 int main(int argc, char* argv[]){
     /*
             Usage : main [OPTIONS]
-            
+
             -save         ->      Save intermediate step
             -verbose      ->      Print verbose
             --help        ->      Show the help panel
@@ -75,16 +75,22 @@ int main(int argc, char* argv[]){
         }
     }
 
-
-    if(strcmp(argv[1], "-ocr")){
+    if(strcmp(argv[1], "-ocr") == 0){
         if(argc < 3){
-            errx(EXIT_FAILURE, ERROR_NB_ARG);
+            printHelpPanel();
+            return EXIT_SUCCESS;
         }
 
         GridCell* gC = (GridCell*)handleAllSteps(argc, argv+2, argv[2], flags);
         gC = findAllDigits(gC, GRID_DIM*GRID_DIM, flags);
-        
+
         SudokuGrid sG = gridCellToSudokuGrid(gC, GRID_DIM);
+
+        if(flags[2].value == 1){
+            printSection(DEFAULT_GRID_DIR);
+
+            printGrid(sG);
+        }
 
         //solve grid :
         if(sudokuSolver(sG) == 0){
@@ -107,14 +113,13 @@ int main(int argc, char* argv[]){
         }
         return EXIT_SUCCESS;
 
-    } else if (strcmp(argv[1], "-solver")){
+    } else if (strcmp(argv[1], "-solver") == 0){
         //TODO
         return EXIT_SUCCESS;
-    } else if(strcmp(argv[1], "-nn")){
+    } else if(strcmp(argv[1], "-nn") == 0){
         //TODO
         return EXIT_SUCCESS;
     }
-
 
     //Show main help menu
     printHelpPanel();

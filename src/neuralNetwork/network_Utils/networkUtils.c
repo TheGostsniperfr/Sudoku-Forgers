@@ -169,7 +169,7 @@ Batch* createBatch(int sizeOfDataSet, int nbMiniBatch){
 /***************************************************************
  *  Function shuffleMiniBatch :
  *
- *  Shuffle all mini batch in the input batch  
+ *  Shuffle all mini batch in the input batch
  *
  *  @input :
  *      - batch (Batch*) : input batch
@@ -254,7 +254,7 @@ GridCell* findAllDigits(GridCell* gridCells, int count, Flag* flags){
         if(currentGridCell->isDigit != 1){
             continue;
         }
-
+;
         for (int px_i = 0; px_i < 784; px_i++)
         {
             Uint32* pixels = currentGridCell->image->pixels;

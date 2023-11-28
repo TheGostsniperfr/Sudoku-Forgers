@@ -136,7 +136,7 @@ void* handleDigitsTrain(
             //load default config
 
             tP.nbEpoch = 5;
-            tP.batchSize = 50000;
+            tP.batchSize = 60000;
             tP.learningRate = 0.1;
             tP.saveTraining = false;
         }else{
@@ -171,7 +171,7 @@ void* handleDigitsTrain(
 
             netPara.nbNeuronsFirstLayer = 784;
             netPara.nbHiddenLayers = 1;
-            netPara.nbNeuronsHiddenLayer = 50;
+            netPara.nbNeuronsHiddenLayer = 30;
             netPara.nbNeuronsOutputLayer = 10;
 
             net = createNetwork(netPara);
