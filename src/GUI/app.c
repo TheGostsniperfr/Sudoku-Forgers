@@ -97,8 +97,9 @@ void on_forward_btn_pressed(GtkButton *button __attribute__((unused)),
 }
 
 
-int main() {
-
+int main(int argc, char* argv[]) {
+    (void)argc;
+    (void)argv;
     gtk_init(NULL,  NULL);
 
     GtkBuilder *builder = gtk_builder_new();

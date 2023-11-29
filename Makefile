@@ -14,7 +14,7 @@ SRC := $(filter-out $(SRC_DIR)/GUI/app.c, $(SRC))
 OBJ = ${SRC:.c=.o}
 TARGET = main
 
-all: $(TARGET)
+all: $(TARGET) solver network pre app
 	make dataset -C $(SRC_DIR)/neuralNetwork
 
 $(TARGET): $(OBJ)
@@ -34,12 +34,16 @@ network:
 pre:
 	make -C $(SRC_DIR)/preProcessing
 
+app:
+	make -C $(SRC_DIR)/GUI
+
 
 
 clean:
 	make -C $(SRC_DIR)/sudokuSolver clean
 	make -C $(SRC_DIR)/neuralNetwork clean
 	make -C $(SRC_DIR)/preProcessing clean
+	make -C $(SRC_DIR)/GUI clean
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
 	rm -f $(shell find ./ -type f -name "*.jpg")
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.result")

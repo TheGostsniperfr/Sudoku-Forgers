@@ -63,7 +63,7 @@ int main(int argc, char* argv[]){
         argc--;
         argv++;
     }else{
-        handlePrintHelp(0, argv, "", flags);
+        handlePrintSolverHelp(0, argv, "", flags);
         return EXIT_SUCCESS;
     }
 

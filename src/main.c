@@ -23,6 +23,7 @@ void printHelpPanel(){
     printf
     (
         "Usage : main [OPTIONS]\n\n"
+        "-gui                       ->      Open GUI\n"
         "-ocr [dir] [option]        ->      solve the image grid\n"
         "-solver [dir] [option]     ->      access to solver app\n"
         "-nn [option]               ->      access to neural network app\n"
@@ -114,10 +115,23 @@ int main(int argc, char* argv[]){
         return EXIT_SUCCESS;
 
     } else if (strcmp(argv[1], "-solver") == 0){
-        //TODO
+        if(execvp("src/sudokuSolver/solver", argv + 1) == -1){
+            perror("Error to exec solver file");
+            exit(EXIT_FAILURE);
+        };       
+
         return EXIT_SUCCESS;
     } else if(strcmp(argv[1], "-nn") == 0){
-        //TODO
+        if(execvp("src/neuralNetwork/network", argv + 1) == -1){
+            perror("Error to exec solver file");
+            exit(EXIT_FAILURE);
+        }; 
+        return EXIT_SUCCESS;
+    } else if(strcmp(argv[1], "-gui") == 0){
+        if(execvp("src/GUI/app", argv + 1) == -1){
+            perror("Error to exec solver file");
+            exit(EXIT_FAILURE);
+        }; 
         return EXIT_SUCCESS;
     }
 

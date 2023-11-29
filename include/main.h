@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <stdio.h>
+#include <unistd.h>
 
 //PreProcessing
 #include "preProcessing/preProcessingAux/preProcessingHandle.h"
@@ -15,6 +16,9 @@
 #include "sudokuSolver/sudokuAux/sudokuHandle.h"
 #include "sudokuSolver/sudokuAux/sudokuUtil.h"
 #include "sudokuSolver/sudokuSolver/sudoku_solver.h"
+
+//GUI
+#include "GUI/gui.h"
 
 
 
