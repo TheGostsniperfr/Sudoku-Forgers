@@ -43,6 +43,15 @@ int main(int argc, char* argv[]){
             --help        ->      Show the help panel
     */
 
+    char buffer[1024];
+    if(getcwd(buffer, sizeof(buffer)) == NULL){
+        perror("getcwd");
+        exit(EXIT_FAILURE);
+    }
+
+    setenv("CURRENT_DIR", buffer, 1);
+
+
     if(argc <= 1){
         printHelpPanel();
         return EXIT_SUCCESS;
@@ -118,20 +127,20 @@ int main(int argc, char* argv[]){
         if(execvp("src/sudokuSolver/solver", argv + 1) == -1){
             perror("Error to exec solver file");
             exit(EXIT_FAILURE);
-        };       
+        };
 
         return EXIT_SUCCESS;
     } else if(strcmp(argv[1], "-nn") == 0){
         if(execvp("src/neuralNetwork/network", argv + 1) == -1){
             perror("Error to exec solver file");
             exit(EXIT_FAILURE);
-        }; 
+        };
         return EXIT_SUCCESS;
     } else if(strcmp(argv[1], "-gui") == 0){
         if(execvp("src/GUI/app", argv + 1) == -1){
             perror("Error to exec solver file");
             exit(EXIT_FAILURE);
-        }; 
+        };
         return EXIT_SUCCESS;
     }
 

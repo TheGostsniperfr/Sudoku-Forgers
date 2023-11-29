@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <libgen.h>
 
 #define NB_FLAGS 4
 
@@ -30,6 +32,21 @@ int main(int argc, char* argv[]){
                                     outputGrid.result
                                     in the same folder
     */
+
+    //check env var
+    char* globalPath = getenv("CURRENT_DIR");
+    if(globalPath == NULL){
+        char buffer[1024];
+        if(getcwd(buffer, sizeof(buffer)) == NULL){
+            perror("getcwd");
+            exit(EXIT_FAILURE);
+        }
+        char* path = dirname(buffer);
+        path = dirname(path);
+
+        setenv("CURRENT_DIR", path, 1);
+    }
+
 
     //Init flags
     Flag* flags = (Flag*)malloc(NB_FLAGS * sizeof(Flag));

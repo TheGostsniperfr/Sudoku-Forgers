@@ -11,7 +11,7 @@ SRC += ../preProcessing/SDL_Function/sdlFunction.c
 OBJ = ${SRC:.c=.o}
 TARGET = network
 
-DATASET_DIR := ./../../data/
+DATASET_DIR := ./../../data/nn/dataset/
 DATA_FILE := train-images.idx3-ubyte
 DF_URL := "https://cdn.discordapp.com/attachments/1161944373051785297/"$\
 "1173335619557134478/train-images.idx3-ubyte?ex=656394f3&is=65511ff3&hm="$\

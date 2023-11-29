@@ -13,7 +13,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#define NETWORK_PATH "src/neuralNetwork/digitsTrain.txt"
+#define NETWORK_PATH "data/nn/save/digitsTrain.txt"
 
 
 
@@ -237,7 +237,10 @@ GridCell* findAllDigits(GridCell* gridCells, int count, Flag* flags){
         printf("🚀 Starting to load neural network.\n");
     }
 
-    NeuralNetwork* net = loadNetwork(NETWORK_PATH);
+    char path[1024];
+    snprintf(path, 1024, "%s/%s",getenv("CURRENT_DIR"), NETWORK_PATH);
+
+    NeuralNetwork* net = loadNetwork(path);
 
     if(flags[0].value == 1){
         printf("✅ Success to load neural network.\n");
@@ -248,7 +251,6 @@ GridCell* findAllDigits(GridCell* gridCells, int count, Flag* flags){
 
     for (int img_i = 0; img_i < count; img_i++)
     {
-        printf("test nb : %d\n",img_i);
         GridCell* currentGridCell = &gridCells[img_i];
 
         if(currentGridCell->isDigit != 1){
@@ -277,9 +279,8 @@ GridCell* findAllDigits(GridCell* gridCells, int count, Flag* flags){
 
         currentGridCell->label = digitRecognised;
     }
-    printf("end test\n");
 
-    //destroyNetwork(net);
+    destroyNetwork(net);
 
     return gridCells;
 }

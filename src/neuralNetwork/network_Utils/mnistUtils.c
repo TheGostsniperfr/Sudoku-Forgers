@@ -12,8 +12,8 @@
 #include "SDL2/SDL.h"
 
 
-#define DATASET_PATH "../../data/train-images.idx3-ubyte"
-#define LABEL_PATH "../../data/train-labels.idx1-ubyte"
+#define DATASET_PATH "data/nn/dataset/train-images.idx3-ubyte"
+#define LABEL_PATH "data/nn/dataset/train-labels.idx1-ubyte"
 #define DATA_MAGIC_NUMBER 2051
 #define LABEL_MAGIC_NUMBER 2049
 
@@ -42,14 +42,14 @@ void freeImgContainer(ImgContainer* imgContainer){
  *      - dataFile (FILE*) : File stream of the dataset
  *      - nbImg (uint32_t*) : number of dataset images
  *      - row (uint32_t*) : row of an image
- *      - col (uint32_t*) : column of an image 
+ *      - col (uint32_t*) : column of an image
 ***************************************************************/
 
 void getMnistDataHeader
     (
-        FILE* dataFile, 
-        uint32_t* nbImg, 
-        uint32_t* row, 
+        FILE* dataFile,
+        uint32_t* nbImg,
+        uint32_t* row,
         uint32_t* col
     )
 {
@@ -138,7 +138,11 @@ void getMnistLabelHeader(FILE* labelFile, uint32_t* nbLabel){
 ImgContainer* getImageFromMnist(int index, Flag* flags) {
 
     //load data (digits) file
-    FILE *dataFile = fopen(DATASET_PATH, "rb");
+    char path[1024];
+    snprintf(path, 1024, "%s/%s",getenv("CURRENT_DIR"), DATASET_PATH);
+    FILE *dataFile = fopen(path, "rb");
+
+    printf("Path = %s\n", path);
 
     if (dataFile == NULL) {
         errx(EXIT_FAILURE, "Can't open dataset dataFile");
@@ -159,7 +163,10 @@ ImgContainer* getImageFromMnist(int index, Flag* flags) {
     }
 
     //load label dataset
-    FILE* labelFile = fopen(LABEL_PATH, "rb");
+    char labelPath[1024];
+    snprintf(labelPath, 1024, "%s/%s",getenv("CURRENT_DIR"), LABEL_PATH);
+
+    FILE* labelFile = fopen(labelPath, "rb");
     if (labelFile == NULL) {
         fclose(dataFile);
         fclose(labelFile);
@@ -244,8 +251,13 @@ ImgContainer* getImageFromMnist(int index, Flag* flags) {
 ***************************************************************/
 
 ImgContainer* getDataSet(int batchSize){
-    FILE* dataFile = fopen(DATASET_PATH, "rb");
-    FILE* labelFile = fopen(LABEL_PATH, "rb");
+    char dataPath[1024];
+    snprintf(dataPath, 1024, "%s/%s",getenv("CURRENT_DIR"), DATASET_PATH);
+    char labelPath[1024];
+    snprintf(labelPath, 1024, "%s/%s",getenv("CURRENT_DIR"), LABEL_PATH);
+
+    FILE* dataFile = fopen(dataPath, "rb");
+    FILE* labelFile = fopen(labelPath, "rb");
     if((dataFile == NULL) | (labelFile == NULL)){
         errx(EXIT_FAILURE, "Can't open dataset dataFile");
     }
@@ -277,7 +289,7 @@ ImgContainer* getDataSet(int batchSize){
         errx(EXIT_FAILURE, "Error : impossible to move the cursor.");
     }
 
-    ImgContainer* globalImgContainer = 
+    ImgContainer* globalImgContainer =
         calloc((int)nbImg, sizeof(ImgContainer));
 
     for (int img_i = 0; img_i < (int)nbImg; img_i++)

@@ -12,7 +12,7 @@
 
 
 //path to digit font
-#define PATH_FONT "../../data/font/MontserratMedium.ttf"
+#define PATH_FONT "data/font/MontserratMedium.ttf"
 
 
 typedef struct SubGridPara{
@@ -49,7 +49,7 @@ typedef struct GridPara {
  *  @intput :
  *      - sGP (SubGridPara) : Recursif parameter
  *      - gP (GridPara) : global parameter of the grid
- *      - defaultSG (SudokuGrid) : input sudoku grid 
+ *      - defaultSG (SudokuGrid) : input sudoku grid
  *      - solvedSG (SudokuGrid) : solved sudoku grid
 ***************************************************************/
 
@@ -282,7 +282,9 @@ SDL_Surface* createOutputGrid(SudokuGrid defaultSG,
 
 
     //Load font to write digit
-    TTF_Font* font = TTF_OpenFont(PATH_FONT, gP.gridPxSize/defaultSG.gS
+    char fontPath[1024];
+    snprintf(fontPath, 1024, "%s/%s",getenv("CURRENT_DIR"), PATH_FONT);
+    TTF_Font* font = TTF_OpenFont(fontPath, gP.gridPxSize/defaultSG.gS
                                     * gP.fontRatio);
     if (!font) {
         errx(EXIT_FAILURE, "⚠️ Error to load font.ttf. ⚠️");

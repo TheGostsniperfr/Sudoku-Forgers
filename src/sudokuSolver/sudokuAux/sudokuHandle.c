@@ -1,4 +1,5 @@
 #include <string.h>
+#include <libgen.h>
 
 #include "sudokuSolver/sudokuSolver/sudoku_solver.h"
 #include "sudokuSolver/sudokuAux/sudokuUtil.h"
@@ -55,8 +56,18 @@ void* handleSolver(int argc,
         errx(EXIT_FAILURE, "Grid is impossible.");
     }
 
+    char path[1024];
 
-    saveGrid(concateStr(gridPath, ".result"), sG);
+    char* fileName = strrchr(gridPath, '/');
+    if(fileName == NULL){
+        snprintf(path, 1024, "%s/%s.result",getenv("CURRENT_DIR"), gridPath);
+    }else{
+        snprintf(path, 1024, "%s%s.result",getenv("CURRENT_DIR"), fileName);
+    }
+
+
+    printf("Save path = %s\n", path);
+    saveGrid(path, sG);
 
     if(flags[3].value == 1){
         printSection(concateStr(gridPath, ".result"));
@@ -115,7 +126,16 @@ void* handleGenerateGridImg(int argc __attribute__((unused)),
 
     SudokuGrid defaultSG = loadGrid(gridPath);
 
-    SudokuGrid solvedSG = loadGrid(concateStr(gridPath, ".result"));
+    char path[1024];
+
+    char* fileName = strrchr(gridPath, '/');
+    if(fileName == NULL){
+        snprintf(path, 1024, "%s/%s.result", getenv("CURRENT_DIR"), gridPath);
+    }else{
+        snprintf(path, 1024, "%s%s.result", getenv("CURRENT_DIR"), fileName);
+    }
+
+    SudokuGrid solvedSG = loadGrid(path);
 
     GridPara gP = {
         .gridPxSize = atof(argv[0]),
@@ -126,7 +146,14 @@ void* handleGenerateGridImg(int argc __attribute__((unused)),
 
     SDL_Surface* outImg = createOutputGrid(defaultSG, solvedSG, gP);
 
-    saveImg(outImg, concateStr(gridPath, ".jpg"));
+    if(fileName == NULL){
+        snprintf(path, 1024, "%s/%s.jpg", getenv("CURRENT_DIR"), gridPath);
+    }else{
+        snprintf(path, 1024, "%s%s.jpg", getenv("CURRENT_DIR"), fileName);
+    }
+
+
+    saveImg(outImg, path);
 
     freeGrid(defaultSG);
     freeGrid(solvedSG);

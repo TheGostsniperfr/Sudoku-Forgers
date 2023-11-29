@@ -14,7 +14,7 @@
 ***************************************************************/
 
 void destroyNetwork(NeuralNetwork* net) {
-    for (int layer_i = 0; layer_i < net->nb_layers; layer_i++) {
+    for (int layer_i = 1; layer_i < net->nb_layers; layer_i++) {
         for (int neuron_i = 0; neuron_i <
                 net->layers[layer_i].nb_neurons; neuron_i++) {
             free(net->layers[layer_i].neurons[neuron_i].weights);

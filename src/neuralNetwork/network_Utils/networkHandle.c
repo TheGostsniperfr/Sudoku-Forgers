@@ -18,8 +18,8 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-#define DEFAULT_XOR_FILENAME "xorTrain.txt"
-#define DEFAULT_DIGITS_FILENAME "digitsTrain.txt"
+#define DEFAULT_XOR_FILENAME "data/nn/save/xorTrain.txt"
+#define DEFAULT_DIGITS_FILENAME "data/nn/save/digitsTrain.txt"
 
 
 /***************************************************************
@@ -100,7 +100,10 @@ void* handleXorTrain(
             printNetworkPara(netPara);
         }
 
-        xorTraining(net, tP, DEFAULT_XOR_FILENAME, flags);
+        char path[1024];
+        snprintf(path, 1024, "%s/%s",getenv("CURRENT_DIR"), DEFAULT_XOR_FILENAME);
+
+        xorTraining(net, tP, path, flags);
 
         destroyNetwork(net);
 
@@ -182,7 +185,11 @@ void* handleDigitsTrain(
             printNetworkPara(netPara);
         }
 
-        digitTraining(net, tP, DEFAULT_DIGITS_FILENAME, flags);
+        char path[1024];
+        snprintf(path, 1024, "%s/%s",
+            getenv("CURRENT_DIR"), DEFAULT_DIGITS_FILENAME);
+
+        digitTraining(net, tP, path, flags);
 
         destroyNetwork(net);
 
