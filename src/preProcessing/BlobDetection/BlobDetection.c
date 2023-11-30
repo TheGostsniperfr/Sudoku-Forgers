@@ -92,7 +92,6 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 			int pxVal = getPixelGrayScale(pixels[i*width +  j]);
 			if (pxVal<255 && blob[i*width+j]==0){
 				Fill(src, pixels, j, i, blob, lim);
-				printf("Fill effectué !\n");
 				if (size_blob>max_size){
 					max = lim;
 					max_size = size_blob;
@@ -102,7 +101,6 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 			}
 		}
 	}
-	printf("Nombres de blobs : %d\n",lim);
 
 	//Runs through the image again and repaint the smaller blobs
 	for(int i = 0; i < src -> h; i++){
@@ -113,17 +111,10 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 			}
 		}
 	}
-	saveImg(src, "BlobResult.jpg");
+	
 	//Modifies pointer size, free the allocated and returns the surface
 	*size_max = max_size;
 	free(blob);
 
 	return src;
-}
-
-int main(){
-	SDL_Surface *img = loadImg("Result.jpg");
-	int size_max = 0;
-	Blob(img, &size_max);
-	printf("Size max : %d\n", size_max);
 }
