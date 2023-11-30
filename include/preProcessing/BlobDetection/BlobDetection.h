@@ -9,17 +9,17 @@
 typedef struct Point {
     int x;
     int y;
-    int size;
+    int lim;
 }Point;
 
-int Fill
+void Fill
 (
     SDL_Surface *src,
     Uint32* pixels,
     int x,
     int y,
     int* blob,
-    char lim
+    int lim
 );
 
 SDL_Surface* Blob
