@@ -2,8 +2,25 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+
 #define EDIT_GRID_SIZE 9
-GdkPixbuf *originalImg = NULL;
+
+typedef struct DataApp {
+    char* originalImgPath;
+    gint stepProcess;
+    gdouble rotateAngle;
+    gint currentPage;
+
+    GtkStack* pageContainer;
+
+    GtkImage* originalImg;
+    GtkImage* logoImg;
+    GtkImage* inputImageResult;
+    GtkImage* rotateImg;
+    GtkImage* matrixGrid;
+    GtkScale* rotateSlider;
+    GtkScale* pageSlider;
+} DataApp;
 
 GtkEntry *editGridMat[EDIT_GRID_SIZE][EDIT_GRID_SIZE];
 typedef struct {
@@ -11,38 +28,141 @@ typedef struct {
     int col;
 } EntryCoordinates;
 
+void pageManager(DataApp* dataApp, gint newNbPage);
+
 gboolean is_digit(const gchar *text) {
     return (text != NULL && *text != '\0' && isdigit(*text));
+}
+
+void pageChanger(DataApp* dataApp, gint newNbPage){
+    g_print("New page : %d\n", newNbPage);
+
+    dataApp->currentPage = newNbPage;
+
+    gtk_stack_set_visible_child_name
+    (
+        dataApp->pageContainer,
+        g_strdup_printf("page%d", newNbPage)
+    );
+}
+
+void load_and_resize_image(const char *filename, int sizeX,
+    int sizeY, GtkImage* img)
+{
+    GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+
+    if (pixbuf == NULL) {
+        g_printerr("Error to load image: %s\n", filename);
+        return;
+    }
+
+    GdkPixbuf* resize =  gdk_pixbuf_scale_simple(pixbuf, sizeX,
+        sizeY, GDK_INTERP_BILINEAR); 
+
+    gtk_image_set_from_pixbuf(img, resize);
+
+    g_object_unref(pixbuf);
+    g_object_unref(resize);
 }
 
 void on_file_selected(GtkFileChooserButton *filechooserbutton,
     gpointer user_data)
 {
-    const gchar *filename =
+    DataApp* appData = user_data;
+
+    appData->originalImgPath =
         gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooserbutton));
-
-    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-
-    if (originalImg != NULL) {
-        g_object_unref(originalImg);
-    }
-    originalImg = pixbuf;
-
-    GtkWidget *image = GTK_WIDGET(user_data);
-    gtk_image_set_from_pixbuf(GTK_IMAGE(image), pixbuf);
-
-    g_free((gpointer)filename);
 }
 
-void on_scale_value_changed(GtkRange *range , gpointer user_data) {
-    GtkStack *pageContainer = GTK_STACK(user_data);
-    gdouble value = gtk_range_get_value(range);
 
-    gtk_stack_set_visible_child_name
-    (
-        pageContainer,
-        g_strdup_printf("page%.0f", value)
-    );
+
+//reset app for clean to load a new image
+void resetApp(DataApp* dataApp){
+    dataApp->stepProcess = 1;
+
+    if (dataApp->originalImgPath != NULL) {
+        g_free((gpointer)dataApp->originalImgPath);
+    } 
+}
+
+void on_rotate_slider_changed(GtkRange *range , gpointer user_data){
+    DataApp* dataApp = user_data;
+
+    dataApp->rotateAngle = gtk_range_get_value(range);
+
+    g_print("Rotate slider val : %f\n", dataApp->rotateAngle);
+
+    //rotate img
+}
+
+void on_page_slider_changed(GtkRange *range , gpointer user_data) {
+    DataApp* dataApp = user_data;
+    gint value = gtk_range_get_value(range);
+    pageManager(dataApp, value);
+}
+
+
+void pageManager(DataApp* dataApp, gint newNbPage){
+    printf("Try to go page nb : %d\n", newNbPage);
+
+    if(newNbPage < dataApp->stepProcess){
+        pageChanger(dataApp, newNbPage);
+        return;
+    }
+
+    printf("newNbPage = %d\n", newNbPage);
+    printf("stepProcess = %d\n", dataApp->stepProcess);
+
+    if(newNbPage > dataApp->stepProcess){
+        //check if all the condition to go the next page is fill
+        switch (newNbPage)
+        {
+        case 2:
+            printf("In the 2\n");
+
+            if(dataApp->originalImg == NULL){
+                printf("Original Image null\n");
+                return;
+            }
+
+            dataApp->stepProcess++;
+
+
+            //Rotate page
+            //load image from page 1 (imported image)
+
+            
+
+            load_and_resize_image(dataApp->originalImgPath, 300, 300, dataApp->originalImg);
+            dataApp->rotateImg = dataApp->originalImg;
+
+            pageChanger(dataApp, newNbPage);
+
+            return;
+        case 3:
+            //apply rotate
+
+            //Intermediate step page
+            //make all step + find all digits + create grid struct
+
+        case 4:
+            //Edit grid page
+            //load image from page 1 (imported image)
+            //init edit grid with grid struct
+        
+        case 5: 
+            //Save page
+            //Solve grid + generate out grid 
+            //load generate out grid
+
+            
+        
+        default:
+            break;
+        }
+    }
+
+    pageChanger(dataApp, newNbPage);
 }
 
 void on_insert_text(GtkEditable *editable, const gchar *text,
@@ -62,38 +182,22 @@ void on_insert_text(GtkEditable *editable, const gchar *text,
     (void)entry;
 }
 
-void load_and_resize_image(const char *filename, int sizeX,
-    int sizeY, GtkImage *img)
-{
-    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
-    if (pixbuf == NULL) {
-        g_printerr("Error to load image: %s\n", filename);
-        return;
-    }
-
-    GdkPixbuf *resized_pixbuf = gdk_pixbuf_scale_simple(pixbuf, sizeX,
-        sizeY, GDK_INTERP_BILINEAR);
-
-    g_object_unref(pixbuf);
-    gtk_image_set_from_pixbuf(img, resized_pixbuf);
-    g_object_unref(resized_pixbuf);
-}
 
 void on_back_btn_pressed(GtkButton *button __attribute__((unused)),
                             gpointer user_data)
 {
-    GtkScale* pageSlider = GTK_SCALE(user_data);
-    gdouble value = gtk_range_get_value(GTK_RANGE(pageSlider));
-    gtk_range_set_value(GTK_RANGE(pageSlider), CLAMP(value-1, 1, 6));
+    DataApp* dataApp = user_data;
+    gdouble value = gtk_range_get_value(GTK_RANGE(dataApp->pageSlider));
+    pageManager(dataApp, value);
 }
 
 void on_forward_btn_pressed(GtkButton *button __attribute__((unused)),
                                 gpointer user_data)
 {
-    GtkScale* pageSlider = GTK_SCALE(user_data);
-    gdouble value = gtk_range_get_value(GTK_RANGE(pageSlider));
-    gtk_range_set_value(GTK_RANGE(pageSlider), CLAMP(value+1, 1, 6));
+    DataApp* dataApp = user_data;
+    gdouble value = gtk_range_get_value(GTK_RANGE(dataApp->pageSlider));    
+    pageManager(dataApp, value);
 }
 
 
@@ -113,13 +217,23 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
+    DataApp* dataApp = calloc(1, sizeof(DataApp));   
+
+
+    dataApp->stepProcess = 1;
+    dataApp->currentPage = 1;
+    dataApp->inputImageResult = NULL;
+    dataApp->originalImg = NULL;
+    dataApp->originalImgPath = NULL;
+    dataApp->rotateAngle = 0;    
 
     GtkWidget *window =
         GTK_WIDGET(gtk_builder_get_object(builder, "SF_APP_WINDOW"));
-    GtkStack* pageContainer =
+    dataApp->pageContainer =
         GTK_STACK(gtk_builder_get_object(builder, "PageContainer"));
-    GtkScale* pageSlider =
+    dataApp->pageSlider =
         GTK_SCALE(gtk_builder_get_object(builder, "page_slider"));
+    
     GtkButton* backBtn =
         GTK_BUTTON(gtk_builder_get_object(builder, "backBtn"));
     GtkButton* forwardBtn =
@@ -129,32 +243,43 @@ int main(int argc, char* argv[]) {
         GTK_FILE_CHOOSER_BUTTON(
             gtk_builder_get_object(builder, "chooseFileBtn"));
 
-    GtkImage* logoImg =
+    dataApp->logoImg =
         GTK_IMAGE(gtk_builder_get_object(builder, "logo"));
-    GtkImage* inputImageResult =
+    
+    dataApp->inputImageResult =
         GTK_IMAGE(gtk_builder_get_object(builder, "inputImageResult"));
+    dataApp->rotateImg =
+        GTK_IMAGE(gtk_builder_get_object(builder, "rotateImg"));
+    dataApp->rotateSlider =
+        GTK_SCALE(gtk_builder_get_object(builder, "rotateSlider"));
+
     GtkGrid* matrixGrid =
         GTK_GRID(gtk_builder_get_object(builder, "editGrid"));
 
-    load_and_resize_image("ressources/logo.png", 300, 300, logoImg);
-    load_and_resize_image
-        ("ressources/emptyGrid.png", 300, 300, inputImageResult);
+    load_and_resize_image("ressources/logo.png", 300, 300, dataApp->logoImg);
+    
 
     //Page Slider
-    gtk_range_set_range(GTK_RANGE(pageSlider), 1, 6);
-    gtk_range_set_value(GTK_RANGE(pageSlider), 1);
-    g_signal_connect(pageSlider, "value_changed",
-        G_CALLBACK(on_scale_value_changed), pageContainer);
+    gtk_range_set_range(GTK_RANGE(dataApp->pageSlider), 1, 6);
+    gtk_range_set_value(GTK_RANGE(dataApp->pageSlider), 1);
+    g_signal_connect(dataApp->pageSlider, "value_changed",
+        G_CALLBACK(on_page_slider_changed), dataApp);
+
+    //Rotate Slider
+    gtk_range_set_range(GTK_RANGE(dataApp->rotateSlider), 1, 6);
+    gtk_range_set_value(GTK_RANGE(dataApp->rotateSlider), 1);
+    g_signal_connect(dataApp->rotateSlider, "value_changed",
+        G_CALLBACK(on_rotate_slider_changed), dataApp);
 
     //Page Btn
     g_signal_connect(backBtn, "clicked",
-        G_CALLBACK(on_back_btn_pressed), pageSlider);
+        G_CALLBACK(on_back_btn_pressed), dataApp);
     g_signal_connect(forwardBtn, "clicked",
-        G_CALLBACK(on_forward_btn_pressed), pageSlider);
+        G_CALLBACK(on_forward_btn_pressed), dataApp);
 
     //File chooser btn
     g_signal_connect(fileChooseBtn, "selection-changed",
-        G_CALLBACK(on_file_selected), inputImageResult);
+        G_CALLBACK(on_file_selected), dataApp);
 
     //grid manager
     for (int i = 0; i < EDIT_GRID_SIZE; i++) {
@@ -187,9 +312,8 @@ int main(int argc, char* argv[]) {
 
     gtk_main();
 
-    if (originalImg != NULL) {
-        g_object_unref(originalImg);
-    }
+    resetApp(dataApp);  
 
+    free(dataApp);
     return EXIT_SUCCESS;
 }

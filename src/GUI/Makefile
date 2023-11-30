@@ -1,5 +1,5 @@
 CC = gcc -I../../include
-CFLAGS = -Wall -Wextra $(shell pkg-config --cflags gtk+-3.0)
+CFLAGS = -Wall -Wextra $(shell pkg-config --cflags gtk+-3.0) -g
 LDLIBS = -lm $(shell pkg-config --libs gtk+-3.0)
 
 SRC_DIR = ./
