@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../../../include/preProcessing/BlobDetection/BlobDetection.h"
+#include "preProcessing/BlobDetection/BlobDetection.h"
 #include <err.h>
-#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
 int size_blob = 0;
 
@@ -58,8 +58,8 @@ void Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, int lim){
 SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 	SDL_Surface *src = SDL_ConvertSurfaceFormat
 						(
-							img, 
-							SDL_PIXELFORMAT_ARGB8888, 
+							img,
+							SDL_PIXELFORMAT_ARGB8888,
 							0
 						);
 
@@ -111,7 +111,7 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 			}
 		}
 	}
-	
+
 	//Modifies pointer size, free the allocated and returns the surface
 	*size_max = max_size;
 	free(blob);

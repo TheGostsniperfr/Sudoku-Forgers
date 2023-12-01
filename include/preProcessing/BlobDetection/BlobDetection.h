@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 #include <err.h>
 
 typedef struct Point {
@@ -24,7 +24,7 @@ void Fill
 
 SDL_Surface* Blob
 (
-    SDL_Surface* src, 
+    SDL_Surface* src,
     int* size_max
 );
 
