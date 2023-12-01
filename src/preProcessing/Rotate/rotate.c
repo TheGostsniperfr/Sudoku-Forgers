@@ -51,21 +51,13 @@ SDL_Surface* Rotated_image(SDL_Surface* image, double angle)
 			new_y += center_y;
 			new_x += center_x;
 
-			/*
-			if(new_x >= 0 && new_x < w && new_y >= 0 && new_y < h)
-			{
-				Uint32 pixel = pixels[i * image->w + j];
-				rotated_pixels[new_x * rotated_image->w + new_y] = pixel;
-			}
-			*/
-
 			Uint32* pixels = (Uint32*) image->pixels;
 			Uint32* rotated_pixels = (Uint32*) rotated_image->pixels;
 
-			if(new_x >= 0 && new_x < h && new_y >= 0 && new_y < w)
+			if(new_x >= 0 && new_x < w && new_y >= 0 && new_y < h)
 			{
-				Uint32 pixel = pixels[i * image->w + j];
-				rotated_pixels[new_x * rotated_image->w + new_y] = pixel;
+				Uint32 pixel = pixels[j * image->w + i];
+				rotated_pixels[new_y * rotated_image->w + new_x] = pixel;
 			}
 		}
 	}
