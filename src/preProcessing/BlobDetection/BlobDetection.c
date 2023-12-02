@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "../../../include/preProcessing/BlobDetection/BlobDetection.h"
+#include "preProcessing/BlobDetection/BlobDetection.h"
 #include <err.h>
-#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
+#include "preProcessing/SDL_Function/sdlFunction.h"
 
 #include "math.h"
 
@@ -24,25 +24,33 @@ int size_blob = 0;
  * 	@output :
  * 		- (int) : Size of the blob
 ******************************************************************************/
-void Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, int lim){
+void Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, int lim)
+{
 	//Size of the blob and colour value of the current pixel
 	int width = src->w;
-	int pxVal = getPixelGrayScale(pixels[y*width +  x]);
+	int pxVal = getPixelGrayScale(pixels[y * width + x]);
 
 	//Iterates through the blob's neighbours to find neighbour
-	if (pxVal<255 && blob[y*width+x]<lim){
+	if (pxVal < 255 && blob[y * width + x] < lim)
+	{
 		size_blob += 1;
-		blob[y*width+x]=lim;
-		if (y<src->h-1){
+
+		blob[y * width + x] = lim;
+		
+		if (y < src->h-1)
+		{
 			Fill(src, pixels, x, y+1, blob, lim);
 		}
-		if (y>0){
+		if (y > 0)
+		{
 			Fill(src, pixels, x, y-1, blob, lim);
 		}
-		if (x<width-1){
+		if (x < width-1)
+		{
 			Fill(src, pixels, x+1, y, blob, lim);
 		}
-		if (x>0){
+		if (x > 0)
+		{
 			Fill(src, pixels, x-1, y, blob, lim);
 		}
 	}
@@ -57,7 +65,8 @@ void Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, int lim){
  *      - src (SDL_Surface*) : Surface of the image to modify
  * 		- size_max (int*) : address of the size of the max blob
 ***************************************************************/
-SDL_Surface* Blob(SDL_Surface* img, int* size_max){
+SDL_Surface* Blob(SDL_Surface* img, int* size_max)
+{
 	SDL_Surface *src = SDL_ConvertSurfaceFormat
 						(
 							img,
@@ -76,7 +85,8 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 	int max =  0;
 
 	//error handling for array creation
-	if (pixels==NULL||blob ==NULL){
+	if (pixels==NULL||blob ==NULL)
+	{
 		warn("Not enough storage for this operation");
 	}
 
@@ -89,15 +99,22 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 	Uint32 whitePx = SDL_MapRGB(src->format, 255, 255, 255);
 
 	//Runs through the image to find the biggest blob
-	for(int i = 0; i <height;i++){
-		for(int j =0;j<width;j++){
+	for(int i = 0; i < height; i++)
+	{
+		for(int j = 0; j < width; j++)
+		{
 			int pxVal = getPixelGrayScale(pixels[i*width +  j]);
-			if (pxVal<255 && blob[i*width+j]==0){
+
+			if (pxVal<255 && blob[i*width+j]==0)
+			{
 				Fill(src, pixels, j, i, blob, lim);
-				if (size_blob>max_size){
+
+				if (size_blob>max_size)
+				{
 					max = lim;
 					max_size = size_blob;
 				}
+
 				size_blob = 0;
 				lim++;
 			}
@@ -105,10 +122,14 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max){
 	}
 
 	//Runs through the image again and repaint the smaller blobs
-	for(int i = 0; i < src -> h; i++){
-		for(int j = 0; j < src -> w; j++){
+	for(int i = 0; i < src -> h; i++)
+	{
+		for(int j = 0; j < src -> w; j++)
+		{
 			int pxVal = getPixelGrayScale(pixels[i*width +  j]);
-			if (blob[i*width+j]!=max && pxVal<255){
+
+			if (blob[i*width+j]!=max && pxVal<255)
+			{
 				pixels[i*width+ j] = whitePx;
 			}
 		}
@@ -154,7 +175,7 @@ int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4)
     return 1; // The conditions are met, it is a square
 }
 
-SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob, int* size_max)
+SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob/*, int* size_max*/)
 {
 	int w = image->w;
 	int h = image->h;
@@ -186,7 +207,7 @@ SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob, int* size_
 	}
 	free(image_blob);
 
-	src = Blob(src, size_max);
+	//src = Blob(src, size_max);
 	return src;
 }
 
