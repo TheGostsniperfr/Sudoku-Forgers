@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-//#include "preProcessing/BlobDetection/BlobDetection.h"
 #include <err.h>
 
 typedef struct {
@@ -43,8 +42,7 @@ int isSquare_Blob
 SDL_Surface* Remove_Blob
 (
     SDL_Surface* image,
-    SDL_Surface* image_blob/* ,
-    int* size_max */
+    SDL_Surface* image_blob
 );
 
 

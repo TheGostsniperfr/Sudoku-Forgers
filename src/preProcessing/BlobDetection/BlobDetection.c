@@ -175,7 +175,7 @@ int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4)
     return 1; // The conditions are met, it is a square
 }
 
-SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob/*, int* size_max*/)
+SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob)
 {
 	int w = image->w;
 	int h = image->h;
@@ -207,17 +207,5 @@ SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob/*, int* siz
 	}
 	free(image_blob);
 
-	//src = Blob(src, size_max);
 	return src;
 }
-
-/*int main () 
-{
-	int size_max = 0;
-	SDL_Surface *temp = loadImg("image3.jpg");
-	SDL_Surface *img3 = Blob(temp, &size_max);
-	img3 = Remove_Blob(temp, img3, &size_max);
-	saveImg(img3, "BlobResult3.jpg");
-	SDL_Surface *img6 = Blob(loadImg("image6.jpg"), &size_max);
-	saveImg(img6, "BlobResult6.jpg");
-}*/
