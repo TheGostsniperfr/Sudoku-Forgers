@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "preProcessing/BlobDetection/BlobDetection.h"
+#include "../../../include/preProcessing/BlobDetection/BlobDetection.h"
 #include <err.h>
-#include "preProcessing/SDL_Function/sdlFunction.h"
+#include "../../../include/preProcessing/SDL_Function/sdlFunction.h"
 
 #include "math.h"
 
@@ -30,7 +30,7 @@ void Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, int lim){
 	int pxVal = getPixelGrayScale(pixels[y*width +  x]);
 
 	//Iterates through the blob's neighbours to find neighbour
-	if (pxVal <255 && blob[y*width+x]<lim){
+	if (pxVal<255 && blob[y*width+x]<lim){
 		size_blob += 1;
 		blob[y*width+x]=lim;
 		if (y<src->h-1){
@@ -154,7 +154,7 @@ int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4)
     return 1; // The conditions are met, it is a square
 }
 
-SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob)
+SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob, int* size_max)
 {
 	int w = image->w;
 	int h = image->h;
@@ -184,7 +184,19 @@ SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob)
 			}
 		}
 	}
-
 	free(image_blob);
+
+	src = Blob(src, size_max);
 	return src;
 }
+
+/*int main () 
+{
+	int size_max = 0;
+	SDL_Surface *temp = loadImg("image3.jpg");
+	SDL_Surface *img3 = Blob(temp, &size_max);
+	img3 = Remove_Blob(temp, img3, &size_max);
+	saveImg(img3, "BlobResult3.jpg");
+	SDL_Surface *img6 = Blob(loadImg("image6.jpg"), &size_max);
+	saveImg(img6, "BlobResult6.jpg");
+}*/
