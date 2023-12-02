@@ -73,10 +73,10 @@ SDL_Surface* applyAdaptiveThreshold(SDL_Surface* inputImg) {
 
     //apply threshold
     double threshold = 0.15;
-    if(noiseLevel < 30){
+    if(noiseLevel < 20){
         threshold = 0.1;
     }
-    if(noiseLevel >= 30 && noiseLevel < 100){
+    if(noiseLevel >= 2 && noiseLevel < 100){
         threshold = 0.15;
     }
     if(noiseLevel > 100 && noiseLevel <= 500){
@@ -85,6 +85,8 @@ SDL_Surface* applyAdaptiveThreshold(SDL_Surface* inputImg) {
     if(noiseLevel > 500){
         threshold = 0.5;
     }
+
+    printf("NOISE LEVEL : %d -> %f\n", noiseLevel, threshold);
 
     int value = 0;
     int x1 = 0;
