@@ -32,7 +32,7 @@ void reversedBW(SDL_Surface* image)
 void clean_edge(SDL_Surface* image) {   
     int count_px;
     Uint8 r, g, b;
-    int Threshold = 2 * (image->w) / 3;
+    int Threshold = (image->w)/2;
 
     SDL_LockSurface(image);
 
@@ -98,7 +98,7 @@ void Image_Clean(GridCell* images)
         clean_edge(images[i].image);
         images[i].image = Blob(images[i].image, &size);
         images[i].label = size;
-        if(size <= 60)
+        if(size <= 40)
         {
             clean_all(images[i].image);
             images[i].isDigit = 0;
