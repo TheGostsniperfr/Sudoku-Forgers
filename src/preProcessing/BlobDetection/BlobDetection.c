@@ -136,8 +136,8 @@ int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4)
     double d24 = Distance(p2, p4);
     double d34 = Distance(p3, p4);
 
-	// Verification of side lengths (within 5% error)
-    double errorMargin = 0.5;
+	// Verification of side lengths
+    double errorMargin = 0.75;
     if (fabs(d12 - d13) / d12 > errorMargin || fabs(d12 - d14) / d12 > errorMargin || fabs(d12 - d23) / d12 > errorMargin ||
         fabs(d12 - d24) / d12 > errorMargin || fabs(d12 - d34) / d12 > errorMargin) {
         return 0; // Les côtés ne sont pas égaux
