@@ -2,6 +2,13 @@
 #define BUILD_NETWORK_H
 
 #include "SDL2/SDL.h"
+#include "preProcessing/CaseDetection/case_detection.h"
+
+//---------------------------
+//
+//      NETWORK STRUCTS :
+//
+//---------------------------
 
 typedef struct Neuron {
     double *weights;
@@ -41,7 +48,7 @@ typedef struct NetworkPara{
 
 //---------------------------
 //
-//      DATA SET STRUCT :
+//      DATA SET STRUCTS :
 //
 //---------------------------
 
@@ -61,5 +68,17 @@ typedef struct Batch{
     int nbMiniBatch;
 } Batch;
 
+//---------------------------
+//
+//      HANDLER STRUCT :
+//
+//---------------------------
+
+typedef struct AllStepResult{
+    GridCell* gridCells;
+    SDL_Surface* binarizedImg;
+    SDL_Surface* homographyImg;
+    SDL_Surface* gridImg;
+} AllStepResult;
 
 #endif

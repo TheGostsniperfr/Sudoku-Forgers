@@ -1,6 +1,6 @@
 CC = gcc -I include
-CFLAGS = $(shell sdl2-config --cflags) -Wall -Wextra
-LDLIBS = $(shell sdl2-config --libs) -lSDL2_image -lSDL2_ttf -lm
+CFLAGS = $(shell sdl2-config --cflags) $(shell pkg-config --cflags gtk+-3.0) -Wall -Wextra
+LDLIBS = $(shell sdl2-config --libs)  $(shell pkg-config --libs gtk+-3.0) -lSDL2_image -lSDL2_ttf -lm
 SRC_DIR = ./src
 
 SRC = $(shell find $(SRC_DIR) -type f -name "*.c" )
@@ -8,12 +8,11 @@ SRC = $(shell find $(SRC_DIR) -type f -name "*.c" )
 SRC := $(filter-out $(SRC_DIR)/preProcessing/preProcessing.c, $(SRC))
 SRC := $(filter-out $(SRC_DIR)/sudokuSolver/solver.c, $(SRC))
 SRC := $(filter-out $(SRC_DIR)/neuralNetwork/network.c, $(SRC))
-SRC := $(filter-out $(SRC_DIR)/GUI/app.c, $(SRC))
 
 OBJ = ${SRC:.c=.o}
 TARGET = main
 
-all: $(TARGET) solver network pre app
+all: $(TARGET) solver network pre
 	make dataset -C $(SRC_DIR)/neuralNetwork
 
 $(TARGET): $(OBJ)
@@ -33,8 +32,6 @@ network:
 pre:
 	make -C $(SRC_DIR)/preProcessing
 
-app:
-	make -C $(SRC_DIR)/GUI
 
 
 
@@ -42,10 +39,12 @@ clean:
 	make -C $(SRC_DIR)/sudokuSolver clean
 	make -C $(SRC_DIR)/neuralNetwork clean
 	make -C $(SRC_DIR)/preProcessing clean
-	make -C $(SRC_DIR)/GUI clean
+
+	rm -f src/GUI/app
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
 	rm -f $(shell find ./ -type f -name "*.jpg")
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.result")
+	rm -f -R src/GUI/tmp/
 	rm -f $(TARGET)
 
 	clear
