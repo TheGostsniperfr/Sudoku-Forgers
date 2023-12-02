@@ -192,21 +192,60 @@ void* handleAllSteps(
 	if(flags[0].value == 1){
 		printf("🚀 Starting to apply Blob.\n");
 	}
+	
 	int size_blob = 0;
 	SDL_Surface* blob = Blob(img, &size_blob);
+	int* points = FindCoins(blob);
+	Pointx_y p1;
+	Pointx_y p2;
+	Pointx_y p3;
+	Pointx_y p4;
+	SDL_Surface* img_bis;
+
+	p1.x = points[0];
+	p1.y = points[1];
+
+	p2.x = points[6];
+	p2.y = points[7];
+
+	p3.x = points[4];
+	p3.y = points[5];
+
+	p4.x = points[2];
+	p4.y = points[3];
+
+	while(!isSquare_Blob(p1, p2, p3, p4))
+	{
+		size_blob = 0;
+		img_bis = Remove_Blob(img, blob);
+		blob = Blob(img_bis, &size_blob);
+		points = FindCoins(blob);
+
+		//ReSet of each coordonates
+		p1.x = points[0];
+		p1.y = points[1];
+
+		p2.x = points[6];
+		p2.y = points[7];
+
+		p3.x = points[4];
+		p3.y = points[5];
+
+		p4.x = points[2];
+		p4.y = points[3];
+	}
+	free(img_bis);
+
 	if(flags[0].value == 1){
 		printf("✅ Success to apply blob detection.\n");
 	}
-
 	if (flags[1].value == 1){
 		saveImg(blob, "Blob.jpg");
 		if (flags[0].value == 1){
 			printf("💾 Success to save Blob.jpg\n");
 		}
 	}
-
-	int* points = FindCoins(blob);
-
+	
 
 	if(flags[0].value == 1){
 		printf("🚀 Starting to apply Homography_Transform.\n");

@@ -12,6 +12,10 @@ typedef struct Point {
     int lim;
 }Point;
 
+typedef struct {
+    double x, y;
+} Pointx_y;
+
 void Fill
 (
     SDL_Surface *src,
@@ -27,5 +31,26 @@ SDL_Surface* Blob
     SDL_Surface* src,
     int* size_max
 );
+
+double Distance
+(
+    Pointx_y p1, 
+    Pointx_y p2
+);
+
+int isSquare_Blob
+(
+    Pointx_y p1, 
+    Pointx_y p2, 
+    Pointx_y p3, 
+    Pointx_y p4
+);
+
+SDL_Surface* Remove_Blob
+(
+    SDL_Surface* image,
+    SDL_Surface* image_blob
+);
+
 
 #endif
