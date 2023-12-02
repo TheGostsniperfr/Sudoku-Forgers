@@ -44,7 +44,8 @@ clean:
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
 	rm -f $(shell find ./ -type f -name "*.jpg")
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.result")
-	rm -f -R src/GUI/tmp/
+	rm -f $(shell find ./src/GUI/tmp/ -type f -name "*.jpg")
+
 	rm -f $(TARGET)
 
 	clear
