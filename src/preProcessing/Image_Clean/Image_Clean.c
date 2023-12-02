@@ -32,7 +32,7 @@ void reversedBW(SDL_Surface* image)
 void clean_edge(SDL_Surface* image) {   
     int count_px;
     Uint8 r, g, b;
-    int Threshold = (image->w)/2;
+    int Threshold = 2*(image->w)/3;
 
     SDL_LockSurface(image);
 
