@@ -91,10 +91,10 @@ int main(int argc, char* argv[]){
             return EXIT_SUCCESS;
         }
 
-        GridCell* gC = (GridCell*)handleAllSteps(argc, argv+2, argv[2], flags);
-        gC = findAllDigits(gC, GRID_DIM*GRID_DIM, flags);
+        AllStepResult* allStepResult = (AllStepResult*)handleAllSteps(argc, argv+2, argv[2], flags);
+        allStepResult->gridCells = findAllDigits(allStepResult->gridCells, GRID_DIM*GRID_DIM, flags);
 
-        SudokuGrid sG = gridCellToSudokuGrid(gC, GRID_DIM);
+        SudokuGrid sG = gridCellToSudokuGrid(allStepResult->gridCells, GRID_DIM);
 
         if(flags[2].value == 1){
             printSection(DEFAULT_GRID_DIR);
@@ -117,6 +117,7 @@ int main(int argc, char* argv[]){
         }
 
         freeGrid(sG);
+        free(allStepResult);
 
         if(flags[0].value == 1){
             printf("✅ Success to solve grid\n");
@@ -137,10 +138,7 @@ int main(int argc, char* argv[]){
         };
         return EXIT_SUCCESS;
     } else if(strcmp(argv[1], "-gui") == 0){
-        if(execvp("src/GUI/app", argv + 1) == -1){
-            perror("Error to exec solver file");
-            exit(EXIT_FAILURE);
-        };
+        launchGUI();
         return EXIT_SUCCESS;
     }
 

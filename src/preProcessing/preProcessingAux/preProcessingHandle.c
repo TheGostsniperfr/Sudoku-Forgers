@@ -18,6 +18,8 @@
 #include "preProcessing/CaseDetection/case_detection.h"
 #include "preProcessing/Image_Clean/Image_Clean.h"
 
+#include "neuralNetwork/network_Utils/struct.h"
+
 /***************************************************************
  *  Function handleAllSteps :
  *
@@ -55,6 +57,8 @@ void* handleAllSteps(
 
 	SDL_Surface* img = loadImg(inputImgPath);
 
+
+	AllStepResult* allStepResult = calloc(1, sizeof(AllStepResult));
 
 	if(img == NULL){
 		errx(EXIT_FAILURE, "Error to load img !");
@@ -182,6 +186,7 @@ void* handleAllSteps(
 			printf("💾 Success to save Morphology.jpg\n");
 		}
 	}
+	allStepResult->binarizedImg = img;
 
 	saveImg(img, "Result.jpg");
 
@@ -198,6 +203,14 @@ void* handleAllSteps(
 		printf("✅ Success to apply blob detection.\n");
 	}
 
+	allStepResult->gridImg = SDL_ConvertSurfaceFormat
+								(
+									blob,
+									SDL_PIXELFORMAT_ABGR8888,
+									0
+								);
+	SDL_BlitSurface(allStepResult->gridImg, NULL, blob, NULL);
+
 	if (flags[1].value == 1){
 		saveImg(blob, "Blob.jpg");
 		if (flags[0].value == 1){
@@ -212,6 +225,15 @@ void* handleAllSteps(
 		printf("🚀 Starting to apply Homography_Transform.\n");
 	}
 	img = Homography_Transform(img, 1000, points);
+
+	allStepResult->homographyImg = SDL_ConvertSurfaceFormat
+								(
+									img,
+									SDL_PIXELFORMAT_ABGR8888,
+									0
+								);
+	SDL_BlitSurface(allStepResult->homographyImg, NULL, img, NULL);
+
 	if(flags[0].value == 1){
 		printf("✅ Success to apply homography.\n");
 	}
@@ -254,10 +276,13 @@ void* handleAllSteps(
 		);
 	}
 
+	allStepResult->gridCells = Cases;
+
+
 	SDL_FreeSurface(img);
 
-	return (void*)Cases;
-} 
+	return (void*)allStepResult;
+}
 
 
 
