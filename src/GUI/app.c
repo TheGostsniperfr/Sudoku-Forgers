@@ -45,6 +45,8 @@ typedef struct DataApp {
     GtkScale* rotateSlider;
     GtkScale* pageSlider;
 
+    GtkFileChooserButton* fileChooser;
+
     GtkEntry*** editGridMat;
 } DataApp;
 
@@ -54,6 +56,7 @@ typedef struct {
 } EntryCoordinates;
 
 void pageManager(DataApp* dataApp, gint newNbPage);
+void resetApp(DataApp* dataApp);
 
 gboolean is_digit(const gchar *text) {
     return (text != NULL && *text != '\0' && isdigit(*text));
@@ -149,10 +152,16 @@ void load_and_resize_image(const char *filename, int sizeX, int sizeY, GtkImage 
 void on_file_selected(GtkFileChooserButton *filechooserbutton,
     gpointer user_data)
 {
-    DataApp* appData = user_data;
+    DataApp* dataApp = user_data;
 
-    appData->originalImgPath =
-        gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooserbutton));
+    if(dataApp->originalImgPath == NULL){
+        dataApp->originalImgPath =
+            gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooserbutton));
+    }else{
+        resetApp(dataApp);
+        dataApp->originalImgPath =
+            gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooserbutton));
+    }
 }
 
 
@@ -160,15 +169,17 @@ void on_file_selected(GtkFileChooserButton *filechooserbutton,
 //reset app for clean to load a new image
 void resetApp(DataApp* dataApp){
     dataApp->stepProcess = 1;
-
-    if (dataApp->originalImgPath != NULL) {
-        g_free((gpointer)dataApp->originalImgPath);
-    }
+    dataApp->stepProcess = 1;
+    dataApp->originalImgPath = NULL;
+    dataApp->rotateAngle = 0;
 
     for (int i = 0; i < EDIT_GRID_SIZE; i++) {
-        free(dataApp->editGridMat[i]);
+        for (int j = 0; j < EDIT_GRID_SIZE; j++) {
+            gtk_entry_set_text(dataApp->editGridMat[i][j], "");
+        }
     }
-    free(dataApp->editGridMat);
+
+    pageChanger(dataApp, 1);
 }
 
 void on_rotate_slider_changed(GtkRange *range , gpointer user_data){
@@ -176,6 +187,7 @@ void on_rotate_slider_changed(GtkRange *range , gpointer user_data){
 
     dataApp->rotateAngle = gtk_range_get_value(range);
 
+    dataApp->stepProcess = 2;
 
     //rotate img
     if(dataApp->rotateImg == NULL){
@@ -228,8 +240,7 @@ void pageManager(DataApp* dataApp, gint newNbPage){
             }
 
             //apply rotate
-            SDL_Surface* sdlRotateImg = loadImg(dataApp->originalImgPath);
-            gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(sdlRotateImg, 350, 350));
+            gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(loadImg(dataApp->originalImgPath), 350, 350));
 
             //Go to rotate page
             pageChanger(dataApp, newNbPage);
@@ -242,7 +253,8 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 
             //make all step + find all digits + create grid struct
-            dataApp->allStepResult = (AllStepResult*)handleAllSteps(0, NULL, dataApp->originalImgPath, dataApp->flags);
+            saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
+            dataApp->allStepResult = (AllStepResult*)handleAllSteps(0, NULL, "src/GUI/tmp/rotatedImg.jpg", dataApp->flags);
             dataApp->allStepResult->gridCells = findAllDigits(dataApp->allStepResult->gridCells, GRID_DIM*GRID_DIM, dataApp->flags);
 
             dataApp->sG = gridCellToSudokuGrid(dataApp->allStepResult->gridCells, GRID_DIM);
@@ -251,6 +263,8 @@ void pageManager(DataApp* dataApp, gint newNbPage){
             saveImg(dataApp->allStepResult->homographyImg, "src/GUI/tmp/homography.jpg");
             saveImg(dataApp->allStepResult->gridImg, "src/GUI/tmp/grid.jpg");
             gtk_image_set_from_pixbuf(dataApp->intermediateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/binarised.jpg"), 350, 350));
+
+
 
 
             pageChanger(dataApp, newNbPage);
@@ -265,17 +279,19 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
             //init edit grid with grid struct
             for (int i = 0; i < EDIT_GRID_SIZE; i++) {
-            for (int j = 0; j < EDIT_GRID_SIZE; j++) {
-                int val;
-                if(dataApp->allStepResult->gridCells[i*EDIT_GRID_SIZE + j].isDigit == 1){
-                    val = dataApp->allStepResult->gridCells[i * EDIT_GRID_SIZE + j].label;
-                    printf("I+J : %d\n", i+j);
-                }else{
-                    val = 0;
+                for (int j = 0; j < EDIT_GRID_SIZE; j++) {
+                    int val;
+                    if(dataApp->allStepResult->gridCells[i*EDIT_GRID_SIZE + j].isDigit == 1){
+                        val = dataApp->allStepResult->gridCells[i * EDIT_GRID_SIZE + j].label;
+                        printf("I+J : %d\n", i+j);
+                        char *text = g_strdup_printf("%d", val);
+                        gtk_entry_set_text(dataApp->editGridMat[i][j], text);
+
+                    }else{
+                        gtk_entry_set_text(dataApp->editGridMat[i][j], "");
+                    }
+
                 }
-                char *text = g_strdup_printf("%d", val);
-                gtk_entry_set_text(dataApp->editGridMat[i][j], text);
-            }
             }
 
 
@@ -303,10 +319,7 @@ void pageManager(DataApp* dataApp, gint newNbPage){
             saveGrid("src/GUI/tmp/grid", dataApp->sG);
 
             printGrid(dataApp->sG);
-            SudokuGrid sGSolved;
-            sGSolved.gS = dataApp->sG.gS;
-            sGSolved.grid = dataApp->sG.grid;
-
+            SudokuGrid sGSolved = loadGrid("src/GUI/tmp/grid");
 
             if(sudokuSolver(sGSolved) == 0){
                 return;
@@ -373,18 +386,22 @@ void on_forward_btn_pressed(GtkButton *button __attribute__((unused)),
     pageManager(dataApp, value+1);
 }
 
+void on_new_btn_clicked(GtkButton *button __attribute__((unused)),
+                                gpointer user_data)
+{
+    DataApp* dataApp = user_data;
+
+
+    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dataApp->fileChooser), "");
+    resetApp(dataApp);
+}
+
 void on_switch_intermediate_img(GtkButton *button __attribute__((unused)),
                             gpointer user_data)
 {
     DataApp* dataApp = user_data;
 
     char* idBtn = (char*)gtk_widget_get_name(GTK_WIDGET(button));
-
-    if (dataApp->intermediateImg != NULL) {
-        GdkPixbuf *currentPixbuf = gtk_image_get_pixbuf(dataApp->intermediateImg);
-        gtk_image_set_from_pixbuf(dataApp->intermediateImg, NULL);
-        g_object_unref(currentPixbuf);
-    }
 
     if(strcmp(idBtn, "BinarizationBtn") == 0){
         load_and_resize_image("src/GUI/tmp/binarised.jpg", 350, 350, dataApp->intermediateImg);
@@ -465,7 +482,7 @@ void launchGUI() {
         GTK_BUTTON(gtk_builder_get_object(builder, "HomographyBtn"));
     GtkButton* GridBtn =
         GTK_BUTTON(gtk_builder_get_object(builder, "GridBtn"));
-    GtkFileChooserButton* fileChooseBtn =
+    dataApp->fileChooser =
         GTK_FILE_CHOOSER_BUTTON(
             gtk_builder_get_object(builder, "chooseFileBtn"));
 
@@ -486,11 +503,14 @@ void launchGUI() {
     GtkGrid* matrixGrid =
         GTK_GRID(gtk_builder_get_object(builder, "editGrid"));
 
+    GtkButton* newBtn =
+        GTK_BUTTON(gtk_builder_get_object(builder, "NewImgBtn"));
+
     load_and_resize_image("src/GUI/ressources/logo.png", 300, 300, dataApp->logoImg);
 
     //Page Slider
 
-    gtk_range_set_range(GTK_RANGE(dataApp->pageSlider), 1, 6);
+    gtk_range_set_range(GTK_RANGE(dataApp->pageSlider), 1, 5);
     gtk_range_set_value(GTK_RANGE(dataApp->pageSlider), 1);
     /*
     g_signal_connect(dataApp->pageSlider, "value_changed",
@@ -510,7 +530,7 @@ void launchGUI() {
         G_CALLBACK(on_forward_btn_pressed), dataApp);
 
     //File chooser btn
-    g_signal_connect(fileChooseBtn, "selection-changed",
+    g_signal_connect(dataApp->fileChooser, "selection-changed",
         G_CALLBACK(on_file_selected), dataApp);
 
     //Intermiate steps btn
@@ -545,15 +565,24 @@ void launchGUI() {
     }
 
 
-
     gtk_widget_show_all(GTK_WIDGET(matrixGrid));
+
+
+    //result page
+    g_signal_connect(newBtn, "clicked",
+        G_CALLBACK(on_new_btn_clicked), dataApp);
 
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
 
     gtk_main();
+    if (dataApp->originalImgPath != NULL) {
+        g_free((gpointer)dataApp->originalImgPath);
+    }
 
-    resetApp(dataApp);
-
+    for (int i = 0; i < EDIT_GRID_SIZE; i++) {
+        free(dataApp->editGridMat[i]);
+    }
+    free(dataApp->editGridMat);
     free(dataApp);
 }

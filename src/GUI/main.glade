@@ -124,6 +124,7 @@
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="margin-end">20</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkAspectFrame">
@@ -191,6 +192,7 @@
               <object class="GtkViewport" id="InterStepPage">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-end">20</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -650,6 +652,7 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="margin-end">20</property>
                     <child>
                       <object class="GtkImage" id="outImg">
                         <property name="name">outImg</property>
@@ -669,7 +672,20 @@
                         <property name="margin-end">20</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <placeholder/>
+                          <object class="GtkAspectFrame">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label-xalign">0</property>
+                            <property name="shadow-type">none</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <object class="GtkBox">
@@ -711,7 +727,20 @@
                           </packing>
                         </child>
                         <child>
-                          <placeholder/>
+                          <object class="GtkAspectFrame">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label-xalign">0</property>
+                            <property name="shadow-type">none</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>
