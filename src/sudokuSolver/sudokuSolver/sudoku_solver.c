@@ -233,7 +233,8 @@ int solver(SudokuGrid sG) {
 int sudokuSolver(SudokuGrid sG) {
 
     if(isGridValid(sG) == EXIT_FAILURE){
-        errx(EXIT_FAILURE, "⚠️ Invalid grid. ⚠️");
+        printf("⚠️ Invalid grid. ⚠️\n");
+        return EXIT_FAILURE;
     }
 
     return solver(sG);

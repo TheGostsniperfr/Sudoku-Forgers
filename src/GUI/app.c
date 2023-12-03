@@ -99,6 +99,8 @@ GdkPixbuf *convertSurfaceToPixbuf(SDL_Surface *sdlSurface, int sizeX, int sizeY)
     return resize;
 }
 
+
+
 void pageChanger(DataApp* dataApp, gint newNbPage){
 
     dataApp->currentPage = newNbPage;
@@ -111,6 +113,9 @@ void pageChanger(DataApp* dataApp, gint newNbPage){
         g_strdup_printf("page%d", newNbPage)
     );
 }
+
+
+
 
 void load_and_resize_image(const char *filename, int sizeX, int sizeY, GtkImage *img)
 {
@@ -149,6 +154,9 @@ void load_and_resize_image(const char *filename, int sizeX, int sizeY, GtkImage 
 }
 
 
+
+
+
 void on_file_selected(GtkFileChooserButton *filechooserbutton,
     gpointer user_data)
 {
@@ -182,6 +190,10 @@ void resetApp(DataApp* dataApp){
     pageChanger(dataApp, 1);
 }
 
+
+
+
+
 void on_rotate_slider_changed(GtkRange *range , gpointer user_data){
     DataApp* dataApp = user_data;
 
@@ -198,11 +210,18 @@ void on_rotate_slider_changed(GtkRange *range , gpointer user_data){
     gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), 350, 350));
 }
 
+
+
+
+
 void on_page_slider_changed(GtkRange *range , gpointer user_data) {
     DataApp* dataApp = user_data;
     gint value = gtk_range_get_value(range);
     pageManager(dataApp, value);
 }
+
+
+
 
 
 void pageManager(DataApp* dataApp, gint newNbPage){
@@ -321,7 +340,15 @@ void pageManager(DataApp* dataApp, gint newNbPage){
             printGrid(dataApp->sG);
             SudokuGrid sGSolved = loadGrid("src/GUI/tmp/grid");
 
-            if(sudokuSolver(sGSolved) == 0){
+
+            if(sudokuSolver(sGSolved) == EXIT_FAILURE){
+                GtkWidget* msg = gtk_message_dialog_new_with_markup(
+                    NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                    "<b>Please correct your sudoku grid.</b>");
+
+                gtk_window_set_title(GTK_WINDOW(msg), "Invalid Grid");
+                g_signal_connect(GTK_DIALOG(msg), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+                gtk_dialog_run(GTK_DIALOG(msg));
                 return;
             }
             dataApp->stepProcess = 5;
@@ -351,6 +378,11 @@ void pageManager(DataApp* dataApp, gint newNbPage){
     }
 }
 
+
+
+
+
+
 void on_insert_text(GtkEditable *editable, const gchar *text,
     gint length __attribute__((unused)),
     gint *position __attribute__((unused)), gpointer user_data)
@@ -370,6 +402,8 @@ void on_insert_text(GtkEditable *editable, const gchar *text,
 
 
 
+
+
 void on_back_btn_pressed(GtkButton *button __attribute__((unused)),
                             gpointer user_data)
 {
@@ -378,6 +412,10 @@ void on_back_btn_pressed(GtkButton *button __attribute__((unused)),
     pageManager(dataApp, value-1);
 }
 
+
+
+
+
 void on_forward_btn_pressed(GtkButton *button __attribute__((unused)),
                                 gpointer user_data)
 {
@@ -385,6 +423,11 @@ void on_forward_btn_pressed(GtkButton *button __attribute__((unused)),
     gdouble value = gtk_range_get_value(GTK_RANGE(dataApp->pageSlider));
     pageManager(dataApp, value+1);
 }
+
+
+
+
+
 
 void on_new_btn_clicked(GtkButton *button __attribute__((unused)),
                                 gpointer user_data)
@@ -395,6 +438,10 @@ void on_new_btn_clicked(GtkButton *button __attribute__((unused)),
     gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dataApp->fileChooser), "");
     resetApp(dataApp);
 }
+
+
+
+
 
 void on_switch_intermediate_img(GtkButton *button __attribute__((unused)),
                             gpointer user_data)
@@ -413,6 +460,10 @@ void on_switch_intermediate_img(GtkButton *button __attribute__((unused)),
         g_printerr("Invalid image path.");
     }
 }
+
+
+
+
 
 void launchGUI() {
     gtk_init(NULL, NULL);
