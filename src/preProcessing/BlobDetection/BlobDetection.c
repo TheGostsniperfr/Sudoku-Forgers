@@ -11,7 +11,7 @@ int size_blob = 0;
 /*****************************************************************************
  *  Function Fill:
  *
- *  Search neighbiurs of the same colours (blobs) and counts size
+ *  Search neighbours of the same colours (blobs) and counts size
  *  of it
  *
  *  @input :
@@ -26,34 +26,63 @@ int size_blob = 0;
 ******************************************************************************/
 void Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, int lim)
 {
-	//Size of the blob and colour value of the current pixel
-	int width = src->w;
-	int pxVal = getPixelGrayScale(pixels[y * width + x]);
+    int width = src->w;
+    int height = src->h;
 
-	//Iterates through the blob's neighbours to find neighbour
-	if (pxVal < 255 && blob[y * width + x] < lim)
-	{
-		size_blob += 1;
+    // Creation of the stack
+    Pointx_y* stack = malloc(width * height * sizeof(Pointx_y));
+    if (stack == NULL) {
+        // Alloc error handling
+        fprintf(stderr, "Erreur d'allocation mémoire pour la pile.\n");
+        exit(EXIT_FAILURE);
+    }
 
-		blob[y * width + x] = lim;
+    int ind = 0;
 
-		if (y < src->h-1)
-		{
-			Fill(src, pixels, x, y+1, blob, lim);
-		}
-		if (y > 0)
-		{
-			Fill(src, pixels, x, y-1, blob, lim);
-		}
-		if (x < width-1)
-		{
-			Fill(src, pixels, x+1, y, blob, lim);
-		}
-		if (x > 0)
-		{
-			Fill(src, pixels, x-1, y, blob, lim);
-		}
-	}
+    //Stack the first pixel
+    stack[ind].x = x;
+    stack[ind].y = y;
+    ind++;
+
+    while (ind > 0) {
+        // Depile a pixel
+        ind--;
+        x = stack[ind].x;
+        y = stack[ind].y;
+
+        //Size of the blob and colour value of the current pixel
+        int pxVal = getPixelGrayScale(pixels[y * width + x]);
+
+        if (pxVal < 255 && blob[y * width + x] < lim) {
+            size_blob += 1;
+            blob[y * width + x] = lim;
+
+            //Stack neighbours if they match condition
+            if (y < height - 1) {
+                stack[ind].x = x;
+                stack[ind].y = y + 1;
+                ind++;
+            }
+            if (y > 0) {
+                stack[ind].x = x;
+                stack[ind].y = y - 1;
+                ind++;
+            }
+            if (x < width - 1) {
+                stack[ind].x = x + 1;
+                stack[ind].y = y;
+                ind++;
+            }
+            if (x > 0) {
+                stack[ind].x = x - 1;
+                stack[ind].y = y;
+                ind++;
+            }
+        }
+    }
+
+    //Free stack allocated memory
+    free(stack);
 }
 
 /***************************************************************
@@ -147,7 +176,7 @@ double Distance(Pointx_y p1, Pointx_y p2)
     return sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
 }
 
-int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4)
+int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4) 
 {
     // Calculation of distances between points
     double d12 = Distance(p1, p2);
@@ -187,7 +216,7 @@ SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob)
 							0
 						);
 
-	Uint32* pixels_src = src->pixels;
+	Uint32* pixels_src = src->pixels; 
 	Uint32* pixels_blob = image_blob->pixels;
 
 	//Basic colors
