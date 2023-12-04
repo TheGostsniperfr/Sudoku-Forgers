@@ -171,6 +171,14 @@ void* handleAllSteps(
 		printf("🚀 Starting to apply morphology filter.\n");
 	}
 
+	SDL_Surface* imgNoMorph = SDL_ConvertSurfaceFormat
+								(
+									img,
+									SDL_PIXELFORMAT_ABGR8888,
+									0
+								);
+	SDL_BlitSurface(imgNoMorph, NULL, img, NULL);
+
 	//dilate
 	img = applyMorphology(img, 0);
 	//erode
@@ -186,7 +194,7 @@ void* handleAllSteps(
 			printf("💾 Success to save Morphology.jpg\n");
 		}
 	}
-	allStepResult->binarizedImg = img;
+	allStepResult->binarizedImg = imgNoMorph;
 
 	saveImg(img, "Result.jpg");
 
@@ -197,7 +205,7 @@ void* handleAllSteps(
 	if(flags[0].value == 1){
 		printf("🚀 Starting to apply Blob.\n");
 	}
-	
+
 	int size_blob = 0;
 	SDL_Surface* blob = Blob(img, &size_blob);
 	int* points = FindCoins(blob);
@@ -237,14 +245,14 @@ void* handleAllSteps(
 
 		p4.x = points[2];
 		p4.y = points[3];
-			
+
 		free(img_bis);
 	}
 
 	if(flags[0].value == 1){
 		printf("✅ Success to apply blob detection.\n");
 	}
-	
+
 	if (flags[1].value == 1){
 		saveImg(blob, "Blob.jpg");
 		if (flags[0].value == 1){
@@ -264,42 +272,46 @@ void* handleAllSteps(
 		printf("🚀 Starting to apply Homography_Transform.\n");
 	}
 	img = Homography_Transform(img, 1000, points);
+	imgNoMorph = Homography_Transform(imgNoMorph, 1000, points);
 
 	allStepResult->homographyImg = SDL_ConvertSurfaceFormat
 								(
-									img,
+									imgNoMorph,
 									SDL_PIXELFORMAT_ABGR8888,
 									0
 								);
-	SDL_BlitSurface(allStepResult->homographyImg, NULL, img, NULL);
+	SDL_BlitSurface(allStepResult->homographyImg, NULL, imgNoMorph, NULL);
 
 	if(flags[0].value == 1){
 		printf("✅ Success to apply homography.\n");
 	}
 
 	if(flags[1].value == 1){
-		saveImg(img, "Homography.jpg");
+		saveImg(imgNoMorph, "Homography.jpg");
 		if(flags[0].value == 1){
 			printf("💾 Success to save Homogaphy.jpg\n");
 		}
 	}
 
 
-	GridCell* Cases = CaseDetection(img);
+	GridCell* Cases = CaseDetection(img, imgNoMorph);
+
+	/*
 	for (int i = 0; i < 81; i++)
 	{
 		char buffer[1024];
 		snprintf(buffer, sizeof(buffer), "post_%d.jpg", i);
 		saveImg(Cases[i].image, buffer);
-	}
+	}*/
 	Image_Clean(Cases);
 
+	/*
 	for (int i = 0; i < 81; i++)
 	{
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer), "after_%d.jpg", i);
+		snprintf(buffer, sizeof(buffer), "_%d.jpg", i);
 		saveImg(Cases[i].image, buffer);
-	}
+	}*/
 
 	allStepResult->gridCells = Cases;
 
@@ -316,6 +328,7 @@ void* handleAllSteps(
 	}
 
 	SDL_FreeSurface(img);
+	SDL_FreeSurface(imgNoMorph);
 
 	return (void*)allStepResult;
 }

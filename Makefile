@@ -43,10 +43,9 @@ clean:
 	rm -f src/GUI/app
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")
 	rm -f $(shell find ./ -type f -name "*.jpg")
-	rm -f $(shell find $(SRC_DIR) -type f -name "*.result")
+	rm -f $(shell find ./ -type f -name "*.result")
 	rm -f $(shell find ./src/GUI/tmp/ -type f -name "*.jpg")
 	rm -f src/GUI/tmp/grid
-	rm -f src/GUI/tmp/grid.result
 
 	rm -f $(TARGET)
 

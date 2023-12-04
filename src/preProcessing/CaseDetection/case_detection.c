@@ -184,7 +184,7 @@ SDL_Surface* Homography_Transform_Division(SDL_Surface* image, int size,
  *  @output :
  *      - result (SDL_Surface**) : a array of all grid's cases
 ***************************************************************/
-GridCell* CaseDetection(SDL_Surface* image)
+GridCell* CaseDetection(SDL_Surface* image, SDL_Surface* imgNoMorph)
 {
 	int* points = (int*)malloc(8 * sizeof(int));
 
@@ -225,7 +225,7 @@ GridCell* CaseDetection(SDL_Surface* image)
 			points[4] = (j+1) * update_width-7;
 			points[6] = (j+1) * update_width-7;
 
-			SDL_Surface* img= Homography_Transform_Division(image, 28, points);
+			SDL_Surface* img= Homography_Transform_Division(imgNoMorph, 28, points);
 
 			result[ref].image = img;
 			result[ref].positionX = j;

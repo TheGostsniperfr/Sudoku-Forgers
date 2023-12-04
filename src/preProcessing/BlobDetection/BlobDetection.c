@@ -36,7 +36,7 @@ void Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, int lim)
 		size_blob += 1;
 
 		blob[y * width + x] = lim;
-		
+
 		if (y < src->h-1)
 		{
 			Fill(src, pixels, x, y+1, blob, lim);
@@ -147,7 +147,7 @@ double Distance(Pointx_y p1, Pointx_y p2)
     return sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
 }
 
-int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4) 
+int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4)
 {
     // Calculation of distances between points
     double d12 = Distance(p1, p2);
@@ -187,7 +187,7 @@ SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob)
 							0
 						);
 
-	Uint32* pixels_src = src->pixels; 
+	Uint32* pixels_src = src->pixels;
 	Uint32* pixels_blob = image_blob->pixels;
 
 	//Basic colors

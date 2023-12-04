@@ -340,8 +340,11 @@ void pageManager(DataApp* dataApp, gint newNbPage){
             printGrid(dataApp->sG);
             SudokuGrid sGSolved = loadGrid("src/GUI/tmp/grid");
 
+            int valSolve = sudokuSolver(sGSolved);
 
-            if(sudokuSolver(sGSolved) == EXIT_FAILURE){
+            printf("val solve %d\n", valSolve);
+
+            if(valSolve == EXIT_FAILURE){
                 GtkWidget* msg = gtk_message_dialog_new_with_markup(
                     NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
                     "<b>Please correct your sudoku grid.</b>");
@@ -351,6 +354,7 @@ void pageManager(DataApp* dataApp, gint newNbPage){
                 gtk_dialog_run(GTK_DIALOG(msg));
                 return;
             }
+
             dataApp->stepProcess = 5;
 
             printGrid(dataApp->sG);

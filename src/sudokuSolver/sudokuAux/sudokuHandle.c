@@ -52,8 +52,9 @@ void* handleSolver(int argc,
     }
 
     //solve grid :
-    if(sudokuSolver(sG) == 0){
-        errx(EXIT_FAILURE, "Grid is impossible.");
+    if(sudokuSolver(sG) == EXIT_FAILURE){
+        printf("⚠️ Invalid grid. ⚠️\n");
+        return (void*)EXIT_FAILURE;
     }
 
     char path[1024];

@@ -12,8 +12,8 @@
 #include "SDL2/SDL.h"
 
 
-#define DATASET_PATH "data/nn/dataset/train-images.idx3-ubyte"
-#define LABEL_PATH "data/nn/dataset/train-labels.idx1-ubyte"
+#define DATASET_PATH "data/nn/dataset/customDataset_images.idx3-ubyte"
+#define LABEL_PATH "data/nn/dataset/customDataset_labels.idx1-ubyte"
 #define DATA_MAGIC_NUMBER 2051
 #define LABEL_MAGIC_NUMBER 2049
 

@@ -23,6 +23,6 @@ SDL_Surface* Homography_Transform_Division
 	int* points
 );
 
-GridCell* CaseDetection(SDL_Surface* image);
+GridCell* CaseDetection(SDL_Surface* image, SDL_Surface* test);
 
 #endif
