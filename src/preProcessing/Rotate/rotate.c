@@ -17,7 +17,14 @@ SDL_Surface* Rotated_image(SDL_Surface* image, double angle)
 	int center_y = h/2;
 
 	//Create a new image for the rotated image
-	SDL_Surface* rotated_image = SDL_CreateRGBSurface(0, w, h, 32,0,0,0,0);
+	SDL_Surface* rotated_image = SDL_CreateRGBSurfaceWithFormat
+                        (
+                            0,
+                            w,
+                            h,
+                            32,
+                            SDL_PIXELFORMAT_ABGR8888
+                        );
 
 	//Get angle from degree to radian
 	double rad_angle = angle * (M_PI / 180);

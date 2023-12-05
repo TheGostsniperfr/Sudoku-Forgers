@@ -522,8 +522,9 @@ void launchGUI() {
         dataApp->editGridMat[i] = calloc(EDIT_GRID_SIZE, sizeof(GtkEntry*));
     }
 
+    /*
     GtkWidget *window =
-        GTK_WIDGET(gtk_builder_get_object(builder, "SF_APP_WINDOW"));
+        GTK_WIDGET(gtk_builder_get_object(builder, "SF_APP_WINDOW"));*/
     dataApp->pageContainer =
         GTK_STACK(gtk_builder_get_object(builder, "PageContainer"));
     dataApp->pageSlider =
@@ -563,6 +564,10 @@ void launchGUI() {
 
     GtkButton* newBtn =
         GTK_BUTTON(gtk_builder_get_object(builder, "NewImgBtn"));
+
+
+    GtkButton* closeBtn = 
+        GTK_BUTTON(gtk_builder_get_object(builder, "quitBtn"));
 
     load_and_resize_image("src/GUI/ressources/logo.png", 300, 300, dataApp->logoImg);
 
@@ -630,7 +635,10 @@ void launchGUI() {
     g_signal_connect(newBtn, "clicked",
         G_CALLBACK(on_new_btn_clicked), dataApp);
 
-    g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(closeBtn, "clicked",
+        G_CALLBACK(gtk_main_quit), NULL);
+
+    //g_signal_connect(window, "clicked", G_CALLBACK(gtk_main_quit), NULL);
 
 
     gtk_main();
