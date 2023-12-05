@@ -26,6 +26,18 @@ SDL_Surface* Rotated_image(SDL_Surface* image, double angle)
                             SDL_PIXELFORMAT_ABGR8888
                         );
 
+	Uint32* rotated_pixels = (Uint32*) rotated_image->pixels;
+	//Basic colors
+	Uint32 whitePx = SDL_MapRGB(image->format, 255, 255, 255);
+	
+	for(int i = 0; i < rotated_image->h; i++)
+	{
+		for(int j = 0; j < rotated_image->w; j++)
+		{
+			rotated_pixels[i*rotated_image->w+j] = whitePx;
+		}
+	}
+
 	//Get angle from degree to radian
 	double rad_angle = angle * (M_PI / 180);
 
@@ -59,7 +71,6 @@ SDL_Surface* Rotated_image(SDL_Surface* image, double angle)
 			new_x += center_x;
 
 			Uint32* pixels = (Uint32*) image->pixels;
-			Uint32* rotated_pixels = (Uint32*) rotated_image->pixels;
 
 			if(new_x >= 0 && new_x < w && new_y >= 0 && new_y < h)
 			{
