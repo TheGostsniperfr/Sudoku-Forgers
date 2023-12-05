@@ -98,7 +98,7 @@ void Image_Clean(GridCell* images)
         clean_edge(images[i].image);
         images[i].image = Blob(images[i].image, &size);
         images[i].label = size;
-        if(size <= 40)
+        if(size <= 30)
         {
             clean_all(images[i].image);
             images[i].isDigit = 0;
