@@ -1,5 +1,5 @@
 CC = gcc -I include
-CFLAGS = $(shell sdl2-config --cflags) $(shell pkg-config --cflags gtk+-3.0) -Wall -Wextra
+CFLAGS = $(shell sdl2-config --cflags) $(shell pkg-config --cflags gtk+-3.0) -Wall -Wextra -g
 LDLIBS = $(shell sdl2-config --libs)  $(shell pkg-config --libs gtk+-3.0) -lSDL2_image -lSDL2_ttf -lm
 SRC_DIR = ./src
 

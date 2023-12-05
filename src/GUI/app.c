@@ -92,7 +92,7 @@ GdkPixbuf *convertSurfaceToPixbuf(SDL_Surface *sdlSurface, int sizeX, int sizeY)
         new_height = sizeY;
         new_width = (int)(sizeY * aspect_ratio);
     }
-    SDL_FreeSurface(sdlSurface);
+    //SDL_FreeSurface(sdlSurface);
 
     GdkPixbuf *resize = gdk_pixbuf_scale_simple(pixbuf, new_width, new_height, GDK_INTERP_BILINEAR);
     g_object_unref(pixbuf);
@@ -207,7 +207,8 @@ void on_rotate_slider_changed(GtkRange *range , gpointer user_data){
         return;
     }
 
-    gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), 350, 350));
+    saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
+    gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/rotatedImg.jpg"), 350, 350));
 }
 
 
@@ -259,7 +260,9 @@ void pageManager(DataApp* dataApp, gint newNbPage){
             }
 
             //apply rotate
-            gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(loadImg(dataApp->originalImgPath), 350, 350));
+
+            saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
+            gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/rotatedImg.jpg"), 350, 350));
 
             //Go to rotate page
             pageChanger(dataApp, newNbPage);
@@ -355,7 +358,7 @@ void pageManager(DataApp* dataApp, gint newNbPage){
                 return;
             }
 
-            dataApp->stepProcess = 5;
+           // dataApp->stepProcess = 5;
 
             printGrid(dataApp->sG);
             printGrid(sGSolved);
