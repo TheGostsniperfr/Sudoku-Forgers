@@ -566,7 +566,7 @@ void launchGUI() {
         GTK_BUTTON(gtk_builder_get_object(builder, "NewImgBtn"));
 
 
-    GtkButton* closeBtn = 
+    GtkButton* closeBtn =
         GTK_BUTTON(gtk_builder_get_object(builder, "quitBtn"));
 
     load_and_resize_image("src/GUI/ressources/logo.png", 300, 300, dataApp->logoImg);

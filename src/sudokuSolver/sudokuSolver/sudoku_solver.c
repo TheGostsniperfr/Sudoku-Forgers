@@ -15,11 +15,12 @@
  *  @input :
  *      - grid (int **) : the grid of the game
  *      - gS (int) : size of the grid
+ *      - empty cell (int) : check if the grid have empty cell (not valid)
  *
  *  @output :
  *      - (int) : 0 -> false, 1 -> true
 ***************************************************************/
-int isGridValid(SudokuGrid sG){
+int isGridValid(SudokuGrid sG, int emptyCells){
 
     if(sG.gS != 9 && sG.gS != 16){
         errx(EXIT_FAILURE, "⚠️ Dimention of the sudoku grid is invalid. ⚠️");
@@ -34,6 +35,9 @@ int isGridValid(SudokuGrid sG){
     {
         for(int col = 0; col < sG.gS; col++){
             if(sG.grid[row][col] == -1){
+                if(emptyCells == 0){
+                    return EXIT_FAILURE;
+                }
                 continue;
             }
 
@@ -55,6 +59,9 @@ int isGridValid(SudokuGrid sG){
     {
         for(int row = 0; row < sG.gS; row++){
             if(sG.grid[row][col] == -1){
+                 if(emptyCells == 0){
+                    return EXIT_FAILURE;
+                }
                 continue;
             }
 
@@ -82,6 +89,9 @@ int isGridValid(SudokuGrid sG){
                 for (int y = j; y < j + sbLth; y++)
                 {
                     if(sG.grid[x][y] == -1){
+                         if(emptyCells == 0){
+                            return EXIT_FAILURE;
+                        }
                         continue;
                     }
 
@@ -198,22 +208,24 @@ int solver(SudokuGrid sG) {
     findEmptyCell(sG, &row, &col);
 
     if (row == -1) {
-        return EXIT_FAILURE;
+        return EXIT_SUCCESS;
     }
+
+    printf("GS = %d\n",sG.gS);
 
     for (int num = 1; num <= sG.gS; num++) {
         if (isRulesRespected(sG, row, col, num) == EXIT_SUCCESS) {
             sG.grid[row][col] = num;
 
-            if (solver(sG) == EXIT_FAILURE) {
-                return EXIT_FAILURE;
+            if (solver(sG) == EXIT_SUCCESS) {
+                return EXIT_SUCCESS;
             }
 
             sG.grid[row][col] = -1;
         }
     }
 
-    return EXIT_SUCCESS;
+    return EXIT_FAILURE;
 }
 
 
@@ -232,10 +244,14 @@ int solver(SudokuGrid sG) {
 
 int sudokuSolver(SudokuGrid sG) {
 
-    if(isGridValid(sG) == EXIT_FAILURE){
+    if(isGridValid(sG, 1) == EXIT_FAILURE){
         return EXIT_FAILURE;
     }
     solver(sG);
+
+    if(isGridValid(sG, 0) == EXIT_FAILURE){
+        return EXIT_FAILURE;
+    }
     return EXIT_SUCCESS;
 }
 
