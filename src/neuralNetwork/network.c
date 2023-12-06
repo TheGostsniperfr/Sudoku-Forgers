@@ -1,4 +1,3 @@
-
 #include "GUI/handleUtils.h"
 #include "neuralNetwork/network_Utils/networkHandle.h"
 #include "neuralNetwork/network_Utils/createNetwork.h"
@@ -15,6 +14,7 @@
 OptionNet options[] = {
     {"-xorTrain", handleXorTrain},
     {"-digitsTrain", handleDigitsTrain},
+    {"-p", handleCreate},
     {"-testXor", handleTestXor},
     {"-testDigit", handleTestDigit},
     {"--help", handlePrintNetHelp},
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]){
                 options[j].action(
                     subArgEnd - subArgStart,
                     argv + subArgStart,
-                    net,
+                    &net,
                     flags
                 );
 
@@ -109,9 +109,8 @@ int main(int argc, char* argv[]){
     }
 
     if(optionFound == 0){
-        handlePrintNetHelp(0, argv, net, flags);
+        handlePrintNetHelp(0, argv, &net, flags);
     }
-
 
     free(flags);
 

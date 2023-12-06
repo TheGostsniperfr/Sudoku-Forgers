@@ -13,7 +13,7 @@ typedef struct OptionNet
         (
             int argc,
             char* argv[],
-            NeuralNetwork* net,
+            NeuralNetwork** net,
             Flag* flag
         );
 
@@ -22,43 +22,43 @@ typedef struct OptionNet
 void* handleXorTrain(
         int argc,
         char* argv[],
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags);
 
 void* handleDigitsTrain(
         int argc,
         char* argv[],
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags);
 
-void* handleLoad(
+void* handleCreate(
         int argc,
         char* argv[],
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags);
 
 void* handleTestXor(
         int argc,
         char* argv[],
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags  );
 
 void* handleTestDigit(
         int argc,
         char* argv[],
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags  );
 
 void* handlePrintNetHelp(
         int argc,
         char* argv[],
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags);
 
 void* handleGetImgFromMnist(
         int argc,
         char* argv[],
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags);
 
 

@@ -30,7 +30,8 @@ typedef struct NeuralNetwork {
 
 typedef struct TrainingPara {
     int nbEpoch;
-    int batchSize;
+    int batchSize; //number of images uses in the dataset
+    int miniBatchSize; //Size of each mini batch
     double learningRate;
 
     //save -> 1, else -> 0

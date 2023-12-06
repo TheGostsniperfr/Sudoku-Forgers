@@ -42,9 +42,19 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
             "❌ Invalid network settings for digit training.\n"
         );
     }
+    if(flags[0].value == 1){
+        printf
+        (
+            "Epoch: 0 | "
+            "Progress: [                                                  ]"
+        );
+
+        fflush(stdout);
+    }
+
 
     //load data set :
-    Batch* batch = createBatch(tP.batchSize, 20);
+    Batch* batch = createBatch(tP.batchSize, tP.miniBatchSize);
 
     for (int epoch_i = 0; epoch_i < tP.nbEpoch; epoch_i++)
     {
@@ -106,7 +116,7 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
             float progress = (float) (epoch_i+1) / tP.nbEpoch;
             int bar_length = progress * bar_width;
 
-            printf("\rEpoch: %d | Progress: [", epoch_i);
+            printf("\rEpoch: %d | Progress: [", epoch_i+1);
             for (int i = 0; i < bar_length-1; ++i) {
                 printf("=");
             }

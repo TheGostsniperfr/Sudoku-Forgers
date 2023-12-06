@@ -40,7 +40,7 @@
 void* handleXorTrain(
         int argc,
         char* argv[],
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags)
     {
 
@@ -78,7 +78,7 @@ void* handleXorTrain(
 
         NetworkPara netPara;
 
-        if(net == NULL){
+        if(*net == NULL){
             if(flags[0].value == 1){
                 printf
                 (
@@ -92,7 +92,13 @@ void* handleXorTrain(
             netPara.nbNeuronsHiddenLayer = 3;
             netPara.nbNeuronsOutputLayer = 2;
 
-            net = createNetwork(netPara);
+            *net = createNetwork(netPara);
+        }else{
+            netPara.nbNeuronsFirstLayer = (*net)->layers[0].nb_neurons;
+            netPara.nbHiddenLayers = (*net)->nb_layers-2;
+            netPara.nbNeuronsHiddenLayer = (*net)->layers[1].nb_neurons;
+            netPara.nbNeuronsOutputLayer =
+                (*net)->layers[(*net)->nb_layers-1].nb_neurons;
         }
 
 
@@ -103,9 +109,9 @@ void* handleXorTrain(
         char path[1024];
         snprintf(path, 1024, "%s/%s",getenv("CURRENT_DIR"), DEFAULT_XOR_FILENAME);
 
-        xorTraining(net, tP, path, flags);
+        xorTraining(*net, tP, path, flags);
 
-        destroyNetwork(net);
+        destroyNetwork(*net);
 
         return EXIT_SUCCESS;
     }
@@ -127,10 +133,10 @@ void* handleXorTrain(
 ***************************************************************/
 
 void* handleDigitsTrain(
-        int argc __attribute__((unused)),
-        char* argv[] __attribute__((unused)),
-        NeuralNetwork* net __attribute__((unused)),
-        Flag* flags __attribute__((unused)))
+        int argc,
+        char* argv[],
+        NeuralNetwork** net,
+        Flag* flags)
     {
         //Training Parameters
         TrainingPara tP;
@@ -138,18 +144,20 @@ void* handleDigitsTrain(
         if(flags[3].value == 1){
             //load default config
 
-            tP.nbEpoch = 100;
-            tP.batchSize = 133;
+            tP.nbEpoch = 50;
+            tP.batchSize = 208;
             tP.learningRate = 0.1;
+            tP.miniBatchSize = 20;
             tP.saveTraining = false;
         }else{
-            if(argc != 3){
+            if(argc != 4){
                 errx(EXIT_FAILURE, ERROR_NB_ARG);
             }
 
             tP.nbEpoch = atoi(argv[0]);
             tP.batchSize = atoi(argv[1]);
-            tP.learningRate = atof(argv[2]);
+            tP.miniBatchSize =atof(argv[2]);
+            tP.learningRate = atof(argv[3]);
             tP.saveTraining = false;
         }
 
@@ -163,7 +171,7 @@ void* handleDigitsTrain(
 
         NetworkPara netPara;
 
-        if(net == NULL){
+        if(*net == NULL){
             if(flags[0].value == 1){
                 printf
                 (
@@ -174,10 +182,16 @@ void* handleDigitsTrain(
 
             netPara.nbNeuronsFirstLayer = 784;
             netPara.nbHiddenLayers = 1;
-            netPara.nbNeuronsHiddenLayer = 30;
+            netPara.nbNeuronsHiddenLayer = 50;
             netPara.nbNeuronsOutputLayer = 10;
 
-            net = createNetwork(netPara);
+            *net = createNetwork(netPara);
+        }else{
+            netPara.nbNeuronsFirstLayer = (*net)->layers[0].nb_neurons;
+            netPara.nbHiddenLayers = (*net)->nb_layers-2;
+            netPara.nbNeuronsHiddenLayer = (*net)->layers[1].nb_neurons;
+            netPara.nbNeuronsOutputLayer =
+                (*net)->layers[(*net)->nb_layers-1].nb_neurons;
         }
 
 
@@ -189,9 +203,9 @@ void* handleDigitsTrain(
         snprintf(path, 1024, "%s/%s",
             getenv("CURRENT_DIR"), DEFAULT_DIGITS_FILENAME);
 
-        digitTraining(net, tP, path, flags);
+        digitTraining(*net, tP, path, flags);
 
-        destroyNetwork(net);
+        destroyNetwork(*net);
 
         return EXIT_SUCCESS;
     }
@@ -212,24 +226,31 @@ void* handleDigitsTrain(
  *      - (int) : state of the program
 ***************************************************************/
 
-void* handleLoad(
+void* handleCreate(
         int argc,
         char* argv[],
-        NeuralNetwork* net __attribute__((unused)),
+        NeuralNetwork** net,
         Flag* flags)
     {
-        if(argc != 1){
+        if(argc != 2){
             errx(EXIT_FAILURE, ERROR_NB_ARG);
         }
 
         if(flags[0].value == 1){
-            printf("🚀 Starting to load neural network.\n");
+            printf("🚀 Starting to create neural network.\n");
         }
 
-        net = loadNetwork(argv[0]);
+        NetworkPara netPara;
+
+        netPara.nbNeuronsFirstLayer = 784;
+        netPara.nbHiddenLayers = atoi(argv[0]);
+        netPara.nbNeuronsHiddenLayer = atoi(argv[1]);
+        netPara.nbNeuronsOutputLayer = 10;
+
+        *net = createNetwork(netPara);
 
         if(flags[0].value == 1){
-            printf("✅ Success to load neural network.\n");
+            printf("✅ Success to create neural network.\n");
         }
 
         return EXIT_SUCCESS;
@@ -254,7 +275,7 @@ void* handleLoad(
 void* handleTestXor(
         int argc ,
         char* argv[] ,
-        NeuralNetwork* net ,
+        NeuralNetwork** net ,
         Flag* flags )
     {
 
@@ -266,13 +287,13 @@ void* handleTestXor(
             printf("🚀 Starting to load neural network.\n");
         }
 
-        net = loadNetwork(argv[0]);
+        *net = loadNetwork(argv[0]);
 
         if(flags[0].value == 1){
             printf("✅ Success to load neural network.\n");
 
 
-            printNetworkSpec(net);
+            printNetworkSpec(*net);
         }
 
         double inputA = atof(argv[1]);
@@ -284,14 +305,14 @@ void* handleTestXor(
 
         double output[2];
 
-        forwardPropagation(net, input);
+        forwardPropagation(*net, input);
 
-        Layer* lL = &net->layers[net->nb_layers-1];
+        Layer* lL = &(*net)->layers[(*net)->nb_layers-1];
         output[0] = lL->neurons[0].output;
         output[1] = lL->neurons[1].output;
 
         int digitRecognised = 0;
-        for (int i = 1; i < net->layers[0].nb_neurons; i++) {
+        for (int i = 1; i < (*net)->layers[0].nb_neurons; i++) {
             if (output[i] > output[digitRecognised]) {
                 digitRecognised = i;
             }
@@ -315,7 +336,7 @@ void* handleTestXor(
         );
 
 
-        destroyNetwork(net);
+        destroyNetwork(*net);
 
         return EXIT_SUCCESS;
     }
@@ -339,7 +360,7 @@ void* handleTestXor(
 void* handleTestDigit(
         int argc ,
         char* argv[] ,
-        NeuralNetwork* net,
+        NeuralNetwork** net,
         Flag* flags )
     {
 
@@ -351,11 +372,11 @@ void* handleTestDigit(
             printf("🚀 Starting to load neural network.\n");
         }
 
-        net = loadNetwork(argv[0]);
+        *net = loadNetwork(argv[0]);
 
         if(flags[0].value == 1){
             printf("✅ Success to load neural network.\n");
-            printNetworkSpec(net);
+            printNetworkSpec(*net);
         }
 
         int imgIndex = atoi(argv[1]);
@@ -378,10 +399,10 @@ void* handleTestDigit(
             input[px_i] = (double)getPixelGrayScale(pixels[px_i])/255.0;
         }
 
-        forwardPropagation(net, input);
+        forwardPropagation(*net, input);
 
 
-        Layer* lL = &net->layers[net->nb_layers-1];
+        Layer* lL = &(*net)->layers[(*net)->nb_layers-1];
 
         int digitRecognised = 0;
         for (int i = 1; i < lL->nb_neurons; i++) {
@@ -408,7 +429,7 @@ void* handleTestDigit(
         );
 
 
-        destroyNetwork(net);
+        destroyNetwork(*net);
         free(imgContainer);
 
         return EXIT_SUCCESS;
@@ -433,22 +454,26 @@ void* handleTestDigit(
 void* handlePrintNetHelp(
         int argc __attribute__((unused)),
         char* argv[] __attribute__((unused)),
-        NeuralNetwork* net __attribute__((unused)),
+        NeuralNetwork** net __attribute__((unused)),
         Flag* flags __attribute__((unused)))
     {
     printf(
             "Usage : network [OPTIONS]\n\n"
-            "-xorTrain  <number epoch> <batch size> <learning rate>\n"
-            "                         ->  Start xor training\n"
+            "-xorTrain  <number epoch> <dataset range> <batch size> <learning rate>\n"
+            "                         ->      Start xor training\n"
             "-digitsTrain <number epoch> <batch size> <learning rate>\n"
-            "                         ->  Start digits training\n"
-            "-testXor <dir> <index>   ->      Test xor network\n"
-            "-testDigit <dir> <index> ->      Test digit network\n"
-            "-verbose                 ->      Print informations\n"
-            "-save                    ->      Save neural network\n"
+            "                         ->      Start digits training\n"
+            "-p <number of hidden layers> <number of neurons per hidden layer>\n"
+            "                         ->      Network parameters\n"
             "-defaultNetSpec          ->      Load default network spec\n"
             "-defaultTrainSpec        ->      Load default training spec\n"
-            "-showImg <index>         ->      Show the image at the n index\n"
+            "\n"
+            "-verbose                 ->      Print informations\n"
+            "-save                    ->      Save neural network\n"
+            "\n"
+            "-testXor <dir> <index>   ->      Test xor network\n"
+            "-testDigit <dir> <index> ->      Test digit network\n"
+            "\n"
             "--help                   ->      Show the help panel\n"
         );
 
@@ -475,7 +500,7 @@ void* handlePrintNetHelp(
 void* handleGetImgFromMnist(
     int argc,
     char* argv[],
-    NeuralNetwork* net __attribute__((unused)),
+    NeuralNetwork** net __attribute__((unused)),
     Flag* flags)
     {
         if(argc != 1){

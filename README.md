@@ -66,7 +66,7 @@ $ ./network [OPTIONS]
 ```
 Options :
 ```bash
--xorTrain  <number epoch> <batch size> <learning rate>
+-xorTrain  <number epoch> <dataset range> <batch size> <learning rate>
                          ->  Start xor training
 -digitsTrain <number epoch> <batch size> <learning rate>
                          ->  Start digits training
