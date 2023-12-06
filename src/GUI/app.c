@@ -50,13 +50,50 @@ typedef struct DataApp {
     GtkEntry*** editGridMat;
 } DataApp;
 
-typedef struct {
+typedef struct EntryCoordinates {
     int row;
     int col;
 } EntryCoordinates;
 
+
 void pageManager(DataApp* dataApp, gint newNbPage);
 void resetApp(DataApp* dataApp);
+
+
+void on_save_button_clicked(GtkWidget *button __attribute__((unused)),
+        gpointer user_data)
+    {
+
+    GtkWidget *dialog;
+    GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+    gint res;
+
+    dialog = gtk_file_chooser_dialog_new("Save File",
+                                         GTK_WINDOW(user_data),
+                                         action,
+                                         "_Cancel",
+                                         GTK_RESPONSE_CANCEL,
+                                         "_Save",
+                                         GTK_RESPONSE_ACCEPT,
+                                         NULL);
+
+    res = gtk_dialog_run(GTK_DIALOG(dialog));
+    if (res == GTK_RESPONSE_ACCEPT) {
+        char *filename =
+            gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+
+        char* tmpPath = concateStr(filename, ".jpg");
+        saveGrid(tmpPath, loadGrid("src/GUI/tmp/grid.result"));
+        g_print("Save grid at: %s\n", tmpPath);
+        SDL_Surface* gridImg = loadImg("src/GUI/tmp/outGrid.jpg");
+        saveImg(gridImg, tmpPath);
+        free(tmpPath);
+        SDL_FreeSurface(gridImg);
+        g_free(filename);
+    }
+
+    gtk_widget_destroy(dialog);
+}
 
 gboolean is_digit(const gchar *text) {
     return (text != NULL && *text != '\0' && isdigit(*text));
@@ -522,9 +559,9 @@ void launchGUI() {
         dataApp->editGridMat[i] = calloc(EDIT_GRID_SIZE, sizeof(GtkEntry*));
     }
 
-    /*
+
     GtkWidget *window =
-        GTK_WIDGET(gtk_builder_get_object(builder, "SF_APP_WINDOW"));*/
+        GTK_WIDGET(gtk_builder_get_object(builder, "SF_APP_WINDOW"));
     dataApp->pageContainer =
         GTK_STACK(gtk_builder_get_object(builder, "PageContainer"));
     dataApp->pageSlider =
@@ -568,6 +605,9 @@ void launchGUI() {
 
     GtkButton* closeBtn =
         GTK_BUTTON(gtk_builder_get_object(builder, "quitBtn"));
+
+    GtkButton* saveBtn =
+        GTK_BUTTON(gtk_builder_get_object(builder, "saveBtn"));
 
     load_and_resize_image("src/GUI/ressources/logo.png", 300, 300, dataApp->logoImg);
 
@@ -634,6 +674,10 @@ void launchGUI() {
     //result page
     g_signal_connect(newBtn, "clicked",
         G_CALLBACK(on_new_btn_clicked), dataApp);
+
+    //save result btn
+    g_signal_connect(saveBtn, "clicked",
+        G_CALLBACK(on_save_button_clicked), window);
 
     g_signal_connect(closeBtn, "clicked",
         G_CALLBACK(gtk_main_quit), NULL);
