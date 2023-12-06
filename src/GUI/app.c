@@ -13,6 +13,7 @@
 #include "sudokuSolver/sudokuSolver/sudoku_solver.h"
 #include "sudokuSolver/outputGrid/createOutputGrid.h"
 #include "neuralNetwork/network_Utils/networkHandle.h"
+#include <pthread.h>
 
 
 
@@ -48,6 +49,8 @@ typedef struct DataApp {
     GtkFileChooserButton* fileChooser;
 
     GtkEntry*** editGridMat;
+
+    int isRunning;
 } DataApp;
 
 typedef struct EntryCoordinates {
@@ -259,7 +262,30 @@ void on_page_slider_changed(GtkRange *range , gpointer user_data) {
 }
 
 
+void* imageProcess(void* data){
+    DataApp* dataApp = (DataApp*) data;
 
+    saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
+    dataApp->allStepResult = (AllStepResult*)handleAllSteps(0, NULL, "src/GUI/tmp/rotatedImg.jpg", dataApp->flags);
+    dataApp->allStepResult->gridCells = findAllDigits(dataApp->allStepResult->gridCells, GRID_DIM*GRID_DIM, dataApp->flags);
+
+    dataApp->sG = gridCellToSudokuGrid(dataApp->allStepResult->gridCells, GRID_DIM);
+
+    saveImg(dataApp->allStepResult->binarizedImg, "src/GUI/tmp/binarised.jpg");
+    saveImg(dataApp->allStepResult->homographyImg, "src/GUI/tmp/homography.jpg");
+    saveImg(dataApp->allStepResult->gridImg, "src/GUI/tmp/grid.jpg");
+    gtk_image_set_from_pixbuf(dataApp->intermediateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/binarised.jpg"), 350, 350));
+
+
+    //Intermediate step page
+    dataApp->stepProcess = 3;
+    dataApp->isRunning = 0;
+    gtk_widget_set_sensitive(GTK_WIDGET(dataApp->fileChooser), TRUE);
+
+    pageChanger(dataApp, 3);
+
+    return NULL;
+}
 
 
 void pageManager(DataApp* dataApp, gint newNbPage){
@@ -306,27 +332,48 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
             return;
         case 3:
-            //Intermediate step page
-            dataApp->stepProcess = 3;
 
 
+
+
+            if(dataApp->isRunning == 1){
+                return;
+            }
 
             //make all step + find all digits + create grid struct
-            saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
-            dataApp->allStepResult = (AllStepResult*)handleAllSteps(0, NULL, "src/GUI/tmp/rotatedImg.jpg", dataApp->flags);
-            dataApp->allStepResult->gridCells = findAllDigits(dataApp->allStepResult->gridCells, GRID_DIM*GRID_DIM, dataApp->flags);
+            pthread_t id;
+            dataApp->isRunning = 1;
 
-            dataApp->sG = gridCellToSudokuGrid(dataApp->allStepResult->gridCells, GRID_DIM);
+            //desable home file chooser
+            gtk_widget_set_sensitive(GTK_WIDGET(dataApp->fileChooser), FALSE);
 
-            saveImg(dataApp->allStepResult->binarizedImg, "src/GUI/tmp/binarised.jpg");
-            saveImg(dataApp->allStepResult->homographyImg, "src/GUI/tmp/homography.jpg");
-            saveImg(dataApp->allStepResult->gridImg, "src/GUI/tmp/grid.jpg");
-            gtk_image_set_from_pixbuf(dataApp->intermediateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/binarised.jpg"), 350, 350));
+            pthread_create(&id, NULL, imageProcess, (void*)dataApp);
 
+            pthread_detach(id);
 
 
+            /*
 
-            pageChanger(dataApp, newNbPage);
+            If the process begins, the current page is set to the gif waiting page.
+            Nevertheless, the user still the possibility to go to the previous page.
+
+            If the process is running, and if the user tries to go on the next page
+            he goes to the gif waiting page.
+
+            PS: its like replace the next page by the gif waiting page.
+
+
+
+            Switch to gif waiting page here :
+            Use this :
+            gtk_stack_set_visible_child_name
+            (
+                dataApp->pageContainer, gifPageId (str)
+            );
+
+            */
+            printf("Hello world\n");
+
             return;
 
         case 4:
@@ -342,7 +389,6 @@ void pageManager(DataApp* dataApp, gint newNbPage){
                     int val;
                     if(dataApp->allStepResult->gridCells[i*EDIT_GRID_SIZE + j].isDigit == 1){
                         val = dataApp->allStepResult->gridCells[i * EDIT_GRID_SIZE + j].label;
-                        printf("I+J : %d\n", i+j);
                         char *text = g_strdup_printf("%d", val);
                         gtk_entry_set_text(dataApp->editGridMat[i][j], text);
 
@@ -382,7 +428,7 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
             int valSolve = sudokuSolver(sGSolved);
 
-            printf("val solve %d\n", valSolve);
+            //printf("val solve %d\n", valSolve);
 
             if(valSolve == EXIT_FAILURE){
                 GtkWidget* msg = gtk_message_dialog_new_with_markup(
@@ -551,6 +597,8 @@ void launchGUI() {
     dataApp->flags[2].value = 1;
     dataApp->flags[3].value = 1;
     dataApp->flags[4].value = 1;
+
+    dataApp->isRunning = 0;
 
     dataApp->editGridMat = calloc(EDIT_GRID_SIZE, sizeof(GtkEntry**));
 
