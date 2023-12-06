@@ -211,8 +211,6 @@ int solver(SudokuGrid sG) {
         return EXIT_SUCCESS;
     }
 
-    printf("GS = %d\n",sG.gS);
-
     for (int num = 1; num <= sG.gS; num++) {
         if (isRulesRespected(sG, row, col, num) == EXIT_SUCCESS) {
             sG.grid[row][col] = num;
