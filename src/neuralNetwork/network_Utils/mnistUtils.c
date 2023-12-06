@@ -12,8 +12,8 @@
 #include "SDL2/SDL.h"
 
 
-#define DATASET_PATH "data/nn/dataset/45ktrain-images.idx3-ubyte"
-#define LABEL_PATH "data/nn/dataset/45ktrain-labels.idx1-ubyte"
+#define DATASET_PATH "data/nn/dataset/customDataset_images.idx3-ubyte"
+#define LABEL_PATH "data/nn/dataset/customDataset_labels.idx1-ubyte"
 
 /*
 #define DATASET_PATH "data/nn/dataset/45ktrain-images.idx3-ubyte"
