@@ -665,6 +665,16 @@ void launchGUI() {
 
 	load_and_resize_image("src/GUI/ressources/logo.png", 300, 300, dataApp->logoImg);
 
+    GtkCssProvider *provider = gtk_css_provider_new();
+    GdkDisplay *display = gdk_display_get_default();
+    GdkScreen *screen = gdk_display_get_default_screen(display);
+    if (!gtk_css_provider_load_from_path(provider, "src/GUI/ressources/style.css", &error)) {
+        g_warning("Unable to load CSS file: %s", error->message);
+        g_clear_error(&error);
+    } else {
+        gtk_style_context_add_provider_for_screen(screen, (GtkStyleProvider *)provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
+    }
+
 	//Page Slider
 
 	gtk_range_set_range(GTK_RANGE(dataApp->pageSlider), 1, 5);

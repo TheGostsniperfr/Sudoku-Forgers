@@ -1,0 +1,13 @@
+window{
+    background-color:antiquewhite;
+    color:tan;
+}
+
+#forwardBtn, #backBtn, #newBtn, #quitBtn{
+    background-color:red;
+    color :aquamarine;
+}
+
+#page_slider{
+    background-color:blue;
+}

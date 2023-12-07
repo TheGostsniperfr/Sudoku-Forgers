@@ -92,6 +92,9 @@
                     </child>
                   </object>
                 </child>
+                <style>
+                  <class name="window"/>
+                </style>
               </object>
               <packing>
                 <property name="name">page1</property>
@@ -905,6 +908,7 @@
             <property name="can-focus">False</property>
             <child>
               <object class="GtkButton" id="backBtn">
+                <property name="name">backBtn</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
@@ -916,6 +920,9 @@
                     <property name="icon_size">2</property>
                   </object>
                 </child>
+                <style>
+                  <class name="backBtn"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -942,6 +949,7 @@
             </child>
             <child>
               <object class="GtkButton" id="forwardBtn">
+                <property name="name">forwardBtn</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
@@ -953,6 +961,9 @@
                     <property name="icon_size">2</property>
                   </object>
                 </child>
+                <style>
+                  <class name="&lt;forwardBtn&gt;"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
