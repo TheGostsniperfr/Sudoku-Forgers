@@ -1,6 +1,10 @@
 window{
-    background-color:antiquewhite;
-    color:tan;
+    background-image: linear-gradient(to left, #fc5c7d, #6a82fb);
+    color:lemonchiffon;
+}
+
+pageContainer{
+    background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
 }
 
 #forwardBtn, #backBtn, #newBtn, #quitBtn{
