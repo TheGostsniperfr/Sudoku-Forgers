@@ -145,50 +145,107 @@
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="margin-end">20</property>
                             <property name="orientation">vertical</property>
+                            <property name="homogeneous">True</property>
                             <child>
-                              <object class="GtkAspectFrame">
+                              <object class="GtkViewport">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="label-xalign">0</property>
                                 <property name="shadow-type">none</property>
                                 <child>
                                   <placeholder/>
                                 </child>
                               </object>
                               <packing>
-                                <property name="expand">True</property>
+                                <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkScale" id="rotateSlider">
+                              <!-- n-columns=2 n-rows=2 -->
+                              <object class="GtkGrid">
                                 <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="orientation">vertical</property>
-                                <property name="round-digits">1</property>
-                                <property name="draw-value">False</property>
+                                <property name="can-focus">False</property>
+                                <property name="row-homogeneous">True</property>
+                                <child>
+                                  <object class="GtkButton" id="plus15Btn">
+                                    <property name="label" translatable="yes">+ 15</property>
+                                    <property name="name">plus15Btn</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left-attach">0</property>
+                                    <property name="top-attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="plus30Btn">
+                                    <property name="label" translatable="yes">+ 30</property>
+                                    <property name="name">plus30Btn</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left-attach">1</property>
+                                    <property name="top-attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="minus15Btn">
+                                    <property name="label" translatable="yes"> - 15 </property>
+                                    <property name="name">minus15Btn</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left-attach">0</property>
+                                    <property name="top-attach">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="minus30Btn">
+                                    <property name="label" translatable="yes">- 30 </property>
+                                    <property name="name">minus30Btn</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left-attach">1</property>
+                                    <property name="top-attach">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
-                                <property name="expand">True</property>
+                                <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAspectFrame">
+                              <object class="GtkViewport">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="label-xalign">0</property>
                                 <property name="shadow-type">none</property>
                                 <child>
                                   <placeholder/>
                                 </child>
                               </object>
                               <packing>
-                                <property name="expand">True</property>
+                                <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">2</property>
                               </packing>
@@ -197,6 +254,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
+                            <property name="padding">20</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -230,7 +288,9 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Intermiate steps :</property>
+                        <property name="valign">center</property>
+                        <property name="label" translatable="yes">Intermediate steps</property>
+                        <property name="single-line-mode">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -261,10 +321,9 @@
                             <property name="orientation">vertical</property>
                             <property name="homogeneous">True</property>
                             <child>
-                              <object class="GtkAspectFrame">
+                              <object class="GtkViewport">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="label-xalign">0</property>
                                 <property name="shadow-type">none</property>
                                 <child>
                                   <placeholder/>
@@ -280,7 +339,6 @@
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="margin-end">20</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">30</property>
                                 <child>
@@ -333,10 +391,9 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAspectFrame">
+                              <object class="GtkViewport">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="label-xalign">0</property>
                                 <property name="shadow-type">none</property>
                                 <child>
                                   <placeholder/>
@@ -352,12 +409,13 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
+                            <property name="padding">20</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>

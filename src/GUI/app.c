@@ -46,7 +46,6 @@ typedef struct DataApp {
 
 	GdkPixbufAnimation * animation;
 
-	GtkScale* rotateSlider;
 	GtkScale* pageSlider;
 
 	GtkFileChooserButton* fileChooser;
@@ -235,12 +234,25 @@ void resetApp(DataApp* dataApp){
 
 
 
-
-
-void on_rotate_slider_changed(GtkRange *range , gpointer user_data){
+void on_rotateBtn_clicked(GtkButton *button,
+							gpointer user_data)
+{
 	DataApp* dataApp = user_data;
 
-	dataApp->rotateAngle = gtk_range_get_value(range);
+	const gchar *button_id = gtk_widget_get_name(GTK_WIDGET(button));
+
+	if(strcmp(button_id, "plus15Btn") == 0){
+		dataApp->rotateAngle += 15;
+	}else if (strcmp(button_id, "plus30Btn") == 0)
+	{
+		dataApp->rotateAngle += 30;
+	}else if (strcmp(button_id, "minus15Btn") == 0)
+	{
+		dataApp->rotateAngle -= 15;
+	}else if (strcmp(button_id, "minus30Btn") == 0)
+	{
+		dataApp->rotateAngle -= 30;
+	}
 
 	dataApp->stepProcess = 2;
 
@@ -252,10 +264,9 @@ void on_rotate_slider_changed(GtkRange *range , gpointer user_data){
 
 	saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
 	gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/rotatedImg.jpg"), 350, 350));
+
+
 }
-
-
-
 
 
 void on_page_slider_changed(GtkRange *range , gpointer user_data) {
@@ -645,8 +656,16 @@ void launchGUI() {
 		GTK_IMAGE(gtk_builder_get_object(builder, "intermediateImg"));
 	dataApp->outImg =
 		GTK_IMAGE(gtk_builder_get_object(builder, "outImg"));
-	dataApp->rotateSlider =
-		GTK_SCALE(gtk_builder_get_object(builder, "rotateSlider"));
+
+
+	GtkButton* plus15Btn =
+		GTK_BUTTON(gtk_builder_get_object(builder, "plus15Btn"));
+	GtkButton* plus30Btn =
+		GTK_BUTTON(gtk_builder_get_object(builder, "plus30Btn"));
+	GtkButton* minus15Btn =
+		GTK_BUTTON(gtk_builder_get_object(builder, "minus15Btn"));
+	GtkButton* minus30Btn =
+		GTK_BUTTON(gtk_builder_get_object(builder, "minus30Btn"));
 
 	GtkGrid* matrixGrid =
 		GTK_GRID(gtk_builder_get_object(builder, "editGrid"));
@@ -684,11 +703,15 @@ void launchGUI() {
 		G_CALLBACK(on_page_slider_changed), dataApp);
 	*/
 
-	//Rotate Slider
-	gtk_range_set_range(GTK_RANGE(dataApp->rotateSlider), -180, 180);
-	gtk_range_set_value(GTK_RANGE(dataApp->rotateSlider), 0);
-	g_signal_connect(dataApp->rotateSlider, "value_changed",
-		G_CALLBACK(on_rotate_slider_changed), dataApp);
+	//Rotate Btn
+	g_signal_connect(plus15Btn, "clicked",
+		G_CALLBACK(on_rotateBtn_clicked), dataApp);
+	g_signal_connect(plus30Btn, "clicked",
+		G_CALLBACK(on_rotateBtn_clicked), dataApp);
+	g_signal_connect(minus15Btn, "clicked",
+		G_CALLBACK(on_rotateBtn_clicked), dataApp);
+	g_signal_connect(minus30Btn, "clicked",
+		G_CALLBACK(on_rotateBtn_clicked), dataApp);
 
 	//Page Btn
 	g_signal_connect(backBtn, "clicked",
@@ -733,7 +756,7 @@ void launchGUI() {
 
 
 	gtk_widget_show_all(GTK_WIDGET(matrixGrid));
-	
+
 	gtk_image_set_from_animation(dataApp->gifImg, dataApp->animation);
 
 	//result page
