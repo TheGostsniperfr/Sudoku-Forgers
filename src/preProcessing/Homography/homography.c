@@ -23,11 +23,12 @@ double* Fill_Matrix(int size, int* points)
 {
 	/*
 	Fill and initialize the matrix :
-	We want to map a point in rectangle A to rectangle B.
+	We want to map a point in rectangle A from rectangle B.
 	   for each point:
 		{xA, yA, 1, 0, 0, 0, -xA*xB, -yA*xB}
 		{0, 0, 0, xA, yA, 1, -xA*yB, -yA*yB}
 	*/
+
 	double* mat = calloc(8*8, sizeof(double));
 
 	//Row 1 / Point 1 -- upper left
@@ -139,7 +140,14 @@ SDL_Surface* Homography_Transform(SDL_Surface* image, int size, int* points)
 	double* mat = Fill_Matrix(size, points);
 
 	//Create a new surface to draw the homographic transformation from image
-	SDL_Surface* new_img = SDL_CreateRGBSurface(0, size, size, 32, 0, 0, 0, 0);
+	SDL_Surface* new_img = SDL_CreateRGBSurfaceWithFormat(
+			0,
+			size,
+			size,
+			32,
+			SDL_PIXELFORMAT_ABGR8888);
+	Uint32* new_pixels = (Uint32*)new_img->pixels;
+	Uint32* pixels = (Uint32*)image->pixels;
 
 	//looping on each pixel from the image
 	for(int i = 0; i < size; i++)
@@ -153,14 +161,11 @@ SDL_Surface* Homography_Transform(SDL_Surface* image, int size, int* points)
 			//Put the pixel from the image to the new if it is into it
 			if (x >= 0 && x < image->w && y >= 0 && y < image->h)
 			{
-				Uint32* new_pixels = (Uint32*)new_img->pixels;
-				Uint32* pixels = (Uint32*)image->pixels;
-
 				Uint32 pixel = pixels[(int)y * image->w + (int)x];
 				new_pixels[(int)j * size + (int)i] = pixel;
 			}
 		}
 	}
-
+	free(mat);
 	return new_img;
 }

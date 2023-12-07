@@ -226,7 +226,8 @@ void* handleAllSteps(
 	p4.x = points[2];
 	p4.y = points[3];
 
-	while(!isSquare_Blob(p1, p2, p3, p4))
+	int count = 0;
+	while(count != 15 && !isSquare_Blob(p1, p2, p3, p4))
 	{
 		size_blob = 0;
 		SDL_Surface* img_bis = Remove_Blob(img, blob);
@@ -247,7 +248,17 @@ void* handleAllSteps(
 		p4.y = points[3];
 
 		free(img_bis);
+		count++;
 	}
+
+	printf("P1.X = %f\n", p1.x);
+	printf("P1.Y = %f\n", p1.y);
+	printf("P2.X = %f\n", p2.x);
+	printf("P2.Y = %f\n", p2.y);
+	printf("P3.X = %f\n", p3.x);
+	printf("P3.Y = %f\n", p3.y);
+	printf("P4.X = %f\n", p4.x);
+	printf("P4.Y = %f\n", p4.y);
 
 	if(flags[0].value == 1){
 		printf("✅ Success to apply blob detection.\n");
