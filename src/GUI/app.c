@@ -472,7 +472,7 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 void on_insert_text(GtkEditable *editable, const gchar *text,
 	gint length __attribute__((unused)),
-	gint *position __attribute__((unused)), 
+	gint *position __attribute__((unused)),
 	gpointer user_data __attribute__((unused)))
 {
 	GtkEntry *entry = GTK_ENTRY(editable);
@@ -490,7 +490,25 @@ void on_insert_text(GtkEditable *editable, const gchar *text,
 }
 
 
+void on_setting_btn_pressed(GtkButton *button __attribute__((unused)),
+							gpointer user_data)
+{
+	DataApp* dataApp = user_data;
 
+
+	if(strcmp(gtk_stack_get_visible_child_name(dataApp->pageContainer), "settingPage") != 0){
+		gtk_stack_set_visible_child_name
+		(
+			dataApp->pageContainer, "settingPage"
+		);
+	}else{
+		gtk_stack_set_visible_child_name
+		(
+			dataApp->pageContainer, g_strdup_printf("page%d", dataApp->currentPage)
+
+		);
+	}
+}
 
 
 void on_back_btn_pressed(GtkButton *button __attribute__((unused)),
@@ -630,6 +648,10 @@ void launchGUI() {
 		GTK_FILE_CHOOSER_BUTTON(
 			gtk_builder_get_object(builder, "chooseFileBtn"));
 
+	GtkButton* SettingBtn =
+		GTK_BUTTON(gtk_builder_get_object(builder, "settingBtn"));
+
+
 	dataApp->logoImg =
 		GTK_IMAGE(gtk_builder_get_object(builder, "logo"));
 
@@ -697,6 +719,10 @@ void launchGUI() {
 		G_CALLBACK(on_rotateBtn_clicked), dataApp);
 	g_signal_connect(minus30Btn, "clicked",
 		G_CALLBACK(on_rotateBtn_clicked), dataApp);
+
+	//Setting btn
+	g_signal_connect(SettingBtn, "clicked",
+		G_CALLBACK(on_setting_btn_pressed), dataApp);
 
 	//Page Btn
 	g_signal_connect(backBtn, "clicked",
