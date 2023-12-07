@@ -71,7 +71,9 @@ void* handleSolver(int argc,
     saveGrid(path, sG);
 
     if(flags[3].value == 1){
-        printSection(concateStr(gridPath, ".result"));
+        char* tmpPath = concateStr(gridPath, ".result");
+        printSection(tmpPath);
+        free(tmpPath);
 
         printGrid(sG);
     }

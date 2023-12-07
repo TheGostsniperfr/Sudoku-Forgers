@@ -54,8 +54,8 @@ int main(int argc, char* argv[]){
 
     for (int i = 0; i < NB_FLAGS; i++)
     {
-        flags->flag = NULL;
-        flags->value = 0;
+        flags[i].flag = NULL;
+        flags[i].value = 0;
     }
 
     flags[0].flag = "-verbose";

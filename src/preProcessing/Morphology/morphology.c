@@ -23,8 +23,8 @@ static int mode;
  *      - (int) : isValid -> 1, else -> 0
 ***************************************************************/
 int isPixelValid(int x, int y, int w, int h){
-    if(x>= 0 && x <= w){
-        if(y>= 0 && y <= h){
+    if(x>= 0 && x < w){
+        if(y>= 0 && y < h){
             return 1;
         }
     }

@@ -40,7 +40,7 @@ void swap(int *a, int *b) {
  *      - (int) : index of the pivot
 ***************************************************************/
 
-int partition(int tab[], int min, int max) {
+int partition(int* tab, int min, int max) {
     int pivot = tab[max];
     int i = (min - 1);
 
@@ -67,7 +67,7 @@ int partition(int tab[], int min, int max) {
  *      - max (int) : max value of the partition
 ***************************************************************/
 
-void quickSort(int tab[], int min, int max) {
+void quickSort(int* tab, int min, int max) {
     if (min < max) {
         int pivotI = partition(tab, min, max);
         quickSort(tab, min, pivotI - 1);
@@ -90,8 +90,15 @@ void quickSort(int tab[], int min, int max) {
 
 SDL_Surface* applyMedianFilter(SDL_Surface* img){
     int size = KERNEL_SIZE * KERNEL_SIZE;
-    int tab[KERNEL_SIZE * KERNEL_SIZE] = {-1};
     int k = KERNEL_SIZE / 2;
+
+
+    int* tab = calloc(KERNEL_SIZE * KERNEL_SIZE, sizeof(int));
+
+    for(int i = 0; i < KERNEL_SIZE * KERNEL_SIZE; i++){
+        tab[i] = -1;
+    };
+
     SDL_Surface *outImg = SDL_ConvertSurfaceFormat
                             (
                                 img,
@@ -111,8 +118,7 @@ SDL_Surface* applyMedianFilter(SDL_Surface* img){
             for (int j = y - k; j <= y + k; j++){
                 for (int i = x - k; i <= x + k; i++){
                     //check valid coordonate
-                    if(j >= 0 && j <= img->h &&
-                        i >= 0 && i <= img->w)
+                    if (j >= 0 && j < img->h && i >= 0 && i < img->w)
                     {
                         tab[(j - (y - k)) * KERNEL_SIZE + (i - (x - k))] =
                             getPixelGrayScale(inPixels[j * img->w + i]);
@@ -143,6 +149,9 @@ SDL_Surface* applyMedianFilter(SDL_Surface* img){
                 );
         }
     }
+
+
+    free(tab);
 
     return outImg;
 }

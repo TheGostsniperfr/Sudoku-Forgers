@@ -89,7 +89,7 @@ void on_save_button_clicked(GtkWidget *button __attribute__((unused)),
 
 		char* tmpPath = concateStr(filename, ".jpg");
 		saveGrid(tmpPath, loadGrid("src/GUI/tmp/grid.result"));
-		g_print("Save grid at: %s\n", tmpPath);
+		//g_print("Save grid at: %s\n", tmpPath);
 		SDL_Surface* gridImg = loadImg("src/GUI/tmp/outGrid.jpg");
 		saveImg(gridImg, tmpPath);
 		free(tmpPath);
@@ -303,7 +303,7 @@ void* imageProcess(void* data){
 
 
 void pageManager(DataApp* dataApp, gint newNbPage){
-	printf("Try to go page nb : %d\n", newNbPage);
+	//printf("Try to go page nb : %d\n", newNbPage);
 
 	if(newNbPage < 1 || newNbPage > 6){
 		return;
@@ -314,8 +314,8 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 		return;
 	}
 
-	printf("newNbPage = %d\n", newNbPage);
-	printf("stepProcess = %d\n", dataApp->stepProcess);
+	//printf("newNbPage = %d\n", newNbPage);
+	//printf("stepProcess = %d\n", dataApp->stepProcess);
 
 	if(newNbPage >= dataApp->stepProcess){
 		//check if all the condition to go the next page is fill
@@ -365,28 +365,11 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 			pthread_detach(id);
 
-
-			/*
-
-			If the process begins, the current page is set to the gif waiting page.
-			Nevertheless, the user still the possibility to go to the previous page.
-
-			If the process is running, and if the user tries to go on the next page
-			he goes to the gif waiting page.
-
-			PS: its like replace the next page by the gif waiting page.
-
-
-
-			Switch to gif waiting page here :
-			Use this :
-			*/
 			gtk_stack_set_visible_child_name
 			(
 				dataApp->pageContainer, "GifPage"
 			);
 
-			printf("Hello world\n");
 
 			return;
 
@@ -489,17 +472,19 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 void on_insert_text(GtkEditable *editable, const gchar *text,
 	gint length __attribute__((unused)),
-	gint *position __attribute__((unused)), gpointer user_data)
+	gint *position __attribute__((unused)), 
+	gpointer user_data __attribute__((unused)))
 {
 	GtkEntry *entry = GTK_ENTRY(editable);
-	EntryCoordinates *coords = (EntryCoordinates *)user_data;
+	//EntryCoordinates *coords = (EntryCoordinates *)user_data;
 	if (!is_digit(text)) {
 		g_signal_stop_emission_by_name(G_OBJECT(editable), "insert-text");
 		return;
 	}
-
+	/*
 	g_print("Input edit grid [%d][%d] : %s\n",
 		coords->row, coords->col, text);
+	*/
 
 	(void)entry;
 }

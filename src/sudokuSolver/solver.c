@@ -121,7 +121,7 @@ int main(int argc, char* argv[]){
         handlePrintSolverHelp(0, argv, "", flags);
     }
 
-
+    free(flags);
 
     return EXIT_SUCCESS;
 }

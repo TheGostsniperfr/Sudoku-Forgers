@@ -22,7 +22,7 @@
 
 SDL_Surface* applyIlluminationFilter(SDL_Surface* img){
 
-    SDL_Surface *outImg = SDL_ConvertSurfaceFormat
+    SDL_Surface *outImg = SDL_ConvertSurfaceFormat  
                             (
                                 img,
                                 SDL_PIXELFORMAT_ABGR8888,
