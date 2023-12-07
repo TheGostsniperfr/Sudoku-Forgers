@@ -39,7 +39,7 @@ SDL_Surface* Rotated_image(SDL_Surface* image, double angle)
 	//Get angle from degree to radian
     double rad_angle = angle * (M_PI / 180);
 
-	//Get the angles for sin and cose
+	//Get the angles for sin and cos
 	double angle_sin = sin(rad_angle);
     double angle_cos = cos(rad_angle);
 
