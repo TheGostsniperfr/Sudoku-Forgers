@@ -70,6 +70,7 @@
                         </child>
                         <child>
                           <object class="GtkFileChooserButton" id="chooseFileBtn">
+                            <property name="name">chooseFileBtn</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="halign">center</property>
@@ -884,6 +885,7 @@
                                 <child>
                                   <object class="GtkButton" id="saveBtn">
                                     <property name="label" translatable="yes">Save</property>
+                                    <property name="name">saveBtn</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
@@ -897,6 +899,7 @@
                                 <child>
                                   <object class="GtkButton" id="NewImgBtn">
                                     <property name="label" translatable="yes">New</property>
+                                    <property name="name">NewImgBtn</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
@@ -990,6 +993,7 @@
             </child>
             <child>
               <object class="GtkScale" id="page_slider">
+                <property name="name">page_slider</property>
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <property name="can-focus">True</property>
@@ -1040,6 +1044,7 @@
     </child>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="header">
+        <property name="name">header</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="title" translatable="yes">Sudoku Forgers</property>
@@ -1049,6 +1054,7 @@
             <property name="can-focus">False</property>
             <child>
               <object class="GtkButton" id="quitBtn">
+                <property name="name">quitBtn</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
