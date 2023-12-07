@@ -251,15 +251,6 @@ void* handleAllSteps(
 		count++;
 	}
 
-	printf("P1.X = %f\n", p1.x);
-	printf("P1.Y = %f\n", p1.y);
-	printf("P2.X = %f\n", p2.x);
-	printf("P2.Y = %f\n", p2.y);
-	printf("P3.X = %f\n", p3.x);
-	printf("P3.Y = %f\n", p3.y);
-	printf("P4.X = %f\n", p4.x);
-	printf("P4.Y = %f\n", p4.y);
-
 	if(flags[0].value == 1){
 		printf("✅ Success to apply blob detection.\n");
 	}
