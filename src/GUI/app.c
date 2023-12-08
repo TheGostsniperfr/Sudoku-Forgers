@@ -15,7 +15,10 @@
 #include "neuralNetwork/network_Utils/networkHandle.h"
 #include <pthread.h>
 
-
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 
 #define NB_FLAGS 5
@@ -52,7 +55,12 @@ typedef struct DataApp {
 
 	GtkEntry*** editGridMat;
 
-	int isRunning;
+	GtkSpinButton* epochSpinBtn;
+	GtkSpinButton* hiddenSpinBtn;
+	GtkSpinButton* neuronsSpinBtn;
+
+	int isTraitmentRunning;
+	int isTrainingRunning;
 } DataApp;
 
 typedef struct EntryCoordinates {
@@ -293,7 +301,7 @@ void* imageProcess(void* data){
 
 	//Intermediate step page
 	dataApp->stepProcess = 3;
-	dataApp->isRunning = 0;
+	dataApp->isTraitmentRunning = 0;
 	gtk_widget_set_sensitive(GTK_WIDGET(dataApp->fileChooser), TRUE);
 
 	pageChanger(dataApp, 3);
@@ -350,13 +358,13 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 
 
-			if(dataApp->isRunning == 1){
+			if(dataApp->isTraitmentRunning == 1){
 				return;
 			}
 
 			//make all step + find all digits + create grid struct
 			pthread_t id;
-			dataApp->isRunning = 1;
+			dataApp->isTraitmentRunning = 1;
 
 			//desable home file chooser
 			gtk_widget_set_sensitive(GTK_WIDGET(dataApp->fileChooser), FALSE);
@@ -505,9 +513,88 @@ void on_setting_btn_pressed(GtkButton *button __attribute__((unused)),
 		gtk_stack_set_visible_child_name
 		(
 			dataApp->pageContainer, g_strdup_printf("page%d", dataApp->currentPage)
-
 		);
 	}
+}
+
+
+
+void* startTraining(void* data){
+    DataApp* dataApp = data;
+
+    int nbE = gtk_spin_button_get_value(dataApp->epochSpinBtn);
+    int nbHL = gtk_spin_button_get_value(dataApp->hiddenSpinBtn);
+    int nbN = gtk_spin_button_get_value(dataApp->neuronsSpinBtn);
+
+    char nbEStr[100];
+    char nbHLStr[100];
+    char nbNStr[100];
+
+    sprintf(nbEStr, "%d", nbE);
+    sprintf(nbHLStr, "%d", nbHL);
+    sprintf(nbNStr, "%d", nbN);
+
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        perror("Error to fork.");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+
+        char* argv[] = {"src/neuralNetwork/network", "-p", nbHLStr, nbNStr, "-digitsTrain", nbEStr, "208", "10", "0.1", "-verbose", "-save", NULL};
+
+        execvp(argv[0], argv);
+
+        perror("Error to exec network file");
+        exit(EXIT_FAILURE);
+    } else {
+        dataApp->isTrainingRunning = 1;
+
+        waitpid(pid, NULL, 0);
+
+        dataApp->isTrainingRunning = 0;
+
+        gtk_stack_set_visible_child_name(dataApp->pageContainer, "settingPage");
+    }
+
+    return NULL;
+}
+
+
+void on_training_start(GtkButton *button __attribute__((unused)),
+							gpointer user_data)
+{
+	DataApp* dataApp = user_data;
+
+	if(dataApp->isTrainingRunning == 1){
+		return;
+	}
+
+	int nbE = gtk_spin_button_get_value(dataApp->epochSpinBtn);
+	int nbHL = gtk_spin_button_get_value(dataApp->hiddenSpinBtn);
+	int nbN = gtk_spin_button_get_value(dataApp->neuronsSpinBtn);
+
+	if(nbE <= 0 || nbHL <= 0 || nbN <= 0){
+		printf("invalid number\n");
+		return;
+	}
+
+			//make all step + find all digits + create grid struct
+			pthread_t id;
+			dataApp->isTrainingRunning = 1;
+
+			pthread_create(&id, NULL, startTraining, (void*)dataApp);
+
+			pthread_detach(id);
+
+			gtk_stack_set_visible_child_name
+			(
+				dataApp->pageContainer, "GifPage"
+			);
+
+
+	return;
+
 }
 
 
@@ -615,7 +702,7 @@ void launchGUI() {
 	dataApp->flags[3].value = 1;
 	dataApp->flags[4].value = 1;
 
-	dataApp->isRunning = 0;
+	dataApp->isTraitmentRunning = 0;
 
 	dataApp->editGridMat = calloc(EDIT_GRID_SIZE, sizeof(GtkEntry**));
 
@@ -689,6 +776,15 @@ void launchGUI() {
 
 	dataApp->gifImg = GTK_IMAGE(gtk_builder_get_object(builder, "GifImg"));
 
+	dataApp->epochSpinBtn =
+		GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "epochSpinBtn"));
+	dataApp->hiddenSpinBtn =
+		GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "hiddenSpinBtn"));
+	dataApp->neuronsSpinBtn =
+		GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "neuronsSpinBtn"));
+	GtkButton* startTrainSpinBtn =
+		GTK_BUTTON(gtk_builder_get_object(builder, "startTrainBtn"));
+
 	load_and_resize_image("src/GUI/ressources/logo.png", 300, 300, dataApp->logoImg);
 
     GtkCssProvider *provider = gtk_css_provider_new();
@@ -723,6 +819,9 @@ void launchGUI() {
 	//Setting btn
 	g_signal_connect(SettingBtn, "clicked",
 		G_CALLBACK(on_setting_btn_pressed), dataApp);
+
+	g_signal_connect(startTrainSpinBtn, "clicked",
+		G_CALLBACK(on_training_start), dataApp);
 
 	//Page Btn
 	g_signal_connect(backBtn, "clicked",
