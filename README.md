@@ -23,32 +23,29 @@ $ make
 
 ## Usage
 
-<font size = "3"> **Pre-processing :** </font>
+<font size = "3"> **Main commands :** </font>
 
 ```bash
-$ cd src/preProcessing/
+Usage : ./main [OPTIONS]
 
-$ ./preProcessing [IMAGE DIR] [OPTIONS]
+-gui                       ->      Open GUI
+-ocr [dir] [option]        ->      Solve the image grid
 ```
-Options :
-```bash
+<font size = "3"> **Options :** </font>
 
--all           ->      Do all the steps
--r             ->      Rotate the image
--save          ->      Save all steps images
--verbose       ->      Print verbose
---help         ->      Show the help panel
+```bash
+-save                      ->      Save intermediate steps
+-verbose                   ->      Print verbose
+--help                     ->      Show the help panel
 ```
 
-<font size = "3"> **Sudoko solver :** </font>
+<font size = "4"> **Sub-application commands :** </font>
+
+<font size = "3"> **Solver app :** </font>
 
 ```bash
-$ cd src/sudokuSolver/
+Usage : ./main -solver [Grid DIR] [OPTIONS]
 
-$ ./solver [Grid DIR] [OPTIONS]
-```
-Options :
-```bash
 -p             ->      Print input grid
 -po            ->      Print output grid
 -g <grid width (px)> <border ratio> <width border> <font ratio>
@@ -57,28 +54,27 @@ Options :
 --help         ->      Show the help panel
 ```
 
-<font size = "3"> **Neural network :** </font>
+<font size = "3"> **Neural network app :** </font>
 
 ```bash
-$ cd src/neuralNetwork/
+Usage : ./main -nn [OPTIONS]
 
-$ ./network [OPTIONS]
-```
-Options :
-```bash
--xorTrain  <number epoch> <dataset range> <batch size> <learning rate>
-                         ->  Start xor training
--digitsTrain <number epoch> <batch size> <learning rate>
-                         ->  Start digits training
--testXor <dir> <index>   ->      Test network with input
--testDigit <dir> <index> ->      Test network with input
+-xorTrain  <number epoch> <batch size> <learning rate>
+                         ->      Start xor training
+-digitsTrain <number epoch> <dataset range> <batch size> <learning rate>
+                         ->      Start digits training
+-p <number of hidden layers> <number of neurons per hidden layer>
+                         ->      Network parameters
+-defaultNetSpec          ->      Load default network spec
+-defaultTrainSpec        ->      Load default training spec
 -verbose                 ->      Print informations
 -save                    ->      Save neural network
--defaultNetSpec          ->      Load default network specification
--defaultTrainSpec        ->      Load default training specification
--getImg <index>          ->      Get the image at the n index
+-testXor <dir> <index>   ->      Test xor network
+-testDigit <dir> <index> ->      Test digit network
 --help                   ->      Show the help panel
 ```
+
+
 
 ## Clean
 

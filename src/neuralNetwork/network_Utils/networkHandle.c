@@ -459,9 +459,9 @@ void* handlePrintNetHelp(
     {
     printf(
             "Usage : network [OPTIONS]\n\n"
-            "-xorTrain  <number epoch> <dataset range> <batch size> <learning rate>\n"
+            "-xorTrain  <number epoch> <batch size> <learning rate>\n"
             "                         ->      Start xor training\n"
-            "-digitsTrain <number epoch> <batch size> <learning rate>\n"
+            "-digitsTrain <number epoch> <dataset range> <batch size> <learning rate>\n"
             "                         ->      Start digits training\n"
             "-p <number of hidden layers> <number of neurons per hidden layer>\n"
             "                         ->      Network parameters\n"

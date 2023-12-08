@@ -24,10 +24,10 @@ void printHelpPanel(){
     (
         "Usage : main [OPTIONS]\n\n"
         "-gui                       ->      Open GUI\n"
-        "-ocr [dir] [option]        ->      solve the image grid\n"
-        "-solver [dir] [option]     ->      access to solver app\n"
-        "-nn [option]               ->      access to neural network app\n"
-        "-save                      ->      Save intermediate step\n"
+        "-ocr [dir] [option]        ->      Solve the image grid\n"
+        "-solver [dir] [option]     ->      Access to solver app\n"
+        "-nn [option]               ->      Access to neural network app\n"
+        "-save                      ->      Save intermediate steps\n"
         "-verbose                   ->      Print verbose\n"
         "--help                     ->      Show the help panel\n"
     );
