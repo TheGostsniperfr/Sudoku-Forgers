@@ -656,6 +656,15 @@ void on_switch_intermediate_img(GtkButton *button __attribute__((unused)),
 }
 
 
+void on_homeBtn_clicked(GtkButton *button __attribute__((unused)),
+							gpointer user_data)
+
+{
+	DataApp* dataApp = user_data;
+
+	pageChanger(dataApp, 1);
+}
+
 
 
 
@@ -774,6 +783,9 @@ void launchGUI() {
 	GtkButton* saveBtn =
 		GTK_BUTTON(gtk_builder_get_object(builder, "saveBtn"));
 
+	GtkButton* homeBtn =
+		GTK_BUTTON(gtk_builder_get_object(builder, "homeBtn"));
+
 	dataApp->gifImg = GTK_IMAGE(gtk_builder_get_object(builder, "GifImg"));
 
 	dataApp->epochSpinBtn =
@@ -805,6 +817,10 @@ void launchGUI() {
 	g_signal_connect(dataApp->pageSlider, "value_changed",
 		G_CALLBACK(on_page_slider_changed), dataApp);
 	*/
+
+	//Home Btn
+	g_signal_connect(homeBtn, "clicked",
+		G_CALLBACK(on_homeBtn_clicked), dataApp);
 
 	//Rotate Btn
 	g_signal_connect(plus15Btn, "clicked",
