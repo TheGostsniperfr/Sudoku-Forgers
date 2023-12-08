@@ -147,17 +147,17 @@ void freeBatch(Batch* batch){
  *      - (Batch*) : Batch created
 ***************************************************************/
 
-Batch* createBatch(int sizeOfDataSet, int nbMiniBatch){
+Batch* createBatch(int sizeOfDataSet, int nbMiniBatch, int* realSize){
     Batch* batch = calloc(1, sizeof(Batch));
 
-    batch->imgContainer = getDataSet(sizeOfDataSet);
+    batch->imgContainer = getDataSet(sizeOfDataSet, realSize);
     batch->miniBatchs = calloc(nbMiniBatch, sizeof(MiniBatch));
 
     batch->nbMiniBatch = nbMiniBatch;
 
     for (int i = 0; i < nbMiniBatch; i++)
     {
-        batch->miniBatchs[i].length = sizeOfDataSet / batch->nbMiniBatch;
+        batch->miniBatchs[i].length = *realSize / batch->nbMiniBatch;
         batch->miniBatchs[i].startIndex = batch->miniBatchs[i].length
                                           * i;
     }

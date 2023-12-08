@@ -15,7 +15,7 @@ void printTrainingPara(TrainingPara tP);
 void printNetworkPara(NetworkPara netPara);
 void printNetworkSpec(NeuralNetwork* net);
 
-Batch* createBatch(int sizeOfDataSet, int nbMiniBatch);
+Batch* createBatch(int sizeOfDataSet, int nbMiniBatch, int* realSize);
 void shuffleMiniBatch(Batch* batch);
 void freeBatch(Batch* batch);
 

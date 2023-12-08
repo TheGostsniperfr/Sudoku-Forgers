@@ -42,6 +42,14 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
             "❌ Invalid network settings for digit training.\n"
         );
     }
+
+
+
+    //load data set :
+    int realSize = tP.batchSize;
+    Batch* batch = createBatch(tP.batchSize, tP.miniBatchSize, &realSize);
+    tP.batchSize = realSize;
+
     if(flags[0].value == 1){
         printf
         (
@@ -51,10 +59,6 @@ void digitTraining(NeuralNetwork* net, TrainingPara tP,
 
         fflush(stdout);
     }
-
-
-    //load data set :
-    Batch* batch = createBatch(tP.batchSize, tP.miniBatchSize);
 
     for (int epoch_i = 0; epoch_i < tP.nbEpoch; epoch_i++)
     {

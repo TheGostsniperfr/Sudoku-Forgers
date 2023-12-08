@@ -151,7 +151,7 @@ ImgContainer* getImageFromMnist(int index, Flag* flags) {
     printf("Path = %s\n", path);
 
     if (dataFile == NULL) {
-        errx(EXIT_FAILURE, "Can't open dataset dataFile");
+        errx(EXIT_FAILURE, "Can't open dataset dataFile.");
     }
 
     uint32_t nbImg, row, col;
@@ -176,7 +176,7 @@ ImgContainer* getImageFromMnist(int index, Flag* flags) {
     if (labelFile == NULL) {
         fclose(dataFile);
         fclose(labelFile);
-        errx(EXIT_FAILURE, "Can't open dataset dataFile");
+        errx(EXIT_FAILURE, "Can't open dataset dataFile.");
     }
 
     uint32_t nbLabels;
@@ -256,7 +256,7 @@ ImgContainer* getImageFromMnist(int index, Flag* flags) {
  *      - (ImageContainer*) : list of the extracted dataset images
 ***************************************************************/
 
-ImgContainer* getDataSet(int batchSize){
+ImgContainer* getDataSet(int batchSize, int* realSize){
     char dataPath[1024];
     snprintf(dataPath, 1024, "%s/%s",getenv("CURRENT_DIR"), DATASET_PATH);
     char labelPath[1024];
@@ -265,7 +265,7 @@ ImgContainer* getDataSet(int batchSize){
     FILE* dataFile = fopen(dataPath, "rb");
     FILE* labelFile = fopen(labelPath, "rb");
     if((dataFile == NULL) | (labelFile == NULL)){
-        errx(EXIT_FAILURE, "Can't open dataset dataFile");
+        errx(EXIT_FAILURE, "Can't open dataset dataFile.");
     }
 
     uint32_t nbImg, row, col, nbLabels;
@@ -286,6 +286,8 @@ ImgContainer* getDataSet(int batchSize){
     }else{
         nbImg = batchSize;
     }
+
+    *realSize = nbImg;
 
     //Move the cursors
     if ((fseek(dataFile, 16, SEEK_SET) != 0) |
