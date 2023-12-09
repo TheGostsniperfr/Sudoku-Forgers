@@ -146,9 +146,9 @@ void* handleDigitsTrain(
             //load default config
 
             tP.nbEpoch = 50;
-            tP.batchSize = 208;
+            tP.batchSize = 60000;
             tP.learningRate = 0.1;
-            tP.miniBatchSize = 20;
+            tP.miniBatchSize = 1;
             tP.saveTraining = false;
         }else{
             if(argc != 4){

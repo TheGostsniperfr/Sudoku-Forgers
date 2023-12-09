@@ -606,7 +606,7 @@ void* startTraining(void* data){
     } else if (pid == 0) {
 
         char* argv[] = {"src/neuralNetwork/network", "-p", nbHLStr, nbNStr,
-		"-digitsTrain", nbEStr, "208", "1", "0.1", "-verbose", "-save", NULL};
+		"-digitsTrain", nbEStr, "60000", "100", "0.1", "-verbose", NULL};
 
         execvp(argv[0], argv);
 
