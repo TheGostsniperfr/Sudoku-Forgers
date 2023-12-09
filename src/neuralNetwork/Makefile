@@ -59,8 +59,8 @@ clean:
 	rm -f xorTrain.txt
 	rm -f digitTrain.txt
 	rm -f ../preProcessing/SDL_Function/sdlFunction.o
-	#rm -rf $(DATASET_DIR)/$(LABEL_FILE)
-	#rm -rf $(DATASET_DIR)/$(DATA_FILE)
+	rm -rf $(DATASET_DIR)/$(LABEL_FILE)
+	rm -rf $(DATASET_DIR)/$(DATA_FILE)
 
 clean-obj:
 	rm -f $(shell find $(SRC_DIR) -type f -name "*.o")

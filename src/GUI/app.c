@@ -481,7 +481,8 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 			saveGrid("src/GUI/tmp/grid", dataApp->sG);
 
-			printGrid(dataApp->sG);
+
+			//printGrid(dataApp->sG);
 			SudokuGrid sGSolved = loadGrid("src/GUI/tmp/grid");
 
 			int valSolve = sudokuSolver(sGSolved);
@@ -504,8 +505,8 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 		   // dataApp->stepProcess = 5;
 
-			printGrid(dataApp->sG);
-			printGrid(sGSolved);
+			//printGrid(dataApp->sG);
+			//printGrid(sGSolved);
 
 
 			saveGrid("src/GUI/tmp/grid.result", sGSolved);
@@ -640,7 +641,7 @@ void on_training_start(GtkButton *button __attribute__((unused)),
 	int nbN = gtk_spin_button_get_value(dataApp->neuronsSpinBtn);
 
 	if(nbE <= 0 || nbHL <= 0 || nbN <= 0){
-		printf("invalid number\n");
+		//printf("invalid number\n");
 		return;
 	}
 
