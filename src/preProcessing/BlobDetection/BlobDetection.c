@@ -33,7 +33,7 @@ void Fill(SDL_Surface *src, Uint32* pixels, int x, int y, int* blob, int lim)
     Pointx_y* stack = malloc(width * height * sizeof(Pointx_y));
     if (stack == NULL) {
         // Alloc error handling
-        fprintf(stderr, "Erreur d'allocation mémoire pour la pile.\n");
+        perror("Memory allocation error for stack.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -119,7 +119,7 @@ SDL_Surface* Blob(SDL_Surface* img, int* size_max)
 		warn("Not enough storage for this operation");
 	}
 
-	//area_max will be the max size of a black blob while size
+	//Area_max will be the max size of a black blob while size
 	//is the size of the current blob
 	int max_size = 0;
 	int lim = 1;

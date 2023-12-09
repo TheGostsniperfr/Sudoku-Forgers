@@ -77,7 +77,7 @@ double* Fill_Matrix(int size, int* points)
 
 	/*
 	We are finding the so called H matrix. I am using this formula:
-		H = ( M1 transpose * M1 )inv * ( M1 transpose * M2)
+		H = ( M1 transpose * M1 )inv * M1 transpose * M2
 	*/
 
 	//Create the transpose matrix
