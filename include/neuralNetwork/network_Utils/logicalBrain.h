@@ -10,10 +10,6 @@
 
 
 void initializeNetwork(NeuralNetwork *net);
-/*
-void backPropagation(NeuralNetwork *net, double *predicted_probs,
-    double *trueProbs, double learningRate);
-    */
 
 void forwardPropagation(NeuralNetwork* net, double* input);
 

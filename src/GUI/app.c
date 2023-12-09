@@ -112,7 +112,9 @@ gboolean is_digit(const gchar *text) {
 	return (text != NULL && *text != '\0' && isdigit(*text));
 }
 
-GdkPixbuf *convertSurfaceToPixbuf(SDL_Surface *sdlSurface, int sizeX, int sizeY) {
+GdkPixbuf *convertSurfaceToPixbuf(SDL_Surface *sdlSurface,
+	int sizeX, int sizeY)
+{
 	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_data(
 		(const guchar *)sdlSurface->pixels,
 		GDK_COLORSPACE_RGB,
@@ -144,7 +146,14 @@ GdkPixbuf *convertSurfaceToPixbuf(SDL_Surface *sdlSurface, int sizeX, int sizeY)
 	}
 	//SDL_FreeSurface(sdlSurface);
 
-	GdkPixbuf *resize = gdk_pixbuf_scale_simple(pixbuf, new_width, new_height, GDK_INTERP_BILINEAR);
+	GdkPixbuf *resize = gdk_pixbuf_scale_simple
+						(
+							pixbuf,
+							new_width,
+							new_height,
+							GDK_INTERP_BILINEAR
+						);
+
 	g_object_unref(pixbuf);
 	return resize;
 }
@@ -155,7 +164,11 @@ void pageChanger(DataApp* dataApp, gint newNbPage){
 
 	dataApp->currentPage = newNbPage;
 
-	gtk_range_set_value(GTK_RANGE(dataApp->pageSlider), CLAMP(newNbPage, 1, 6));
+	gtk_range_set_value
+	(
+		GTK_RANGE(dataApp->pageSlider),
+		CLAMP(newNbPage, 1, 6)
+	);
 
 	gtk_stack_set_visible_child_name
 	(
@@ -167,7 +180,8 @@ void pageChanger(DataApp* dataApp, gint newNbPage){
 
 
 
-void load_and_resize_image(const char *filename, int sizeX, int sizeY, GtkImage *img)
+void load_and_resize_image(const char *filename,
+	int sizeX, int sizeY, GtkImage *img)
 {
 	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
@@ -195,7 +209,13 @@ void load_and_resize_image(const char *filename, int sizeX, int sizeY, GtkImage 
 		new_width = (int)(sizeY * aspect_ratio);
 	}
 
-	GdkPixbuf *resize = gdk_pixbuf_scale_simple(pixbuf, new_width, new_height, GDK_INTERP_BILINEAR);
+	GdkPixbuf *resize = gdk_pixbuf_scale_simple
+						(
+							pixbuf,
+							new_width,
+							new_height,
+							GDK_INTERP_BILINEAR
+						);
 
 	gtk_image_set_from_pixbuf(img, resize);
 
@@ -214,11 +234,13 @@ void on_file_selected(GtkFileChooserButton *filechooserbutton,
 
 	if(dataApp->originalImgPath == NULL){
 		dataApp->originalImgPath =
-			gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooserbutton));
+			gtk_file_chooser_get_filename(
+				GTK_FILE_CHOOSER(filechooserbutton));
 	}else{
 		resetApp(dataApp);
 		dataApp->originalImgPath =
-			gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooserbutton));
+			gtk_file_chooser_get_filename(
+				GTK_FILE_CHOOSER(filechooserbutton));
 	}
 }
 
@@ -270,8 +292,15 @@ void on_rotateBtn_clicked(GtkButton *button,
 		return;
 	}
 
-	saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
-	gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/rotatedImg.jpg"), 350, 350));
+	saveImg(Rotated_image(
+		loadImg(dataApp->originalImgPath),
+		dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
+
+
+
+	gtk_image_set_from_pixbuf(dataApp->rotateImg,
+		convertSurfaceToPixbuf(
+			loadImg("src/GUI/tmp/rotatedImg.jpg"), 350, 350));
 
 
 }
@@ -287,16 +316,30 @@ void on_page_slider_changed(GtkRange *range , gpointer user_data) {
 void* imageProcess(void* data){
 	DataApp* dataApp = (DataApp*) data;
 
-	saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
-	dataApp->allStepResult = (AllStepResult*)handleAllSteps(0, NULL, "src/GUI/tmp/rotatedImg.jpg", dataApp->flags);
-	dataApp->allStepResult->gridCells = findAllDigits(dataApp->allStepResult->gridCells, GRID_DIM*GRID_DIM, dataApp->flags);
+	saveImg(Rotated_image(loadImg(dataApp->originalImgPath),
+		dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
 
-	dataApp->sG = gridCellToSudokuGrid(dataApp->allStepResult->gridCells, GRID_DIM);
+	dataApp->allStepResult = (AllStepResult*)handleAllSteps
+		(0, NULL, "src/GUI/tmp/rotatedImg.jpg", dataApp->flags);
 
-	saveImg(dataApp->allStepResult->binarizedImg, "src/GUI/tmp/binarised.jpg");
-	saveImg(dataApp->allStepResult->homographyImg, "src/GUI/tmp/homography.jpg");
+	dataApp->allStepResult->gridCells =
+		findAllDigits(dataApp->allStepResult->gridCells,
+						GRID_DIM*GRID_DIM, dataApp->flags);
+
+	dataApp->sG =
+		gridCellToSudokuGrid(dataApp->allStepResult->gridCells, GRID_DIM);
+
+	saveImg(dataApp->allStepResult->binarizedImg,
+				"src/GUI/tmp/binarised.jpg");
+
+	saveImg(dataApp->allStepResult->homographyImg,
+				"src/GUI/tmp/homography.jpg");
+
 	saveImg(dataApp->allStepResult->gridImg, "src/GUI/tmp/grid.jpg");
-	gtk_image_set_from_pixbuf(dataApp->intermediateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/binarised.jpg"), 350, 350));
+
+	gtk_image_set_from_pixbuf(dataApp->intermediateImg,
+		convertSurfaceToPixbuf(
+			loadImg("src/GUI/tmp/binarised.jpg"), 350, 350));
 
 
 	//Intermediate step page
@@ -346,8 +389,12 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 			//apply rotate
 
-			saveImg(Rotated_image(loadImg(dataApp->originalImgPath), dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
-			gtk_image_set_from_pixbuf(dataApp->rotateImg, convertSurfaceToPixbuf(loadImg("src/GUI/tmp/rotatedImg.jpg"), 350, 350));
+			saveImg(Rotated_image(loadImg(dataApp->originalImgPath),
+				dataApp->rotateAngle), "src/GUI/tmp/rotatedImg.jpg");
+
+			gtk_image_set_from_pixbuf(dataApp->rotateImg,
+				convertSurfaceToPixbuf(
+					loadImg("src/GUI/tmp/rotatedImg.jpg"), 350, 350));
 
 			//Go to rotate page
 			pageChanger(dataApp, newNbPage);
@@ -386,14 +433,19 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 			dataApp->stepProcess = 4;
 
 			//load image from page 1 (imported image)
-			load_and_resize_image("src/GUI/tmp/homography.jpg", 350, 350, dataApp->inputImageResult);
+			load_and_resize_image("src/GUI/tmp/homography.jpg",
+									350, 350, dataApp->inputImageResult);
 
 			//init edit grid with grid struct
 			for (int i = 0; i < EDIT_GRID_SIZE; i++) {
 				for (int j = 0; j < EDIT_GRID_SIZE; j++) {
 					int val;
-					if(dataApp->allStepResult->gridCells[i*EDIT_GRID_SIZE + j].isDigit == 1){
-						val = dataApp->allStepResult->gridCells[i * EDIT_GRID_SIZE + j].label;
+					if(dataApp->allStepResult->
+						gridCells[i*EDIT_GRID_SIZE + j].isDigit == 1){
+
+						val = dataApp->allStepResult->
+							gridCells[i * EDIT_GRID_SIZE + j].label;
+
 						char *text = g_strdup_printf("%d", val);
 						gtk_entry_set_text(dataApp->editGridMat[i][j], text);
 
@@ -416,7 +468,8 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 			for (int i = 0; i < EDIT_GRID_SIZE; i++) {
 				for (int j = 0; j < EDIT_GRID_SIZE; j++) {
 
-					int val = atoi(gtk_entry_get_text(dataApp->editGridMat[i][j]));
+					int val = atoi(
+						gtk_entry_get_text(dataApp->editGridMat[i][j]));
 
 					if(val == 0){
 						dataApp->sG.grid[i][j] = -1;
@@ -437,11 +490,14 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 
 			if(valSolve == EXIT_FAILURE){
 				GtkWidget* msg = gtk_message_dialog_new_with_markup(
-					NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+					NULL, GTK_DIALOG_MODAL,
+					GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
 					"<b>Please correct your sudoku grid.</b>");
 
 				gtk_window_set_title(GTK_WINDOW(msg), "Invalid Grid");
-				g_signal_connect(GTK_DIALOG(msg), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+				g_signal_connect(GTK_DIALOG(msg),
+				"response", G_CALLBACK(gtk_widget_destroy), NULL);
+
 				gtk_dialog_run(GTK_DIALOG(msg));
 				return;
 			}
@@ -462,8 +518,12 @@ void pageManager(DataApp* dataApp, gint newNbPage){
 				.widthBorder = 15,
 			};
 
-			saveImg(createOutputGrid(dataApp->sG, sGSolved, gP), "src/GUI/tmp/outGrid.jpg");
-			load_and_resize_image("src/GUI/tmp/outGrid.jpg", 350, 350, dataApp->outImg);
+			saveImg(createOutputGrid(dataApp->sG, sGSolved, gP),
+									 "src/GUI/tmp/outGrid.jpg");
+
+			load_and_resize_image("src/GUI/tmp/outGrid.jpg",
+									350, 350, dataApp->outImg);
+
 			pageChanger(dataApp, newNbPage);
 			return;
 
@@ -504,7 +564,9 @@ void on_setting_btn_pressed(GtkButton *button __attribute__((unused)),
 	DataApp* dataApp = user_data;
 
 
-	if(strcmp(gtk_stack_get_visible_child_name(dataApp->pageContainer), "settingPage") != 0){
+	if(strcmp(gtk_stack_get_visible_child_name(dataApp->pageContainer),
+		"settingPage") != 0)
+	{
 		gtk_stack_set_visible_child_name
 		(
 			dataApp->pageContainer, "settingPage"
@@ -512,7 +574,8 @@ void on_setting_btn_pressed(GtkButton *button __attribute__((unused)),
 	}else{
 		gtk_stack_set_visible_child_name
 		(
-			dataApp->pageContainer, g_strdup_printf("page%d", dataApp->currentPage)
+			dataApp->pageContainer,
+			g_strdup_printf("page%d", dataApp->currentPage)
 		);
 	}
 }
@@ -541,7 +604,8 @@ void* startTraining(void* data){
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
 
-        char* argv[] = {"src/neuralNetwork/network", "-p", nbHLStr, nbNStr, "-digitsTrain", nbEStr, "208", "1", "0.1", "-verbose", "-save", NULL};
+        char* argv[] = {"src/neuralNetwork/network", "-p", nbHLStr, nbNStr,
+		"-digitsTrain", nbEStr, "208", "1", "0.1", "-verbose", "-save", NULL};
 
         execvp(argv[0], argv);
 
@@ -554,7 +618,8 @@ void* startTraining(void* data){
 
         dataApp->isTrainingRunning = 0;
 
-        gtk_stack_set_visible_child_name(dataApp->pageContainer, "settingPage");
+        gtk_stack_set_visible_child_name(
+			dataApp->pageContainer, "settingPage");
     }
 
     return NULL;
@@ -645,11 +710,17 @@ void on_switch_intermediate_img(GtkButton *button __attribute__((unused)),
 	char* idBtn = (char*)gtk_widget_get_name(GTK_WIDGET(button));
 
 	if(strcmp(idBtn, "BinarizationBtn") == 0){
-		load_and_resize_image("src/GUI/tmp/binarised.jpg", 350, 350, dataApp->intermediateImg);
+		load_and_resize_image("src/GUI/tmp/binarised.jpg",
+			350, 350, dataApp->intermediateImg);
+
 	}else if (strcmp(idBtn, "HomographyBtn") == 0){
-		load_and_resize_image("src/GUI/tmp/homography.jpg", 350, 350, dataApp->intermediateImg);
+		load_and_resize_image("src/GUI/tmp/homography.jpg",
+			350, 350, dataApp->intermediateImg);
+
 	}else if (strcmp(idBtn, "GridBtn") == 0){
-		load_and_resize_image("src/GUI/tmp/grid.jpg", 350, 350, dataApp->intermediateImg);
+		load_and_resize_image("src/GUI/tmp/grid.jpg",
+			350, 350, dataApp->intermediateImg);
+
 	}else{
 		g_printerr("Invalid image path.");
 	}
@@ -720,7 +791,8 @@ void launchGUI() {
 		dataApp->editGridMat[i] = calloc(EDIT_GRID_SIZE, sizeof(GtkEntry*));
 	}
 
-	dataApp->animation = gdk_pixbuf_animation_new_from_file ("src/GUI/ressources/GIF_OCR.gif", NULL);
+	dataApp->animation = gdk_pixbuf_animation_new_from_file
+		("src/GUI/ressources/GIF_OCR.gif", NULL);
 
 	GtkWidget *window =
 		GTK_WIDGET(gtk_builder_get_object(builder, "SF_APP_WINDOW"));
@@ -797,16 +869,20 @@ void launchGUI() {
 	GtkButton* startTrainSpinBtn =
 		GTK_BUTTON(gtk_builder_get_object(builder, "startTrainBtn"));
 
-	load_and_resize_image("src/GUI/ressources/logo.png", 300, 300, dataApp->logoImg);
+	load_and_resize_image("src/GUI/ressources/logo.png",
+							300, 300, dataApp->logoImg);
 
     GtkCssProvider *provider = gtk_css_provider_new();
     GdkDisplay *display = gdk_display_get_default();
     GdkScreen *screen = gdk_display_get_default_screen(display);
-    if (!gtk_css_provider_load_from_path(provider, "src/GUI/ressources/style.css", &error)) {
+    if (!gtk_css_provider_load_from_path(provider,
+			"src/GUI/ressources/style.css", &error))
+	{
         g_warning("Unable to load CSS file: %s", error->message);
         g_clear_error(&error);
     } else {
-        gtk_style_context_add_provider_for_screen(screen, (GtkStyleProvider *)provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
+        gtk_style_context_add_provider_for_screen(screen,
+			(GtkStyleProvider *)provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
     }
 
 	//Page Slider

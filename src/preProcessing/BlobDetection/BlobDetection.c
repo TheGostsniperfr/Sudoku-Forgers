@@ -176,7 +176,7 @@ double Distance(Pointx_y p1, Pointx_y p2)
     return sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
 }
 
-int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4) 
+int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4)
 {
     // Calculation of distances between points
     double d12 = Distance(p1, p2);
@@ -188,16 +188,22 @@ int isSquare_Blob(Pointx_y p1, Pointx_y p2, Pointx_y p3, Pointx_y p4)
 
 	// Verification of side lengths
     double errorMargin = 0.75;
-    if (fabs(d12 - d13) / d12 > errorMargin || fabs(d12 - d14) / d12 > errorMargin || fabs(d12 - d23) / d12 > errorMargin ||
-        fabs(d12 - d24) / d12 > errorMargin || fabs(d12 - d34) / d12 > errorMargin) {
-        return 0; // Les côtés ne sont pas égaux
+    if (fabs(d12 - d13) / d12 > errorMargin || fabs(d12 - d14) / d12 >
+			errorMargin || fabs(d12 - d23) / d12 > errorMargin ||
+
+        fabs(d12 - d24) / d12 > errorMargin || fabs(d12 - d34) / d12 >
+			errorMargin)
+	{
+        return 0; // The sides are not equal
     }
 
     // Checking right angles
     double diag1 = Distance(p1, p3);
     double diag2 = Distance(p2, p4);
-    if (fabs(diag1 * diag1 + d12 * d12 - d13 * d13) / (2 * diag1 * d12) > errorMargin ||
-        fabs(diag2 * diag2 + d12 * d12 - d24 * d24) / (2 * diag2 * d12) > errorMargin) {
+    if (fabs(diag1 * diag1 + d12 * d12 - d13 * d13) / (2 * diag1 * d12) >
+			errorMargin ||
+        fabs(diag2 * diag2 + d12 * d12 - d24 * d24) / (2 * diag2 * d12) >
+			errorMargin) {
         return 0; // The angles are not straight
     }
 
@@ -216,7 +222,7 @@ SDL_Surface* Remove_Blob(SDL_Surface* image, SDL_Surface* image_blob)
 							0
 						);
 
-	Uint32* pixels_src = src->pixels; 
+	Uint32* pixels_src = src->pixels;
 	Uint32* pixels_blob = image_blob->pixels;
 
 	//Basic colors

@@ -91,10 +91,14 @@ int main(int argc, char* argv[]){
             return EXIT_SUCCESS;
         }
 
-        AllStepResult* allStepResult = (AllStepResult*)handleAllSteps(argc, argv+2, argv[2], flags);
-        allStepResult->gridCells = findAllDigits(allStepResult->gridCells, GRID_DIM*GRID_DIM, flags);
+        AllStepResult* allStepResult =
+            (AllStepResult*)handleAllSteps(argc, argv+2, argv[2], flags);
 
-        SudokuGrid sG = gridCellToSudokuGrid(allStepResult->gridCells, GRID_DIM);
+        allStepResult->gridCells =
+            findAllDigits(allStepResult->gridCells, GRID_DIM*GRID_DIM, flags);
+
+        SudokuGrid sG =
+            gridCellToSudokuGrid(allStepResult->gridCells, GRID_DIM);
 
         if(flags[2].value == 1){
             printSection(DEFAULT_GRID_DIR);

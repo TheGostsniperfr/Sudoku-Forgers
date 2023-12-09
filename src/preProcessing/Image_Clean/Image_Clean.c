@@ -39,14 +39,17 @@ void clean_edge(SDL_Surface* image) {
     for (int y = 0; y < 3; ++y) {
         count_px = 0;
         for (int x = 0; x < image->w; ++x) {
-            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                image->pitch + x * sizeof(Uint32));
+
             SDL_GetRGB(*pixel, image->format, &r, &g, &b);
             if (r < 100 && g < 100 && b < 100)
                 count_px++;
         }
         if (count_px > Threshold) {
             for (int x = 0; x < image->w; ++x) {
-                Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+                Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                    image->pitch + x * sizeof(Uint32));
                 *pixel = SDL_MapRGB(image->format, 255, 255, 255);
             }
         }
@@ -55,14 +58,16 @@ void clean_edge(SDL_Surface* image) {
     for (int y = image->h - 3; y < image->h; ++y) {
         count_px = 0;
         for (int x = 0; x < image->w; ++x) {
-            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                image->pitch + x * sizeof(Uint32));
             SDL_GetRGB(*pixel, image->format, &r, &g, &b);
             if (r < 100 && g < 100 && b < 100)
                 count_px++;
         }
         if (count_px > Threshold) {
             for (int x = 0; x < image->w; ++x) {
-                Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+                Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                    image->pitch + x * sizeof(Uint32));
                 *pixel = SDL_MapRGB(image->format, 255, 255, 255);
             }
         }
@@ -71,14 +76,16 @@ void clean_edge(SDL_Surface* image) {
     for (int x = 0; x < 3; ++x) {
         count_px = 0;
         for (int y = 0; y < image->h; ++y) {
-            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                image->pitch + x * sizeof(Uint32));
             SDL_GetRGB(*pixel, image->format, &r, &g, &b);
             if (r < 100 && g < 100 && b < 100)
                 count_px++;
         }
         if (count_px > Threshold) {
             for (int y = 0; y < image->h; ++y) {
-                Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+                Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                    image->pitch + x * sizeof(Uint32));
                 *pixel = SDL_MapRGB(image->format, 255, 255, 255);
             }
         }
@@ -87,14 +94,16 @@ void clean_edge(SDL_Surface* image) {
     for (int x = image->w - 3; x < image->w; ++x) {
         count_px = 0;
         for (int y = 0; y < image->h; ++y) {
-            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                image->pitch + x * sizeof(Uint32));
             SDL_GetRGB(*pixel, image->format, &r, &g, &b);
             if (r < 100 && g < 100 && b < 100)
                 count_px++;
         }
         if (count_px > Threshold) {
             for (int y = 0; y < image->h; ++y) {
-                Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+                Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                    image->pitch + x * sizeof(Uint32));
                 *pixel = SDL_MapRGB(image->format, 255, 255, 255);
             }
         }
@@ -104,18 +113,19 @@ void clean_edge(SDL_Surface* image) {
 }
 
 
-void clean_all(SDL_Surface* image) 
+void clean_all(SDL_Surface* image)
 {
     SDL_LockSurface(image);
 
     int width = image->w;
     int height = image->h;
 
-    for (int y = 0; y < height; ++y) 
+    for (int y = 0; y < height; ++y)
     {
-        for (int x = 0; x < width; ++x) 
+        for (int x = 0; x < width; ++x)
         {
-            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y * image->pitch + x * sizeof(Uint32));
+            Uint32* pixel = (Uint32*)((Uint8*)image->pixels + y *
+                image->pitch + x * sizeof(Uint32));
             *pixel = SDL_MapRGB(image->format, 0, 0, 0);
         }
     }

@@ -7,8 +7,6 @@
 #include "preProcessing/Matrix/mat.h"
 #include "preProcessing/CaseDetection/case_detection.h"
 
-//#include "stdio.h" // a enlever //
-
 #define FILL(mat, x, y) mat[x*8+y]
 
 /***************************************************************
@@ -96,7 +94,8 @@ double* Fill_Matrix_Division(int size, int* points)
 	//Free mat because we don't need it anymore
 	free(mat);
 
-	//Check whether the matrix is reversible and get the result or show a error
+	//Check whether the matrix is reversible and get
+	//the result or show a error
 	double* inverse_mat = calloc(8*8, sizeof(double));
 	if (!Inverse_Mat(mult_mat, inverse_mat, 8))
 	{
@@ -225,7 +224,8 @@ GridCell* CaseDetection(SDL_Surface* image, SDL_Surface* imgNoMorph)
 			points[4] = (j+1) * update_width-7;
 			points[6] = (j+1) * update_width-7;
 
-			SDL_Surface* img= Homography_Transform_Division(imgNoMorph, 28, points);
+			SDL_Surface* img= Homography_Transform_Division(
+								imgNoMorph, 28, points);
 
 			result[ref].image = img;
 			result[ref].positionX = j;

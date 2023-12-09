@@ -107,7 +107,8 @@ void* handleXorTrain(
         }
 
         char path[1024];
-        snprintf(path, 1024, "%s/%s",getenv("CURRENT_DIR"), DEFAULT_XOR_FILENAME);
+        snprintf(path, 1024, "%s/%s",getenv("CURRENT_DIR"),
+            DEFAULT_XOR_FILENAME);
 
         xorTraining(*net, tP, path, flags);
 
@@ -461,9 +462,11 @@ void* handlePrintNetHelp(
             "Usage : network [OPTIONS]\n\n"
             "-xorTrain  <number epoch> <batch size> <learning rate>\n"
             "                         ->      Start xor training\n"
-            "-digitsTrain <number epoch> <dataset range> <batch size> <learning rate>\n"
+            "-digitsTrain <number epoch> <dataset range> <batch size> \
+            <learning rate>\n"
             "                         ->      Start digits training\n"
-            "-p <number of hidden layers> <number of neurons per hidden layer>\n"
+            "-p <number of hidden layers> <number of neurons per \
+            hidden layer>\n"
             "                         ->      Network parameters\n"
             "-defaultNetSpec          ->      Load default network spec\n"
             "-defaultTrainSpec        ->      Load default training spec\n"
