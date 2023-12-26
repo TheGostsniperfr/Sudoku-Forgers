@@ -2,6 +2,8 @@
 
 This project is an OCR that lets you solve your sudoku grid with a simple photo of her.
 
+Website : https://thegostsniperfr.github.io/Sudoku-Forgers/
+
 ## Dependencies
 
 SDL 2 :
